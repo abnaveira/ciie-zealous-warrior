@@ -27,9 +27,10 @@ SPRITE_SALTANDO = 2
 
 # Velocidades de los distintos personajes
 VELOCIDAD_JUGADOR = 0.2 # Pixeles por milisegundo
-VELOCIDAD_SALTO_JUGADOR = 0.4 # Pixeles por milisegundo
+VELOCIDAD_SALTO_JUGADOR = 0.35 # Pixeles por milisegundo
 RETARDO_ANIMACION_JUGADOR = 5 # updates que durará cada imagen del personaje
                               # debería de ser un valor distinto para cada postura
+BASEJUMP = 400
 
 VELOCIDAD_SNIPER = 0.12 # Pixeles por milisegundo
 VELOCIDAD_SALTO_SNIPER = 0.27 # Pixeles por milisegundo
@@ -37,7 +38,7 @@ RETARDO_ANIMACION_SNIPER = 5 # updates que durará cada imagen del personaje
                              # debería de ser un valor distinto para cada postura
 # El Sniper camina un poco más lento que el jugador, y salta menos
 
-GRAVEDAD = 0.0006 # Píxeles / ms2
+GRAVEDAD = 0.0007 # Píxeles / ms2
 
 # -------------------------------------------------
 # -------------------------------------------------
@@ -93,6 +94,7 @@ class Personaje(MiSprite):
     #  Numero de imagenes en cada postura
     #  Velocidad de caminar y de salto
     #  Retardo para mostrar la animacion del personaje
+    timejumping = BASEJUMP
     def __init__(self, archivoImagen, archivoCoordenadas, numImagenes, velocidadCarrera, velocidadSalto, retardoAnimacion):
 
         # Primero invocamos al constructor de la clase padre
@@ -145,17 +147,20 @@ class Personaje(MiSprite):
         if movimiento == ARRIBA:
             # Si estamos en el aire y el personaje quiere saltar, ignoramos este movimiento
             if self.numPostura == SPRITE_SALTANDO:
-                self.movimiento = QUIETO
+                if self.timejumping <= 0:
+                    self.movimiento = QUIETO
             else:
                 self.movimiento = ARRIBA
         elif movimiento == ARRIBADCH:
             if self.numPostura == SPRITE_SALTANDO:
-                self.movimiento = DERECHA
+                if self.timejumping <= 0:
+                    self.movimiento = DERECHA
             else:
                 self.movimiento = ARRIBADCH
         elif movimiento == ARRIBAIZD:
             if self.numPostura == SPRITE_SALTANDO:
-                self.movimiento = IZQUIERDA
+                if self.timejumping <= 0:
+                    self.movimiento = IZQUIERDA
             else:
                 self.movimiento = ARRIBAIZD
         else:
@@ -202,6 +207,7 @@ class Personaje(MiSprite):
 
             # Si no estamos en el aire
             if self.numPostura != SPRITE_SALTANDO:
+                self.timejumping = BASEJUMP
                 # La postura actual sera estar caminando
                 self.numPostura = SPRITE_ANDANDO
                 # Ademas, si no estamos encima de ninguna plataforma, caeremos
@@ -210,23 +216,27 @@ class Personaje(MiSprite):
 
         # Si queremos saltar
         elif self.movimiento == ARRIBA:
+            self.timejumping -= tiempo
             # La postura actual sera estar saltando
             self.numPostura = SPRITE_SALTANDO
             # Le imprimimos una velocidad en el eje y
             velocidady = -self.velocidadSalto
 
         elif self.movimiento == ARRIBADCH:
+            self.timejumping -= tiempo
             self.numPostura = SPRITE_SALTANDO
             velocidady = -self.velocidadSalto
             velocidadx = self.velocidadCarrera
 
         elif self.movimiento == ARRIBAIZD:
+            self.timejumping -= tiempo
             self.numPostura = SPRITE_SALTANDO
             velocidady = -self.velocidadSalto
             velocidadx = -self.velocidadCarrera
 
         # Si no se ha pulsado ninguna tecla
         elif self.movimiento == QUIETO:
+            self.timejumping = BASEJUMP
             # Si no estamos saltando, la postura actual será estar quieto
             if not self.numPostura == SPRITE_SALTANDO:
                 self.numPostura = SPRITE_QUIETO
