@@ -78,8 +78,10 @@ class Fase(EscenaPygame):
 
         # Creamos las animaciones de fuego,
         #  las que estan detras del decorado, y delante
-
+        self.animacionesDelante = []
         self.animacionesDetras = []
+        '''
+        
         for i in range(9):
             # La animacion del fuego
             animacionFuego = AnimacionFuego()
@@ -94,7 +96,8 @@ class Fase(EscenaPygame):
             # y la anadimos a la lista de animaciones detras
             self.animacionesDetras.append(animacionFuego)
 
-        self.animacionesDelante = []
+        
+        
         for i in range(11):
             # La animacion del fuego
             animacionFuego = AnimacionFuego()
@@ -108,9 +111,9 @@ class Fase(EscenaPygame):
             animacionFuego.nextFrame(i)
             # y la anadimos a la lista de animaciones delante
             self.animacionesDelante.append(animacionFuego)
+        '''
 
 
-        
     # Devuelve True o False según se ha tenido que desplazar el scroll
     def actualizarScrollOrdenados(self, jugadorIzq, jugadorDcha):
         # Si ambos jugadores se han ido por ambos lados de los dos bordes
@@ -120,7 +123,7 @@ class Fase(EscenaPygame):
             jugadorIzq.establecerPosicion((self.scrollx+MINIMO_X_JUGADOR, jugadorIzq.posicion[1]))
             # Colocamos al jugador que esté a la derecha a la derecha de todo
             jugadorDcha.establecerPosicion((self.scrollx+MAXIMO_X_JUGADOR-jugadorDcha.rect.width, jugadorDcha.posicion[1]))
-            
+
             return False; # No se ha actualizado el scroll
 
         # Si el jugador de la izquierda se encuentra más allá del borde izquierdo
@@ -139,7 +142,7 @@ class Fase(EscenaPygame):
             # Si no, es posible que el jugador de la derecha no se pueda desplazar
             #  tantos pixeles a la derecha por estar muy cerca del borde derecho
             elif ((MAXIMO_X_JUGADOR-jugadorDcha.rect.right)<desplazamiento):
-                
+
                 # En este caso, ponemos el jugador de la izquierda en el lado izquierdo
                 jugadorIzq.establecerPosicion((jugadorIzq.posicion[0]+desplazamiento, jugadorIzq.posicion[1]))
 
@@ -245,12 +248,12 @@ class Fase(EscenaPygame):
 
         # Actualizamos el scroll
         self.actualizarScroll(self.jugador1, self.jugador2)
-  
+
         # Actualizamos el fondo:
         #  la posicion del sol y el color del cielo
         self.fondo.update(tiempo)
 
-        
+
     def dibujar(self, pantalla):
         # Ponemos primero el fondo
         self.fondo.dibujar(pantalla)
@@ -317,7 +320,7 @@ class Cielo:
         else:
             ratio = 2 * self.posicionx / (self.rect.width + ANCHO_PANTALLA)
         self.colorCielo = (100*ratio, 200*ratio, 255)
-        
+
     def dibujar(self,pantalla):
         # Dibujamos el color del cielo
         pantalla.fill(self.colorCielo)

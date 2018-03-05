@@ -5,7 +5,7 @@ from pygame.locals import *
 from escena import *
 from gestorRecursos import *
 
-# -------------------------------------------------
+# ------------------------------- ------------------
 # -------------------------------------------------
 # Constantes
 # -------------------------------------------------
@@ -27,10 +27,10 @@ SPRITE_SALTANDO = 2
 
 # Velocidades de los distintos personajes
 VELOCIDAD_JUGADOR = 0.2 # Pixeles por milisegundo
-VELOCIDAD_SALTO_JUGADOR = 0.35 # Pixeles por milisegundo
+VELOCIDAD_SALTO_JUGADOR = 0.37 # Pixeles por milisegundo
 RETARDO_ANIMACION_JUGADOR = 5 # updates que durará cada imagen del personaje
                               # debería de ser un valor distinto para cada postura
-BASEJUMP = 400
+BASEJUMP = 350          # Maximum time in which you can keep jumping after jumping (Allows gradual jumps)
 
 VELOCIDAD_SNIPER = 0.12 # Pixeles por milisegundo
 VELOCIDAD_SALTO_SNIPER = 0.27 # Pixeles por milisegundo
@@ -38,7 +38,7 @@ RETARDO_ANIMACION_SNIPER = 5 # updates que durará cada imagen del personaje
                              # debería de ser un valor distinto para cada postura
 # El Sniper camina un poco más lento que el jugador, y salta menos
 
-GRAVEDAD = 0.0007 # Píxeles / ms2
+GRAVEDAD = 0.0009 # Píxeles / ms2
 
 # -------------------------------------------------
 # -------------------------------------------------
@@ -106,7 +106,7 @@ class Personaje(MiSprite):
         # El movimiento que esta realizando
         self.movimiento = QUIETO
         # Lado hacia el que esta mirando
-        self.mirando = IZQUIERDA
+        self.mirando = DERECHA
 
         # Leemos las coordenadas de un archivo de texto
         datos = GestorRecursos.CargarArchivoCoordenadas(archivoCoordenadas)
@@ -180,11 +180,11 @@ class Personaje(MiSprite):
                 self.numImagenPostura = len(self.coordenadasHoja[self.numPostura])-1
             self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
 
-            # Si esta mirando a la izquiera, cogemos la porcion de la hoja
-            if self.mirando == IZQUIERDA:
+            # Si esta mirando a la derecha, cogemos la porcion de la hoja
+            if self.mirando == DERECHA:
                 self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
-            #  Si no, si mira a la derecha, invertimos esa imagen
-            elif self.mirando == DERECHA:
+            #  Si no, si mira a la izquierda, invertimos esa imagen
+            elif self.mirando == IZQUIERDA:
                 self.image = pygame.transform.flip(self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura]), 1, 0)
 
 
@@ -287,7 +287,7 @@ class Jugador(Personaje):
     "Cualquier personaje del juego"
     def __init__(self):
         # Invocamos al constructor de la clase padre con la configuracion de este personaje concreto
-        Personaje.__init__(self,'Jugador.png','coordJugador.txt', [6, 12, 6], VELOCIDAD_JUGADOR, VELOCIDAD_SALTO_JUGADOR, RETARDO_ANIMACION_JUGADOR);
+        Personaje.__init__(self,'Soma.png','coordSoma.txt', [5, 12, 5], VELOCIDAD_JUGADOR, VELOCIDAD_SALTO_JUGADOR, RETARDO_ANIMACION_JUGADOR);
 
 
     def mover(self, teclasPulsadas, arriba, abajo, izquierda, derecha):
@@ -348,9 +348,15 @@ class Sniper(NoJugador):
                 jugadorMasCercano = jugador2
             # Y nos movemos andando hacia el
             if jugadorMasCercano.posicion[0]<self.posicion[0]:
-                Personaje.mover(self,IZQUIERDA)
+                if jugadorMasCercano.posicion[1]<self.posicion[1]:
+                    Personaje.mover(self, ARRIBAIZD)
+                else:
+                    Personaje.mover(self, IZQUIERDA)
             else:
-                Personaje.mover(self,DERECHA)
+                if jugadorMasCercano.posicion[1]<self.posicion[1]:
+                    Personaje.mover(self, ARRIBADCH)
+                else:
+                    Personaje.mover(self, DERECHA)
 
         # Si este personaje no esta en pantalla, no hara nada
         else:
