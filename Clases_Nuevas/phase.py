@@ -4,6 +4,7 @@ from scene import PygameScene
 from xmlLevelParser import *
 from characters import *
 from scrollControl import *
+from resourcesManager import *
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
@@ -110,7 +111,7 @@ class Background:
 
 class Scenary:
     def __init__(self, sceneryObj):
-        self.image = GestorRecursos.CargarImagen(sceneryObj.file, -1)
+        self.image = ResourcesManager.LoadImage(sceneryObj.file, -1)
         self.image = pygame.transform.scale(self.image, (sceneryObj.scaleX, sceneryObj.scaleY))
 
         self.rect = self.image.get_rect()

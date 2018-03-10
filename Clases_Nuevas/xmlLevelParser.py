@@ -1,9 +1,9 @@
-#imports
+# -*- encoding: utf-8 -*-
 
 import sys
 import os
 import xml.etree.ElementTree as ET
-import fase
+from phase import Platform
 import pygame
 
 def openXmlGetTree(xmlFileName):
@@ -22,7 +22,7 @@ def openXmlGetTree(xmlFileName):
 
 def loadLevelData(level):
     tree = openXmlGetTree(level)
-    #We get the "level" tag
+    # We get the "level" tag
     root = tree.getroot()
 
     '''
@@ -31,19 +31,19 @@ def loadLevelData(level):
     at the cost of efficiency.
     Will also trust the xml is well coded
     '''
-    #Scenery
+    # Scenery
     scenery = root.find("scenery")
     file = scenery.find("file").text
-    #Scale = 0 if no scaling needed
+    # Scale = 0 if no scaling needed
     scaleX = int(scenery.find("scaleX").text)
     scaleY = int(scenery.find("scaleY").text)
-    #window size
+    # window size
     windowWidth = int(scenery.find("windowWidth").text)
     windowHeight = int(scenery.find("windowHeight").text)
-    #Minimum position of the player in the map
+    # Minimum position of the player in the map
     leftMin = int(scenery.find("leftMin").text)
     topMin = int(scenery.find("topMin").text)
-    #Background color
+    # Background color
     backgroundColor = scenery.find("backgroundColor")
     red = int(backgroundColor.find("r").text)
     green = int(backgroundColor.find("g").text)
@@ -51,40 +51,40 @@ def loadLevelData(level):
     sceneryObj = sceneryClass(file, scaleX, scaleY, windowWidth, windowHeight,
                               leftMin, topMin, red, green, blue)
 
-    #Platforms
+    # Platforms
     platforms = root.find("platforms")
     platformList = []
     for platform in platforms.iter("platform"):
-        #Id has only informative use
+        # Id has only informative use
         id = platform.find("id").text
         top = int(platform.find("top").text)
         left = int(platform.find("left").text)
         width = int(platform.find("width").text)
         height = int(platform.find("height").text)
 
-        platformList.append(fase.Plataforma(pygame.Rect(top,left,width,height)))
+        platformList.append(Platform(pygame.Rect(top,left,width,height)))
 
-    #Images on the front
+    # Images on the front
     frontImages = root.find("frontImages")
     frontImagesList = []
     if (frontImages != None):
         for frontImage in frontImages.iter("frontImage"):
             file = frontImage.find("file").text
-            #Scales and placements in the case we want to use the image
-            #in various points
+            # Scales and placements in the case we want to use the image
+            # in various points
             scaleAndPlacements = frontImage.find("scaleAndPlacements")
             scaleAndPlacementList = []
             for scaleAndPlacement in scaleAndPlacements.iter("scaleAndPlacement"):
                 # Scale = 0 if no scaling needed
                 scaleX = int(scaleAndPlacement.find("scaleX").text)
                 scaleY = int(scaleAndPlacement.find("scaleY").text)
-                #Position of the image in the scenery
+                # Position of the image in the scenery
                 x = int(scaleAndPlacement.find("x").text)
                 y = int(scaleAndPlacement.find("y").text)
                 scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
             frontImagesList.append(frontImagesClass(file, scaleAndPlacementList))
 
-    #Animations on the front
+    # Animations on the front
     frontAnimations = root.find("frontAnimations")
     frontAnimationsList = []
     if (frontAnimations != None):
@@ -109,7 +109,7 @@ def loadLevelData(level):
                 scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
             frontAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
 
-    #Animations on the back
+    # Animations on the back
     backAnimations = root.find("backAnimations")
     backAnimationsList = []
     if (backAnimations != None):
@@ -135,12 +135,12 @@ def loadLevelData(level):
             backAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
 
 
-    #Player position in the scenery
+    # Player position in the scenery
     playerPosition = root.find("playerPosition")
     playerX = int(playerPosition.find("x").text)
     playerY = int(playerPosition.find("y").text)
 
-    #SpawnPoints
+    # SpawnPoints
     spawnPoints = root.find("spawnPoints")
     spawnPointList = []
     if (spawnPoints != None):
@@ -152,7 +152,7 @@ def loadLevelData(level):
                 enemyId = enemy.find("id").text
                 spawnFrecuency = enemy.find("spawnFrecuency").text
                 enemyList.append(enemyInSpawnPoint(enemyId,spawnFrecuency))
-            #SpawnPoints position on the map
+            # SpawnPoints position on the map
             x = int(spawnPoint.find("x").text)
             y = int(spawnPoint.find("y").text)
             spawnPointList.append(spawnPointClass(id, enemyList, x, y))
@@ -160,11 +160,8 @@ def loadLevelData(level):
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
            platformList, playerX, playerY, spawnPointList
 
-def main():
-    loadLevelData("level1Example.xml")
 
-
-#Define an enemy parser as well with ids
+# TODO: Define an enemy parser as well with ids
 
 class enemyInSpawnPoint:
     def __init__(self, id, spawnFrecuency):
@@ -209,6 +206,10 @@ class scaleAndPlacementClass:
         self.x = x
         self.y = y
 
+
+
+def main():
+    loadLevelData("level1Example.xml")
 
 if __name__ == "__main__":
     main()
