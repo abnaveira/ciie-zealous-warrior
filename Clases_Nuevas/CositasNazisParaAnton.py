@@ -18,7 +18,6 @@ for frontAnimation in frontAnimationsList:
         animation.positionX = scaleAndPlacement.x
         animation.positionY = scaleAndPlacement.y
         animation.play()
-        # animation.nextFrame()
         self.animacionesDelante.append(animation)
 
 # Animations in the back
@@ -30,5 +29,4 @@ for backAnimation in backAnimationsList:
         animation.positionX = scaleAndPlacement.x
         animation.positionY = scaleAndPlacement.y
         animation.play()
-        # animation.nextFrame()
         self.animacionesDetras.append(animation)
