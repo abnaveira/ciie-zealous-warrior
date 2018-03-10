@@ -11,7 +11,7 @@ def openXmlGetTree(xmlFileName):
     directory = sys.path[0]
 
     # Append the directory where levels are located
-    # xmlFile = os.path.join(directory, "Carpeta donde Estan los niveles")
+    # directory = os.path.join(directory, "Carpeta donde Estan los niveles")
 
     # Append the level we want to open
     xmlFile = os.path.join(directory, xmlFileName)
@@ -70,13 +70,19 @@ def loadLevelData(level):
     if (frontImages != None):
         for frontImage in frontImages.iter("frontImage"):
             file = frontImage.find("file").text
-            # Scale = 0 if no scaling needed
-            scaleX = int(frontImage.find("scaleX").text)
-            scaleY = int(frontImage.find("scaleY").text)
-            #Position of the image in the scenery
-            x = int(frontImage.find("x").text)
-            y = int(frontImage.find("y").text)
-            frontImagesList.append(frontImagesClass(file, scaleX, scaleY, x, y))
+            #Scales and placements in the case we want to use the image
+            #in various points
+            scaleAndPlacements = frontImage.find("scaleAndPlacements")
+            scaleAndPlacementList = []
+            for scaleAndPlacement in scaleAndPlacements.iter("scaleAndPlacement"):
+                # Scale = 0 if no scaling needed
+                scaleX = int(scaleAndPlacement.find("scaleX").text)
+                scaleY = int(scaleAndPlacement.find("scaleY").text)
+                #Position of the image in the scenery
+                x = int(scaleAndPlacement.find("x").text)
+                y = int(scaleAndPlacement.find("y").text)
+                scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
+            frontImagesList.append(frontImagesClass(file, scaleAndPlacementList))
 
     #Animations on the front
     frontAnimations = root.find("frontAnimations")
@@ -89,13 +95,19 @@ def loadLevelData(level):
                 file = frame.find("file").text
                 milis = float(frame.find("milis").text)
                 framesList.append((file, milis))
-            # Scale = 0 if no scaling needed
-            scaleX = int(frontAnimation.find("scaleX").text)
-            scaleY = int(frontAnimation.find("scaleY").text)
-            # Position of the animation in the scenery
-            x = int(frontAnimation.find("x").text)
-            y = int(frontAnimation.find("y").text)
-            frontAnimationsList.append(animationClass("front", framesList, scaleX, scaleY, x, y))
+            # Scales and placements in the case we want to use the animation
+            # in various points
+            scaleAndPlacements = frontAnimation.find("scaleAndPlacements")
+            scaleAndPlacementList = []
+            for scaleAndPlacement in scaleAndPlacements.iter("scaleAndPlacement"):
+                # Scale = 0 if no scaling needed
+                scaleX = int(scaleAndPlacement.find("scaleX").text)
+                scaleY = int(scaleAndPlacement.find("scaleY").text)
+                # Position of the animation in the scenery
+                x = int(scaleAndPlacement.find("x").text)
+                y = int(scaleAndPlacement.find("y").text)
+                scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
+            frontAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
 
     #Animations on the back
     backAnimations = root.find("backAnimations")
@@ -108,13 +120,19 @@ def loadLevelData(level):
                 file = frame.find("file").text
                 milis = float(frame.find("milis").text)
                 framesList.append((file, milis))
-            # Scale = 0 if no scaling needed
-            scaleX = int(backAnimation.find("scaleX").text)
-            scaleY = int(backAnimation.find("scaleY").text)
-            # Position of the animation in the scenery
-            x = int(backAnimation.find("x").text)
-            y = int(backAnimation.find("y").text)
-            frontAnimationsList.append(animationClass("front", framesList, scaleX, scaleY, x, y))
+            # Scales and placements in the case we want to use the animation
+            # in various points
+            scaleAndPlacements = backAnimation.find("scaleAndPlacements")
+            scaleAndPlacementList = []
+            for scaleAndPlacement in scaleAndPlacements.iter("scaleAndPlacement"):
+                # Scale = 0 if no scaling needed
+                scaleX = int(scaleAndPlacement.find("scaleX").text)
+                scaleY = int(scaleAndPlacement.find("scaleY").text)
+                # Position of the animation in the scenery
+                x = int(scaleAndPlacement.find("x").text)
+                y = int(scaleAndPlacement.find("y").text)
+                scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
+            backAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
 
 
     #Player position in the scenery
@@ -175,19 +193,17 @@ class sceneryClass:
         self.blue = blue
 
 class frontImagesClass:
-    def __init__(self, file, scaleX, scaleY, x, y):
+    def __init__(self, file, scaleAndPlacementList):
         self.file = file
-        self.scaleX = scaleX
-        self.scaleY = scaleY
-        self.x = x
-        self.y = y
+        self.scaleAndPlacementList = scaleAndPlacementList
 
 class animationClass:
-    def __init__(self, type, frameList, scaleX, scaleY, x, y):
-        #Type can be front or back (if the animation is played in front or on
-        #the back of the player
-        self.type = type
+    def __init__(self, frameList, scaleAndPlacementList):
         self.frameList = frameList
+        self.scaleAndPlacementList = scaleAndPlacementList
+
+class scaleAndPlacementClass:
+    def __init__(self, scaleX, scaleY, x, y):
         self.scaleX = scaleX
         self.scaleY = scaleY
         self.x = x
