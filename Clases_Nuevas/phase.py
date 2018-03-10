@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import pygame, escena
-from escena import *
-from characters import *
-from pygame.locals import *
-from animacionesPygame import *
+from scene import PygameScene
 
 #---------------------------
 #---------Constants---------
 #---------------------------
+
+# -------------------------------------------------
+# Class for pygame scenes with one player
+
+class PhaseScene(PygameScene):
+
+    def __init__(self, director):
+        PygameScene.__init__(self, director)
 

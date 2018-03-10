@@ -2,13 +2,6 @@
 
 import pygame
 
-#---------------------------
-#---------Constants---------
-#---------------------------
-
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
-
 # -------------------------------------------------
 # Class scene with its abtract methods
 
@@ -31,15 +24,7 @@ class Scene:
 
 class PygameScene(Scene):
 
-    def __init__(self, director):
+    def __init__(self, director, window_width, window_height):
         Scene.__init__(self, director)
         pygame.init()
-        self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-
-# -------------------------------------------------
-# Class for pygame scenes with one player
-
-class PhaseScene(PygameScene):
-
-    def __init__(self, director):
-        PygameScene.__init__(self, director)
+        self.screen = pygame.display.set_mode((window_width, window_height))
