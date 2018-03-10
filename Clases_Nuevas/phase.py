@@ -12,13 +12,14 @@ class PhaseScene(PygameScene):
 
     def __init__(self, director, levelFile):
         # It reads the file with the level paramethers
-        sceneryObj, platformList, playerX, playerY, spawnPointList = loadLevelData(levelFile)
+        sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
+        platformList, playerX, playerY, spawnPointList = loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, sceneryObj.windowWidth, sceneryObj.windowHeight)
 
-        # Creamos el decorado y el fondo
-        self.scenery= Scenary()
-        self.fondo = Cielo()
+        # Creates the scenary and background
+        self.scenery= Scenary(sceneryObj)
+        self.background = Background(sceneryObj)
 
         # Set scroll to (0,0)
         self.scroll = (0, 0)
@@ -58,16 +59,12 @@ class PhaseScene(PygameScene):
         # Update scroll
         self.controlScroll.updateScroll(self.player, self.spritesGroup)
 
-        # Actualizamos el fondo:
-        #  la posicion del sol y el color del cielo
-        self.fondo.update(time)
+        # Update the background if it is necessary
+        self.background.update(time)
 
     def draw(self, screen):
-        # Ponemos primero el fondo
-        self.fondo.dibujar(screen)
-        # Después el decorado
+        self.background.draw(screen)
         self.scenery.draw(screen)
-        # Luego los Sprites
         self.spritesGroup.draw(screen)
 
     def events(self, events_list):
@@ -94,48 +91,32 @@ class Platform(MySprite):
 
 
 # -------------------------------------------------
-# Clase Cielo
+# Class for the background
 
-class Cielo:
-    def __init__(self):
-        self.sol = GestorRecursos.CargarImagen('sol.png', -1)
-        self.sol = pygame.transform.scale(self.sol, (200, 200))
+class Background:
+    def __init__(self, sceneryObj):
+        self.color = (sceneryObj.red, sceneryObj.green, sceneryObj.blue)
 
-        self.rect = self.sol.get_rect()
-        self.posicionx = 0  # El lado izquierdo de la subimagen que se esta visualizando
-        self.update(0)
+    # It has to be implmented if there is some variations over time in the background
+    def update(self, time):
+        return
 
-    def update(self, tiempo):
-        self.posicionx += 0.2 * tiempo
-        if (self.posicionx - self.rect.width >= ANCHO_PANTALLA):
-            self.posicionx = 0
-        self.rect.right = self.posicionx
-        # Calculamos el color del cielo
-        if self.posicionx >= ((self.rect.width + ANCHO_PANTALLA) / 2):
-            ratio = 2 * ((self.rect.width + ANCHO_PANTALLA) - self.posicionx) / (self.rect.width + ANCHO_PANTALLA)
-        else:
-            ratio = 2 * self.posicionx / (self.rect.width + ANCHO_PANTALLA)
-        self.colorCielo = (100 * ratio, 200 * ratio, 255)
-
-    def dibujar(self, pantalla):
-        # Dibujamos el color del cielo
-        pantalla.fill(self.colorCielo)
-        # Y ponemos el sol
-        pantalla.blit(self.sol, self.rect)
+    def draw(self, screen):
+        screen.fill(self.color)
 
 
 # -------------------------------------------------
-# Clase Decorado
+# Class for the scenary
 
 class Scenary:
-    def __init__(self, windowHeight, windowWidth):
-        self.image = GestorRecursos.CargarImagen('decorado.png', -1)
-        self.image = pygame.transform.scale(self.image, (1200, 700)) # 1200, 300
+    def __init__(self, sceneryObj):
+        self.image = GestorRecursos.CargarImagen(sceneryObj.file, -1)
+        self.image = pygame.transform.scale(self.image, (sceneryObj.scaleX, sceneryObj.scaleY))
 
         self.rect = self.image.get_rect()
 
-        # La subimagen que estamos viendo
-        self.rectSubimage = pygame.Rect(0, 0, windowWidth, windowHeight)
+        # The subimage that we see
+        self.rectSubimage = pygame.Rect(0, 0, sceneryObj.windowWidth, sceneryObj.windowHeight)
         self.rectSubimage.left = 0  # Starts on the left
         self.rectSubimage.bottom = self.rect.bottom # Starts on the bottom
 
