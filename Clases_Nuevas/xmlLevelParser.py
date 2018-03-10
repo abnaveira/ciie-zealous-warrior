@@ -34,12 +34,16 @@ def loadLevelData(level):
     #Scenery
     scenery = root.find("scenery")
     file = scenery.find("file").text
+    #Scale = 0 if no scaling needed
     scaleX = int(scenery.find("scaleX").text)
     scaleY = int(scenery.find("scaleY").text)
+    #window size
     windowWidth = int(scenery.find("windowWidth").text)
     windowHeight = int(scenery.find("windowHeight").text)
+    #Minimum position of the player in the map
     leftMin = int(scenery.find("leftMin").text)
     topMin = int(scenery.find("topMin").text)
+    #Background color
     backgroundColor = scenery.find("backgroundColor")
     red = int(backgroundColor.find("r").text)
     green = int(backgroundColor.find("g").text)
@@ -51,7 +55,7 @@ def loadLevelData(level):
     platforms = root.find("platforms")
     platformList = []
     for platform in platforms.iter("platform"):
-        #el id no le doy uso por ahora
+        #Id has only informative use
         id = platform.find("id").text
         top = int(platform.find("top").text)
         left = int(platform.find("left").text)
@@ -63,48 +67,57 @@ def loadLevelData(level):
     #Images on the front
     frontImages = root.find("frontImages")
     frontImagesList = []
-    for frontImage in frontImages.iter("frontImage"):
-        file = frontImage.find("file").text
-        scaleX = int(frontImage.find("scaleX").text)
-        scaleY = int(frontImage.find("scaleY").text)
-        x = int(frontImage.find("x").text)
-        y = int(frontImage.find("y").text)
-        frontImagesList.append(frontImagesClass(file, scaleX, scaleY, x, y))
+    if (frontImages != None):
+        for frontImage in frontImages.iter("frontImage"):
+            file = frontImage.find("file").text
+            # Scale = 0 if no scaling needed
+            scaleX = int(frontImage.find("scaleX").text)
+            scaleY = int(frontImage.find("scaleY").text)
+            #Position of the image in the scenery
+            x = int(frontImage.find("x").text)
+            y = int(frontImage.find("y").text)
+            frontImagesList.append(frontImagesClass(file, scaleX, scaleY, x, y))
 
     #Animations on the front
     frontAnimations = root.find("frontAnimations")
     frontAnimationsList = []
-    for frontAnimation in frontAnimations.iter("frontAnimation"):
-        framesList = []
-        frames = frontAnimation.find("frames")
-        for frame in frames.iter("frame"):
-            file = frame.find("file").text
-            milis = float(frame.find("milis").text)
-            framesList.append(frameClass(file, milis))
-        scaleX = int(frontAnimation.find("scaleX").text)
-        scaleY = int(frontAnimation.find("scaleY").text)
-        x = int(frontAnimation.find("x").text)
-        y = int(frontAnimation.find("y").text)
-        frontAnimationsList.append(animationClass("front", framesList, scaleX, scaleY, x, y))
+    if (frontAnimations != None):
+        for frontAnimation in frontAnimations.iter("frontAnimation"):
+            framesList = []
+            frames = frontAnimation.find("frames")
+            for frame in frames.iter("frame"):
+                file = frame.find("file").text
+                milis = float(frame.find("milis").text)
+                framesList.append((file, milis))
+            # Scale = 0 if no scaling needed
+            scaleX = int(frontAnimation.find("scaleX").text)
+            scaleY = int(frontAnimation.find("scaleY").text)
+            # Position of the animation in the scenery
+            x = int(frontAnimation.find("x").text)
+            y = int(frontAnimation.find("y").text)
+            frontAnimationsList.append(animationClass("front", framesList, scaleX, scaleY, x, y))
 
     #Animations on the back
     backAnimations = root.find("backAnimations")
     backAnimationsList = []
-    for backAnimation in backAnimations.iter("backAnimation"):
-        framesList = []
-        frames = backAnimation.find("frames")
-        for frame in frames.iter("frame"):
-            file = frame.find("file").text
-            milis = float(frame.find("milis").text)
-            framesList.append(frameClass(file, milis))
-        scaleX = int(backAnimation.find("scaleX").text)
-        scaleY = int(backAnimation.find("scaleY").text)
-        x = int(backAnimation.find("x").text)
-        y = int(backAnimation.find("y").text)
-        frontAnimationsList.append(animationClass("front", framesList, scaleX, scaleY, x, y))
+    if (backAnimations != None):
+        for backAnimation in backAnimations.iter("backAnimation"):
+            framesList = []
+            frames = backAnimation.find("frames")
+            for frame in frames.iter("frame"):
+                file = frame.find("file").text
+                milis = float(frame.find("milis").text)
+                framesList.append((file, milis))
+            # Scale = 0 if no scaling needed
+            scaleX = int(backAnimation.find("scaleX").text)
+            scaleY = int(backAnimation.find("scaleY").text)
+            # Position of the animation in the scenery
+            x = int(backAnimation.find("x").text)
+            y = int(backAnimation.find("y").text)
+            frontAnimationsList.append(animationClass("front", framesList, scaleX, scaleY, x, y))
 
 
-    #Player position
+    #Player position in the scenery
     playerPosition = root.find("playerPosition")
     playerX = int(playerPosition.find("x").text)
     playerY = int(playerPosition.find("y").text)
@@ -112,18 +125,19 @@ def loadLevelData(level):
     #SpawnPoints
     spawnPoints = root.find("spawnPoints")
     spawnPointList = []
-    for spawnPoint in spawnPoints.iter("spawnPoint"):
-        # el id no le doy uso por ahora
-        id = spawnPoint.find("id").text
-        enemies = spawnPoint.find("enemies")
-        enemyList = []
-        for enemy in enemies.iter("enemy"):
-            enemyId = enemy.find("id").text
-            spawnFrecuency = enemy.find("spawnFrecuency").text
-            enemyList.append(enemyInSpawnPoint(enemyId,spawnFrecuency))
-        x = int(spawnPoint.find("x").text)
-        y = int(spawnPoint.find("y").text)
-        spawnPointList.append(spawnPointClass(id, enemyList, x, y))
+    if (spawnPoints != None):
+        for spawnPoint in spawnPoints.iter("spawnPoint"):
+            id = spawnPoint.find("id").text
+            enemies = spawnPoint.find("enemies")
+            enemyList = []
+            for enemy in enemies.iter("enemy"):
+                enemyId = enemy.find("id").text
+                spawnFrecuency = enemy.find("spawnFrecuency").text
+                enemyList.append(enemyInSpawnPoint(enemyId,spawnFrecuency))
+            #SpawnPoints position on the map
+            x = int(spawnPoint.find("x").text)
+            y = int(spawnPoint.find("y").text)
+            spawnPointList.append(spawnPointClass(id, enemyList, x, y))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
            platformList, playerX, playerY, spawnPointList
@@ -167,11 +181,6 @@ class frontImagesClass:
         self.scaleY = scaleY
         self.x = x
         self.y = y
-
-class frameClass:
-    def __init__(self, file, milis):
-        self.file = file
-        self.milis = milis
 
 class animationClass:
     def __init__(self, type, frameList, scaleX, scaleY, x, y):

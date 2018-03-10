@@ -59,11 +59,27 @@
         <backAnimation>
             <frames>
                 <frame>
-                    <file>image1</file>
+                    <file>imagenes/flame_a_0001.png</file>
                     <milis>0.1</milis>
                 </frame>
                 <frame>
-                    <file>image2</file>
+                    <file>imagenes/flame_a_0002.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>imagenes/flame_a_0003.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>imagenes/flame_a_0004.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>imagenes/flame_a_0005.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>imagenes/flame_a_0006.png</file>
                     <milis>0.1</milis>
                 </frame>
             </frames>
@@ -93,8 +109,6 @@
             <height>10</height>
         </platform>
     </platforms>
-
-    <!--Animations?-->
 
     <!--Player's starting position in the map-->
     <playerPosition>
