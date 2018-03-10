@@ -60,6 +60,50 @@ def loadLevelData(level):
 
         platformList.append(fase.Plataforma(pygame.Rect(top,left,width,height)))
 
+    #Images on the front
+    frontImages = root.find("frontImages")
+    frontImagesList = []
+    for frontImage in frontImages.iter("frontImage"):
+        file = frontImage.find("file").text
+        scaleX = int(frontImage.find("scaleX").text)
+        scaleY = int(frontImage.find("scaleY").text)
+        x = int(frontImage.find("x").text)
+        y = int(frontImage.find("y").text)
+        frontImagesList.append(frontImagesClass(file, scaleX, scaleY, x, y))
+
+    #Animations on the front
+    frontAnimations = root.find("frontAnimations")
+    frontAnimationsList = []
+    for frontAnimation in frontAnimations.iter("frontAnimation"):
+        framesList = []
+        frames = frontAnimation.find("frames")
+        for frame in frames.iter("frame"):
+            file = frame.find("file").text
+            milis = float(frame.find("milis").text)
+            framesList.append(frameClass(file, milis))
+        scaleX = int(frontAnimation.find("scaleX").text)
+        scaleY = int(frontAnimation.find("scaleY").text)
+        x = int(frontAnimation.find("x").text)
+        y = int(frontAnimation.find("y").text)
+        frontAnimationsList.append(animationClass("front", framesList, scaleX, scaleY, x, y))
+
+    #Animations on the back
+    backAnimations = root.find("backAnimations")
+    backAnimationsList = []
+    for backAnimation in backAnimations.iter("backAnimation"):
+        framesList = []
+        frames = backAnimation.find("frames")
+        for frame in frames.iter("frame"):
+            file = frame.find("file").text
+            milis = float(frame.find("milis").text)
+            framesList.append(frameClass(file, milis))
+        scaleX = int(backAnimation.find("scaleX").text)
+        scaleY = int(backAnimation.find("scaleY").text)
+        x = int(backAnimation.find("x").text)
+        y = int(backAnimation.find("y").text)
+        frontAnimationsList.append(animationClass("front", framesList, scaleX, scaleY, x, y))
+
+
     #Player position
     playerPosition = root.find("playerPosition")
     playerX = int(playerPosition.find("x").text)
@@ -79,12 +123,13 @@ def loadLevelData(level):
             enemyList.append(enemyInSpawnPoint(enemyId,spawnFrecuency))
         x = int(spawnPoint.find("x").text)
         y = int(spawnPoint.find("y").text)
-        spawnPointList.append(spawnPointClass(enemyId, enemyList, x, y))
+        spawnPointList.append(spawnPointClass(id, enemyList, x, y))
 
-    return sceneryObj, platformList, playerX, playerY, spawnPointList
+    return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
+           platformList, playerX, playerY, spawnPointList
 
 def main():
-    loadLevelData("level1Xml.xml")
+    loadLevelData("level1Example.xml")
 
 
 #Define an enemy parser as well with ids
@@ -115,6 +160,29 @@ class sceneryClass:
         self.green = green
         self.blue = blue
 
+class frontImagesClass:
+    def __init__(self, file, scaleX, scaleY, x, y):
+        self.file = file
+        self.scaleX = scaleX
+        self.scaleY = scaleY
+        self.x = x
+        self.y = y
+
+class frameClass:
+    def __init__(self, file, milis):
+        self.file = file
+        self.milis = milis
+
+class animationClass:
+    def __init__(self, type, frameList, scaleX, scaleY, x, y):
+        #Type can be front or back (if the animation is played in front or on
+        #the back of the player
+        self.type = type
+        self.frameList = frameList
+        self.scaleX = scaleX
+        self.scaleY = scaleY
+        self.x = x
+        self.y = y
 
 
 if __name__ == "__main__":

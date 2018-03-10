@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<level>
+    <!--Scenery-->
+    <scenery>
+        <file>decorado.png</file>
+        <!--Scaling of the image (use 0 if no scaling needed)-->
+        <scaleX>0</scaleX>
+        <scaleY>0</scaleY>
+        <!--Size of the window-->
+        <windowWidth>800</windowWidth>
+        <windowHeight>600</windowHeight>
+        <!--Minimum distance to the sides-->
+        <leftMin>50</leftMin>
+        <topMin>50</topMin>
+        <backgroundColor>
+            <r>0</r>
+            <g>255</g>
+            <b>255</b>
+        </backgroundColor>
+    </scenery>
+
+    <!--Images that go in front of the player-->
+    <frontImages>
+        <frontImage>
+            <file>image.jpg</file>
+            <!--Scaling of the image (use 0 if no scaling needed)-->
+            <scaleX>0</scaleX>
+            <scaleY>0</scaleY>
+            <!--Position of the image-->
+            <x>200</x>
+            <y>551</y>
+        </frontImage>
+    </frontImages>
+
+    <!--Animations that go in front of sprites-->
+    <frontAnimations>
+        <frontAnimation>
+            <frames>
+                <frame>
+                    <file>image1</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>image2</file>
+                    <milis>0.1</milis>
+                </frame>
+            </frames>
+            <!--Scaling of the animation (use 0 if no scaling needed)-->
+            <scaleX>0</scaleX>
+            <scaleY>0</scaleY>
+            <!--Position of the animation-->
+            <x>200</x>
+            <y>551</y>
+        </frontAnimation>
+    </frontAnimations>
+
+    <!--Animations that go in the back of the player-->
+    <backAnimations>
+        <backAnimation>
+            <frames>
+                <frame>
+                    <file>image1</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>image2</file>
+                    <milis>0.1</milis>
+                </frame>
+            </frames>
+            <!--Scaling of the animation (use 0 if no scaling needed)-->
+            <scaleX>0</scaleX>
+            <scaleY>0</scaleY>
+            <!--Position of the animation-->
+            <x>200</x>
+            <y>551</y>
+        </backAnimation>
+    </backAnimations>
+
+    <!--Platforms and their five parameters: id and four position points-->
+    <platforms>
+        <platform>
+            <id>suelo</id>
+            <top>0</top>
+            <left>550</left>
+            <width>1200</width>
+            <height>15</height>
+        </platform>
+        <platform>
+            <id>casa</id>
+            <top>870</top>
+            <left>417</left>
+            <width>200</width>
+            <height>10</height>
+        </platform>
+    </platforms>
+
+    <!--Animations?-->
+
+    <!--Player's starting position in the map-->
+    <playerPosition>
+        <x>200</x>
+        <y>551</y>
+    </playerPosition>
+
+    <!--Enemies Spawn Point-->
+    <spawnPoints>
+        <spawnPoint>
+            <id>1</id>
+            <enemies>
+                <enemy>
+                    <id>Walker</id>
+                    <spawnFrecuency>0.2</spawnFrecuency>
+                </enemy>
+                <enemy>
+                    <id>Ghost</id>
+                    <spawnFrecuency>3</spawnFrecuency>
+                </enemy>
+            </enemies>
+            <x>400</x>
+            <y>551</y>
+        </spawnPoint>
+    </spawnPoints>
+
+</level>
