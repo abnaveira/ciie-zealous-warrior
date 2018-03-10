@@ -76,35 +76,29 @@ class scrollControl:
     def updateScrollY(self, player):
         # If the player overpass the top edge
         if (player.rect.top < self.minY):
-            print("top")
             displacement = self.minY - player.rect.top
 
             # If there is no more scenary on the top
             if self.scroll[1] + self.wHeight >= self.scenery.rect.bottom:
-                print("No top")
                 self.scroll = (self.scroll[0], self.scenery.rect.bottom - self.wHeight)
                 return False
 
             # If it is possible to scroll top
             else:
-                print("Scrolled top")
                 self.scroll = (self.scroll[0], self.scroll[1] + displacement)
                 return True
 
         # If the player overpass the bottom edge
         if (player.rect.bottom > self.maxY):
-            print("bottom")
             displacement = player.rect.bottom - self.maxY
 
             # If there is no more scenary on the bottom
             if self.scroll[1] <= 0:
-                print("No sc")
                 self.scroll = (self.scroll[0], 0)
                 return False
 
             # If it is possible to scroll bottom
             else:
-                print("Scrolled bott")
                 self.scroll = (self.scroll[0], self.scroll[1] - displacement)
                 return True
 
@@ -112,7 +106,7 @@ class scrollControl:
         return False
 
     # Input:
-    # player: the charecter controled by the player
+    # player: the character controled by the player
     # sprites: The group of all the sprites that have to be updated
     def updateScroll(self, player, sprites):
 
