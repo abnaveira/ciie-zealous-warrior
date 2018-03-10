@@ -13,10 +13,10 @@ class Scene:
     def update(self, *args):
         raise NotImplemented("It has to be implemented")
 
-    def eventos(self, *args):
+    def events(self, *args):
         raise NotImplemented("It has to be implemented")
 
-    def dibujar(self):
+    def draw(self):
         raise NotImplemented("It has to be implemented")
 
 # -------------------------------------------------
