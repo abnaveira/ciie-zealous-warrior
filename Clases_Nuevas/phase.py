@@ -5,6 +5,7 @@ from xmlLevelParser import *
 from characters import *
 from scrollControl import *
 from resourcesManager import *
+from animationsPygame import *
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
@@ -32,10 +33,38 @@ class PhaseScene(PygameScene):
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
 
+        # Initialize the enemy sprites group
+        self.enemiesGroup = pygame.sprite.Group()
+
         # Stores all the platforms of the level
         self.platformsGroup = pygame.sprite.Group.empty()
         for platform in platformList:
             self.platformsGroup.add(platform)
+
+        # Loads the animations in the front
+        self.frontAnimations = []
+        for frontAnimation in frontAnimationsList:
+            for scaleAndPlacement in frontAnimation.scaleAndPlacementList:
+                animation = AnimationFromList(frontAnimation.frameList)
+                if ((scaleAndPlacement.scaleX != 0) and (scaleAndPlacement.scaleY != 0)):
+                    animation.scale((scaleAndPlacement.scaleX, scaleAndPlacement.scaleY))
+                animation.positionX = scaleAndPlacement.x
+                animation.positionY = scaleAndPlacement.y
+                animation.play()
+                self.frontAnimations.append(animation)
+
+        # Loads the animations in the back
+        self.backAnimations = []
+        for backAnimation in backAnimationsList:
+            for scaleAndPlacement in backAnimation.scaleAndPlacementList:
+                animation = AnimationFromList(backAnimation.frameList)
+                if ((scaleAndPlacement.scaleX != 0) and (scaleAndPlacement.scaleY != 0)):
+                    animation.scale((scaleAndPlacement.scaleX, scaleAndPlacement.scaleY))
+                animation.positionX = scaleAndPlacement.x
+                animation.positionY = scaleAndPlacement.y
+                animation.play()
+                # Animation next frame?
+                self.backAnimations.append(animation)
 
         # Creates a group for the dinamic sprites
         self.dinamicSpritesGroup = pygame.sprite.Group(self.player)
@@ -52,6 +81,12 @@ class PhaseScene(PygameScene):
                                            sceneryObj.topMin, sceneryObj.windowHeight - sceneryObj.topMin, sceneryObj.windowHeight, \
                                            sceneryObj.windowWidth, self.scenery)
 
+    # Allows to add enemies to the phase
+    def addEnemies(self, enemySprite):
+        self.enemiesGroup.add(enemySprite)
+        self.dinamicSpritesGroup.add(enemySprite)
+        self.spritesGroup.add(enemySprite)
+
     def update(self, time):
 
         # Update dinamic sprites
@@ -64,9 +99,18 @@ class PhaseScene(PygameScene):
         self.background.update(time)
 
     def draw(self, screen):
+        # Background
         self.background.draw(screen)
+        # Back animations
+        for animation in self.backAnimations:
+            animation.dibujar(screen)
+        # Scenery
         self.scenery.draw(screen)
+        # Sprites
         self.spritesGroup.draw(screen)
+        # Front animations
+        for animation in self.frontAnimations:
+            animation.dibujar(screen)
 
     def events(self, events_list):
         # Miramos a ver si hay algun evento de salir del programa
@@ -76,10 +120,12 @@ class PhaseScene(PygameScene):
                 self.director.salirPrograma()
 
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
-        teclasPulsadas = pygame.key.get_pressed()
-        self.player.move(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT)
+        keysPressed = pygame.key.get_pressed()
+        self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT)
 
+# -------------------------------------------------
 # Class created for the scenery platforms
+
 class Platform(MySprite):
     def __init__(self, rectangle):
         MySprite.__init__(self)
