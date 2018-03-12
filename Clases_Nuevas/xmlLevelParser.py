@@ -269,4 +269,4 @@ def main():
     loadLevelData("level1Example.xml")
 
 if __name__ == "__main__":
-    calculateInitialWindow(1200,300,600,800,300,1200)
+    calculateInitialWindow(50,450,600,800,1000,3000)

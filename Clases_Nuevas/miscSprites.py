@@ -45,8 +45,8 @@ class Scenary:
 
         # The subimage that we see
         self.rectSubimage = pygame.Rect(0, 0, sceneryObj.windowWidth, sceneryObj.windowHeight)
-        self.rectSubimage.left = 0  # Starts on the left
-        self.rectSubimage.bottom = self.rect.bottom # Starts on the bottom
+        self.rectSubimage.left = sceneryObj.subImagePosition[0]  # Starts on the left
+        self.rectSubimage.bottom = sceneryObj.subImagePosition[1]+ sceneryObj.windowHeight # Starts on the bottom
 
     def update(self, scroll):
         self.rectSubimage.left = scroll[0]
