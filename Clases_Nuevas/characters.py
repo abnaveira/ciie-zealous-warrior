@@ -226,7 +226,6 @@ class Player(Character):
 
 
     def update(self, platformGroup, projectileGroup, time):
-        print(self.position)
         if self.attacking:
             self.attackTime = PLAYER_ATTACK_DELAY
             if (self.looking == RIGHT):

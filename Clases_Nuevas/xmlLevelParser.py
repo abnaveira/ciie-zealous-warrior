@@ -51,18 +51,34 @@ def loadLevelData(level):
     sceneryObj = sceneryClass(file, scaleX, scaleY, windowWidth, windowHeight,
                               leftMin, topMin, red, green, blue)
 
+
+    # Player position in the scenery
+    playerPosition = root.find("playerPosition")
+    playerX = int(playerPosition.find("x").text)
+    playerY = int(playerPosition.find("y").text)
+
+    """
+     This is the (0,0) of the window of the game in the background image
+     Positions in the XML are based on their distance to the (0,0) of the
+     background images, we need to convert this position to the window position
+     by substracting this position from the (0,0) of the window
+    """
+    (winImageX, winImageY) = calculateInitialWindow(playerX, playerY,
+                                                    windowHeight, windowWidth,
+                                                    scaleY, scaleX)
+    print winImageX, winImageY
+
     # Platforms
     platforms = root.find("platforms")
     platformList = []
     for platform in platforms.iter("platform"):
         # Id has only informative use
         id = platform.find("id").text
-        left = int(platform.find("left").text)
-        top = int(platform.find("top").text)
+        left = winImageX - int(platform.find("left").text)
+        top = winImageY - int(platform.find("top").text)
         width = int(platform.find("width").text)
         height = int(platform.find("height").text)
 
-        platformList.append(Platform(pygame.Rect(left,top,width,height)))
         platformList.append(Platform(pygame.Rect(left,top,width,height)))
 
     # Images on the front
@@ -80,8 +96,8 @@ def loadLevelData(level):
                 scaleX = int(scaleAndPlacement.find("scaleX").text)
                 scaleY = int(scaleAndPlacement.find("scaleY").text)
                 # Position of the image in the scenery
-                x = int(scaleAndPlacement.find("x").text)
-                y = int(scaleAndPlacement.find("y").text)
+                x = winImageX - int(scaleAndPlacement.find("x").text)
+                y = winImageY - int(scaleAndPlacement.find("y").text)
                 scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
             frontImagesList.append(frontImagesClass(file, scaleAndPlacementList))
 
@@ -105,8 +121,8 @@ def loadLevelData(level):
                 scaleX = int(scaleAndPlacement.find("scaleX").text)
                 scaleY = int(scaleAndPlacement.find("scaleY").text)
                 # Position of the animation in the scenery
-                x = int(scaleAndPlacement.find("x").text)
-                y = int(scaleAndPlacement.find("y").text)
+                x = winImageX - int(scaleAndPlacement.find("x").text)
+                y = winImageY - int(scaleAndPlacement.find("y").text)
                 scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
             frontAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
 
@@ -130,16 +146,12 @@ def loadLevelData(level):
                 scaleX = int(scaleAndPlacement.find("scaleX").text)
                 scaleY = int(scaleAndPlacement.find("scaleY").text)
                 # Position of the animation in the scenery
-                x = int(scaleAndPlacement.find("x").text)
-                y = int(scaleAndPlacement.find("y").text)
+                x = winImageX - int(scaleAndPlacement.find("x").text)
+                y = winImageY - int(scaleAndPlacement.find("y").text)
                 scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
             backAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
 
 
-    # Player position in the scenery
-    playerPosition = root.find("playerPosition")
-    playerX = int(playerPosition.find("x").text)
-    playerY = int(playerPosition.find("y").text)
 
     # SpawnPoints
     spawnPoints = root.find("spawnPoints")
@@ -154,8 +166,8 @@ def loadLevelData(level):
                 spawnFrecuency = enemy.find("spawnFrecuency").text
                 enemyList.append(enemyInSpawnPoint(enemyId,spawnFrecuency))
             # SpawnPoints position on the map
-            x = int(spawnPoint.find("x").text)
-            y = int(spawnPoint.find("y").text)
+            x = winImageX - int(spawnPoint.find("x").text)
+            y = winImageY - int(spawnPoint.find("y").text)
             spawnPointList.append(spawnPointClass(id, enemyList, x, y))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
