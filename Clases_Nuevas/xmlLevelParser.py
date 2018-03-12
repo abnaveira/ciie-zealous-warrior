@@ -70,14 +70,18 @@ def loadLevelData(level):
     """
     (winImageX, winImageY) = subImagePosition
 
+    # Player position -> recalculated
+    playerX = playerX - winImageX
+    playerY = playerY - winImageY
+
     # Platforms
     platforms = root.find("platforms")
     platformList = []
     for platform in platforms.iter("platform"):
         # Id has only informative use
         id = platform.find("id").text
-        left = winImageX - int(platform.find("left").text)
-        top = winImageY - int(platform.find("top").text)
+        left = int(platform.find("left").text) - winImageX
+        top = int(platform.find("top").text) - winImageY
         width = int(platform.find("width").text)
         height = int(platform.find("height").text)
 
@@ -98,8 +102,8 @@ def loadLevelData(level):
                 scaleX = int(scaleAndPlacement.find("scaleX").text)
                 scaleY = int(scaleAndPlacement.find("scaleY").text)
                 # Position of the image in the scenery
-                x = winImageX - int(scaleAndPlacement.find("x").text)
-                y = winImageY - int(scaleAndPlacement.find("y").text)
+                x = int(scaleAndPlacement.find("x").text) - winImageX
+                y = int(scaleAndPlacement.find("y").text) -winImageY
                 scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
             frontImagesList.append(frontImagesClass(file, scaleAndPlacementList))
 
@@ -123,8 +127,8 @@ def loadLevelData(level):
                 scaleX = int(scaleAndPlacement.find("scaleX").text)
                 scaleY = int(scaleAndPlacement.find("scaleY").text)
                 # Position of the animation in the scenery
-                x = winImageX - int(scaleAndPlacement.find("x").text)
-                y = winImageY - int(scaleAndPlacement.find("y").text)
+                x = int(scaleAndPlacement.find("x").text) - winImageX
+                y = int(scaleAndPlacement.find("y").text) - winImageY
                 scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
             frontAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
 
@@ -148,8 +152,8 @@ def loadLevelData(level):
                 scaleX = int(scaleAndPlacement.find("scaleX").text)
                 scaleY = int(scaleAndPlacement.find("scaleY").text)
                 # Position of the animation in the scenery
-                x = winImageX - int(scaleAndPlacement.find("x").text)
-                y = winImageY - int(scaleAndPlacement.find("y").text)
+                x = int(scaleAndPlacement.find("x").text) - winImageX
+                y = int(scaleAndPlacement.find("y").text) - winImageY
                 scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
             backAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
 
@@ -168,8 +172,8 @@ def loadLevelData(level):
                 spawnFrecuency = enemy.find("spawnFrecuency").text
                 enemyList.append(enemyInSpawnPoint(enemyId,spawnFrecuency))
             # SpawnPoints position on the map
-            x = winImageX - int(spawnPoint.find("x").text)
-            y = winImageY - int(spawnPoint.find("y").text)
+            x = int(spawnPoint.find("x").text) - winImageX
+            y = int(spawnPoint.find("y").text) - winImageY
             spawnPointList.append(spawnPointClass(id, enemyList, x, y))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\

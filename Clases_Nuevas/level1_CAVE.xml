@@ -199,7 +199,7 @@
     <!--Player's starting position in the map-->
     <playerPosition>
         <x>50</x>
-        <y>450</y>
+        <y>854</y>
     </playerPosition>
 
     <!--Enemies Spawn Point-->
