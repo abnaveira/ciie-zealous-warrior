@@ -72,14 +72,9 @@ class PhaseScene(PygameScene):
         # Creates a group for the dinamic sprites
         self.dinamicSpritesGroup = pygame.sprite.Group(self.player)
 
-        # Creates a group for all the sprites
-        self.spritesGroup = pygame.sprite.Group()
-        for sprite in self.platformsGroup.sprites():
-            self.spritesGroup.add(sprite)
-        for sprite in self.dinamicSpritesGroup.sprites():
-            self.spritesGroup.add(sprite)
-        for sprite in self.projectilesGroup.sprites():
-            self.spritesGroup.add(sprite)
+        # Creates a list for all the group sprites
+        self.spritesList = [self.playersGroup, self.enemiesGroup, self.projectilesGroup,
+                            self.platformsGroup]
 
         # Creates the class that will control the scroll
         self.controlScroll = scrollControl(self.scroll, sceneryObj.leftMin, sceneryObj.windowWidth - sceneryObj.leftMin,
@@ -90,7 +85,6 @@ class PhaseScene(PygameScene):
     def addEnemies(self, enemySprite):
         self.enemiesGroup.add(enemySprite)
         self.dinamicSpritesGroup.add(enemySprite)
-        self.spritesGroup.add(enemySprite)
 
     def update(self, time):
         # Executes enemy AI
@@ -110,7 +104,7 @@ class PhaseScene(PygameScene):
         self.platformsGroup.update(time)
 
         # Update scroll
-        self.controlScroll.updateScroll(self.player, self.spritesGroup)
+        self.controlScroll.updateScroll(self.player, self.spritesList)
 
         # Update the background if it is necessary
         self.background.update(time)
@@ -124,7 +118,8 @@ class PhaseScene(PygameScene):
         # Scenery
         self.scenery.draw(screen)
         # Sprites
-        self.spritesGroup.draw(screen)
+        for group in self.spritesList:
+            group.draw(screen)
         # Front animations
         for animation in self.frontAnimations:
             animation.dibujar(screen)

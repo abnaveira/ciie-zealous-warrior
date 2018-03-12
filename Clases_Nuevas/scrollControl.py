@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-
+from projectiles import *
 
 # -------------------------------------------------
 # Class used for the window scroll control
@@ -37,7 +37,6 @@ class scrollControl:
             # If there is no more scenary in the left
             if self.scroll[0] <= 0:
                 self.scroll = (0, self.scroll[1])
-                #TODO: establecer posicion?
                 player.setPosition((self.minX, player.position[1]))
 
                 return False
@@ -108,14 +107,15 @@ class scrollControl:
     # Input:
     # player: the character controled by the player
     # sprites: The group of all the sprites that have to be updated
-    def updateScroll(self, player, sprites):
+    def updateScroll(self, player, spritesList):
 
         updatedScrollX = self.updateScrollX(player)
         updatedScrollY = self.updateScrollY(player)
         if updatedScrollX or updatedScrollY:
             # Update the sprite positions with the new scroll
-            for sprite in iter(sprites):
-                sprite.setScreenPosition(self.scroll)
+            for group in spritesList:
+                for sprite in iter(group):
+                    sprite.setScreenPosition(self.scroll)
 
             # Update the scenery to show the new position
             self.scenery.update(self.scroll)

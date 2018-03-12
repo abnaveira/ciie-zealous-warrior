@@ -174,7 +174,7 @@ class Character(MySprite):
                 speedx = self.runSpeed
 
         elif self.movement == STILL:
-            self.timejumping = PLAYER_BASE_JUMP
+            self.jumpTime = PLAYER_BASE_JUMP
             if not self.numStance == SPRITE_JUMP:
                 self.numStance = SPRITE_STILL
             speedx = 0

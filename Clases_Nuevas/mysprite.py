@@ -22,7 +22,7 @@ class MySprite(pygame.sprite.Sprite):
         (scrollx, scrolly) = self.scroll
         (posx, posy) = self.position
         self.rect.left = posx - scrollx
-        self.rect.bottom = posy - scrolly
+        self.rect.bottom = posy + scrolly
 
     def increasePosition(self, increment):
         (posx, posy) = self.position

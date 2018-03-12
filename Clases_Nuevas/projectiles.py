@@ -91,6 +91,7 @@ class swordSlash(Projectile):
 
     def update(self, player, enemyGroup, platformGroup, projectileGroup, time):
         self.position = player.position
+        self.scroll = player.scroll
         if (self.looking <> RIGHT):
             self.increasePosition((-50, 0))
         enemyCollision = pygame.sprite.spritecollide(self, enemyGroup, False)
@@ -101,4 +102,4 @@ class swordSlash(Projectile):
 
         Projectile.update(self, platformGroup, projectileGroup, time)
         if self.ended:
-            projectileGroup.remove(self)
+            self.kill()
