@@ -4,8 +4,6 @@ import pygame, sys, os
 from pygame.locals import *
 from escena import *
 from gestorRecursos import *
-from mysprite import MySprite
-from projectiles import *
 
 #---------------------------
 #---------Constants---------
@@ -30,7 +28,6 @@ PLAYER_SPEED        = 0.2   # px / ms
 PLAYER_JUMP_SPEED   = 0.37  # px / ms
 PLAYER_ANIM_DELAY   = 5     # updates / image
 PLAYER_BASE_JUMP    = 350   # time to "keep jumping" to go higher
-PLAYER_ATTACK_DELAY = 400   # time between attacks
 
 SNIPER_SPEED        = 0.12  # px / ms
 SNIPER_JUMP_SPEED   = 0.27  # px / ms
@@ -43,6 +40,38 @@ GRAVITY = 0.0009    # px / ms^2
 #---------Classes-----------
 #---------------------------
 
+# --------------------------
+# MySprite Class
+
+class MySprite(pygame.sprite.Sprite):
+    "Sprites for the game"
+    def __init__(self):
+        pygame.sprite.Sprite.__init(self)
+        self.position = (0, 0)
+        self.speed = (0, 0)
+        self.scroll = (0, 0)
+
+    def setPosition(self, position):
+        self.position = position
+        self.rect.left = self.position[0] - self.scroll[0]
+        self.rect.bottom = self.position[1] - self.scroll[1]
+
+    def setScreenPosition(self, sceneryScroll):
+        self.scroll = sceneryScroll
+        (scrollx, scrolly) = self.scroll
+        (posx, posy) = self.position
+        self.rect.left = posx - scrollx
+        self.rect.bottom = posy - scrolly
+
+    def increasePosition(self, increment):
+        (posx, posy) = self.position
+        (incrementx, incrementy) = increment
+        self.setPosition((posx + incrementx, posy + incrementy))
+
+    def update(self, time):
+        incrementx = self.speed[0] * time
+        incrementy = self.speed[1] * time
+        self.increasePosition((incrementx, incrementy))
 
 #------------------------------------
 # Character classes
@@ -50,8 +79,7 @@ GRAVITY = 0.0009    # px / ms^2
 class Character(MySprite):
 
     jumpTime = PLAYER_BASE_JUMP  # Time you can keep jumping to increase height
-    attackTime = 0               # If this is larger than 0 character has to wait to attack
-    attacking = False
+
     # Parameters:
     #   Spritesheet file
     #   Coordinate file
@@ -63,7 +91,7 @@ class Character(MySprite):
     def __init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay):
 
         # First we call parent's constructor
-        MySprite.__init__(self)
+        MySprite.__init__(self);
 
         # Loading the spritesheet.
         self.sheet = GestorRecursos.CargarImagen(imageFile, -1)
@@ -77,7 +105,7 @@ class Character(MySprite):
         data = data.split()
         self.numStance = 1
         self.numImageStance = 0
-        counter = 0
+        counter = 1
         self.sheetCoords = []
         for line in range(0, 3):
             self.sheetCoords.append([])
@@ -98,7 +126,7 @@ class Character(MySprite):
         self.runSpeed = runSpeed
         self.jumpSpeed = jumpSpeed
 
-        self.animationDelay = animDelay
+        self.animDelay = animDelay
 
         self.updateStance()
 
@@ -143,7 +171,7 @@ class Character(MySprite):
                     self.sheet.subsurface(self.sheetCoords[self.numStance][self.numImageStance]), 1, 0)
 
 
-    def update(self, platformGroup, projectileGroup, time):
+    def update(self, platformGroup, time):
 
         (speedx, speedy) = self.speed
 
@@ -203,8 +231,8 @@ class Player(Character):
         Character.__init__(self, 'Soma.png', 'coordSoma.txt',
                     [5, 12, 5], PLAYER_SPEED, PLAYER_JUMP_SPEED, PLAYER_ANIM_DELAY)
 
-    #def move(self, pressedKeys, up, down, left, right):
-    def move(self, pressedKeys, up, down, left, right, attack):
+    def move(self, pressedKeys, up, down, left, right):
+#   def move(self, pressedKeys, up, down, left, right, attack):
         if pressedKeys[up]:
             if pressedKeys[right]:
                 Character.move(self, UPRIGHT)
@@ -218,32 +246,16 @@ class Player(Character):
             Character.move(self, RIGHT)
         else:
             Character.move(self, STILL)
-        if pressedKeys[attack]:
-            if self.attackTime <= 0:
-                self.attacking = True
-
-
-
-    def update(self, platformGroup, projectileGroup, time):
-        if self.attacking:
-            self.attackTime = PLAYER_ATTACK_DELAY
-            if (self.looking == RIGHT):
-                projectileGroup.add(swordSlash(self.position, self.looking))
-            else :
-                projectileGroup.add(swordSlash((self.position[0] - 50, self.position[1]), self.looking))
-            self.attacking = False
-        elif self.attackTime > 0:
-            self.attackTime -= time
-        Character.update(self, platformGroup, projectileGroup, time)
-
+#       if pressedKeys[attack]
+#           Character.attack(self)
 
 class NPC(Character):
 
     def __init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay):
         Character.__init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay)
 
-#    def move_cpu(self, player1, player2):
-    def move_cpu(self, player):
+    def move_cpu(self, player1, player2):
+#   def move_cpu(self, player)
         return
 
 class Sniper(NPC):
@@ -252,7 +264,7 @@ class Sniper(NPC):
         NPC.__init__(self, 'Sniper.png', 'coordSniper.txt', [5, 10, 6],
                      SNIPER_SPEED, SNIPER_JUMP_SPEED, SNIPER_ANIM_DELAY)
 
-    def move_cpu(self, player1):
+    def move_cpu(self, player1, player2):
 #   def move_cpu(self, player1)
         if (self.rect.left > 0) and (self.rect.right < ANCHO_PANTALLA) \
                 and (self.rect.bottom > 0) and (self.rect.top < ALTO_PANTALLA):
