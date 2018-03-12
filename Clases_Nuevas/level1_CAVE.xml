@@ -9,7 +9,7 @@
         <scaleY>1000</scaleY>
         <!--Size of the window-->
         <windowWidth>800</windowWidth>
-        <windowHeight>1000</windowHeight>
+        <windowHeight>600</windowHeight>
         <!--Minimum distance to the sides-->
         <leftMin>50</leftMin>
         <topMin>50</topMin>
