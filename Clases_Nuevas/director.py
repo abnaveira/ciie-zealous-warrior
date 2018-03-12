@@ -52,7 +52,7 @@ class Director():
         # Inicializamos la libreria de pygame (si no esta inicializada ya)
         pygame.init()
         # Creamos la pantalla de pygame (si no esta creada ya)
-        self.screen = pygame.display.set_mode((ANCHO_PANTALLA, ALTO_PANTALLA))
+        #self.screen = pygame.display.set_mode((ANCHO_PANTALLA, ALTO_PANTALLA))
         # Estas dos lineas realmente no son necesarias, se ponen aqui por seguridad,
 
         # Mientras haya escenas en la pila, ejecutaremos la de arriba

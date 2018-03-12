@@ -8,8 +8,8 @@
         <scaleX>3000</scaleX>
         <scaleY>1000</scaleY>
         <!--Size of the window-->
-        <windowWidth>800</windowWidth>
-        <windowHeight>600</windowHeight>
+        <windowWidth>3000</windowWidth>
+        <windowHeight>1000</windowHeight>
         <!--Minimum distance to the sides-->
         <leftMin>50</leftMin>
         <topMin>50</topMin>
@@ -29,7 +29,7 @@
         <platform>
             <id>SueloTierra1</id>
             <left>0</left>
-            <top>450</top>
+            <top>854</top>
             <width>197</width>
             <height>50</height>
         </platform>
