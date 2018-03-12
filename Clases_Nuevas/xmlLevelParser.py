@@ -66,6 +66,7 @@ def loadLevelData(level):
     (winImageX, winImageY) = calculateInitialWindow(playerX, playerY,
                                                     windowHeight, windowWidth,
                                                     scaleY, scaleX)
+    print(playerX, playerY,windowHeight, windowWidth, scaleY, scaleX)
     print winImageX, winImageY
 
     # Platforms
@@ -171,7 +172,7 @@ def loadLevelData(level):
             spawnPointList.append(spawnPointClass(id, enemyList, x, y))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, playerX, playerY, spawnPointList
+           platformList, playerX, playerY, (winImageX, winImageY), spawnPointList
 
 
 # TODO: Define an enemy parser as well with ids
