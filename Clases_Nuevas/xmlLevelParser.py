@@ -31,6 +31,11 @@ def loadLevelData(level):
     at the cost of efficiency.
     Will also trust the xml is well coded
     '''
+    # Player position in the scenery
+    playerPosition = root.find("playerPosition")
+    playerX = int(playerPosition.find("x").text)
+    playerY = int(playerPosition.find("y").text)
+
     # Scenery
     scenery = root.find("scenery")
     file = scenery.find("file").text
@@ -48,14 +53,14 @@ def loadLevelData(level):
     red = int(backgroundColor.find("r").text)
     green = int(backgroundColor.find("g").text)
     blue = int(backgroundColor.find("b").text)
+    subImagePosition = calculateInitialWindow(playerX, playerY,
+                                                    windowHeight, windowWidth,
+                                                    scaleY, scaleX)
     sceneryObj = sceneryClass(file, scaleX, scaleY, windowWidth, windowHeight,
-                              leftMin, topMin, red, green, blue)
+                              leftMin, topMin, red, green, blue, subImagePosition)
 
 
-    # Player position in the scenery
-    playerPosition = root.find("playerPosition")
-    playerX = int(playerPosition.find("x").text)
-    playerY = int(playerPosition.find("y").text)
+
 
     """
      This is the (0,0) of the window of the game in the background image
@@ -63,11 +68,7 @@ def loadLevelData(level):
      background images, we need to convert this position to the window position
      by substracting this position from the (0,0) of the window
     """
-    (winImageX, winImageY) = calculateInitialWindow(playerX, playerY,
-                                                    windowHeight, windowWidth,
-                                                    scaleY, scaleX)
-    print(playerX, playerY,windowHeight, windowWidth, scaleY, scaleX)
-    print winImageX, winImageY
+    (winImageX, winImageY) = subImagePosition
 
     # Platforms
     platforms = root.find("platforms")
@@ -172,7 +173,7 @@ def loadLevelData(level):
             spawnPointList.append(spawnPointClass(id, enemyList, x, y))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, playerX, playerY, (winImageX, winImageY), spawnPointList
+           platformList, playerX, playerY, spawnPointList
 
 
 # TODO: Define an enemy parser as well with ids
@@ -191,7 +192,7 @@ class spawnPointClass:
         
 class sceneryClass:
     def __init__(self, file, scaleX, scaleY, windowWidth, windowHeight,
-                 leftMin, topMin, red, green, blue):
+                 leftMin, topMin, red, green, blue, subImagePosition):
         self.file = file
         self.scaleX = scaleX
         self.scaleY = scaleY
@@ -202,6 +203,7 @@ class sceneryClass:
         self.red = red
         self.green = green
         self.blue = blue
+        self.subImagePosition = subImagePosition
 
 class frontImagesClass:
     def __init__(self, file, scaleAndPlacementList):
