@@ -256,7 +256,7 @@ def calculateInitialWindow(posx, posy, winHeight, winWidth, imHeight, imWidth):
             y = distanceY1 - mediumWindowHeigth
         else:
             # Set player y in the most right window possible
-            y = imWidth - winWidth
+            y = imHeight - winHeight
     else:
         # Set player y in the most left window possible
         y = 0
