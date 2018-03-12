@@ -74,7 +74,7 @@ class PhaseScene(PygameScene):
 
         # Creates a list for all the group sprites
         self.spritesList = [self.playersGroup, self.enemiesGroup, self.projectilesGroup,
-                            self.platformsGroup, self.frontAnimations, self.backAnimations]
+                            self.platformsGroup]
 
         # Creates the class that will control the scroll
         self.controlScroll = scrollControl(self.scroll, sceneryObj.leftMin, sceneryObj.windowWidth - sceneryObj.leftMin,
