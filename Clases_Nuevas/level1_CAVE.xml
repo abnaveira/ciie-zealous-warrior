@@ -8,8 +8,8 @@
         <scaleX>3000</scaleX>
         <scaleY>1000</scaleY>
         <!--Size of the window-->
-        <windowWidth>3000</windowWidth>
-        <windowHeight>1000</windowHeight>
+        <windowWidth>800</windowWidth>
+        <windowHeight>600</windowHeight>
         <!--Minimum distance to the sides-->
         <leftMin>50</leftMin>
         <topMin>50</topMin>
@@ -153,7 +153,42 @@
             <height>12</height>
         </platform>
 
-        <!--TODO: faltan los bloque3 -->
+        <platform>
+            <id>Bloque3.1</id>
+            <left>792</left>
+            <top>309</top>
+            <width>522</width>
+            <height>12</height>
+        </platform>
+        <platform>
+            <id>Bloque3.2</id>
+            <left>1083</left>
+            <top>426</top>
+            <width>247</width>
+            <height>12</height>
+        </platform>
+        <platform>
+            <id>Bloque3.3</id>
+            <left>872</left>
+            <top>504</top>
+            <width>395</width>
+            <height>12</height>
+        </platform>
+
+        <platform>
+            <id>Bloque4.1</id>
+            <left>1495</left>
+            <top>361</top>
+            <width>646</width>
+            <height>12</height>
+        </platform>
+        <platform>
+            <id>Bloque4.2</id>
+            <left>1372</left>
+            <top>480</top>
+            <width>511</width>
+            <height>12</height>
+        </platform>
 
     </platforms>
 
@@ -162,7 +197,7 @@
 
     <!--Player's starting position in the map-->
     <playerPosition>
-        <x>0</x>
+        <x>50</x>
         <y>450</y>
     </playerPosition>
 
