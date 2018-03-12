@@ -11,7 +11,7 @@ def openXmlGetTree(xmlFileName):
     directory = sys.path[0]
 
     # Append the directory where levels are located
-    # directory = os.path.join(directory, "Carpeta donde Estan los niveles")
+    directory = os.path.join(directory, "Clases_Nuevas")
 
     # Append the level we want to open
     xmlFile = os.path.join(directory, xmlFileName)
