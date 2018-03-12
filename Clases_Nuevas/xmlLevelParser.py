@@ -57,12 +57,12 @@ def loadLevelData(level):
     for platform in platforms.iter("platform"):
         # Id has only informative use
         id = platform.find("id").text
-        top = int(platform.find("top").text)
         left = int(platform.find("left").text)
+        top = int(platform.find("top").text)
         width = int(platform.find("width").text)
         height = int(platform.find("height").text)
 
-        platformList.append(Platform(pygame.Rect(top,left,width,height)))
+        platformList.append(Platform(pygame.Rect(left,top,width,height)))
 
     # Images on the front
     frontImages = root.find("frontImages")
