@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <level>
+
     <!--Scenery-->
     <scenery>
-        <file>decorado.png</file>
-        <!--Scaling of the image (use 0 if no scaling needed)-->
-        <scaleX>0</scaleX>
-        <scaleY>0</scaleY>
+        <file>cave.png</file>
+        <!--Scaling of the image-->
+        <scaleX>3000</scaleX>
+        <scaleY>1000</scaleY>
         <!--Size of the window-->
         <windowWidth>800</windowWidth>
-        <windowHeight>600</windowHeight>
+        <windowHeight>1000</windowHeight>
         <!--Minimum distance to the sides-->
         <leftMin>50</leftMin>
         <topMin>50</topMin>
@@ -20,158 +21,151 @@
     </scenery>
 
     <!--Images that go in front of the player-->
-    <frontImages>
-        <frontImage>
-            <file>image.jpg</file>
-            <!--To use the same image with different scaling in different positions-->
-            <scaleAndPlacements>
-                <scaleAndPlacement>
-                    <!--Scale of the image (use 0 if no scaling needed)-->
-                    <scaleX>0</scaleX>
-                    <scaleY>0</scaleY>
-                    <!--Position of the image-->
-                    <x>200</x>
-                    <y>551</y>
-                </scaleAndPlacement>
-            </scaleAndPlacements>
-        </frontImage>
-    </frontImages>
-
     <!--Animations that go in front of sprites-->
-    <frontAnimations>
-        <frontAnimation>
-            <frames>
-                <frame>
-                    <file>imagenes/flame_a_0001.png</file>
-                    <milis>0.1</milis>
-                </frame>
-                <frame>
-                    <file>imagenes/flame_a_0002.png</file>
-                    <milis>0.1</milis>
-                </frame>
-                <frame>
-                    <file>imagenes/flame_a_0003.png</file>
-                    <milis>0.1</milis>
-                </frame>
-                <frame>
-                    <file>imagenes/flame_a_0004.png</file>
-                    <milis>0.1</milis>
-                </frame>
-                <frame>
-                    <file>imagenes/flame_a_0005.png</file>
-                    <milis>0.1</milis>
-                </frame>
-                <frame>
-                    <file>imagenes/flame_a_0006.png</file>
-                    <milis>0.1</milis>
-                </frame>
-            </frames>
-            <!--To use the same animation with different scaling in different positions-->
-            <scaleAndPlacements>
-                <scaleAndPlacement>
-                    <!--Scale of the animation (use 0 if no scaling needed)-->
-                    <scaleX>400</scaleX>
-                    <scaleY>400</scaleY>
-                    <!--Position of the animation-->
-                    <x>120</x>
-                    <y>450</y>
-                </scaleAndPlacement>
-            </scaleAndPlacements>
-        </frontAnimation>
-    </frontAnimations>
-
     <!--Animations that go in the back of the player-->
-    <backAnimations>
-        <backAnimation>
-            <frames>
-                <frame>
-                    <file>imagenes/flame_a_0001.png</file>
-                    <milis>0.1</milis>
-                </frame>
-                <frame>
-                    <file>imagenes/flame_a_0002.png</file>
-                    <milis>0.1</milis>
-                </frame>
-                <frame>
-                    <file>imagenes/flame_a_0003.png</file>
-                    <milis>0.1</milis>
-                </frame>
-                <frame>
-                    <file>imagenes/flame_a_0004.png</file>
-                    <milis>0.1</milis>
-                </frame>
-                <frame>
-                    <file>imagenes/flame_a_0005.png</file>
-                    <milis>0.1</milis>
-                </frame>
-                <frame>
-                    <file>imagenes/flame_a_0006.png</file>
-                    <milis>0.1</milis>
-                </frame>
-            </frames>
-            <!--To use the same animation with different scaling in different positions-->
-            <scaleAndPlacements>
-                <scaleAndPlacement>
-                    <!--Scale of the animation (use 0 if no scaling needed)-->
-                    <scaleX>400</scaleX>
-                    <scaleY>400</scaleY>
-                    <!--Position of the animation-->
-                    <x>120</x>
-                    <y>250</y>
-                </scaleAndPlacement>
-                <scaleAndPlacement>
-                    <!--Scale of the animation (use 0 if no scaling needed)-->
-                    <scaleX>400</scaleX>
-                    <scaleY>400</scaleY>
-                    <!--Position of the animation-->
-                    <x>120</x>
-                    <y>650</y>
-                </scaleAndPlacement>
-            </scaleAndPlacements>
-        </backAnimation>
-    </backAnimations>
 
     <!--Platforms and their five parameters: id and four position points-->
     <platforms>
         <platform>
-            <id>suelo</id>
-            <left>550</left>
-            <top>0</top>
-            <width>1200</width>
-            <height>15</height>
+            <id>SueloTierra1</id>
+            <left>0</left>
+            <top>450</top>
+            <width>197</width>
+            <height>50</height>
         </platform>
         <platform>
-            <id>casa</id>
-            <left>417</left>
-            <top>870</top>
-            <width>200</width>
-            <height>10</height>
+            <id>SueloTierra2</id>
+            <left>1052</left>
+            <top>797</top>
+            <width>129</width>
+            <height>50</height>
         </platform>
+        <platform>
+            <id>SueloTierra3</id>
+            <left>1182</left>
+            <top>755</top>
+            <width>129</width>
+            <height>50</height>
+        </platform>
+        <platform>
+            <id>SueloTierra4</id>
+            <left>1312</left>
+            <top>789</top>
+            <width>676</width>
+            <height>50</height>
+        </platform>
+
+        <!--TODO: Escalera 1 falta-->
+
+        <platform>
+            <id>SueloPiedra1</id>
+            <left>2105</left>
+            <top>935</top>
+            <width>478</width>
+            <height>50</height>
+        </platform>
+
+        <platform>
+            <id>Escalera2.1</id>
+            <left>2580</left>
+            <top>922</top>
+            <width>20</width>
+            <height>4</height>
+        </platform>
+        <platform>
+            <id>Escalera2.2</id>
+            <left>2596</left>
+            <top>906</top>
+            <width>20</width>
+            <height>4</height>
+        </platform>
+        <platform>
+            <id>Escalera2.3</id>
+            <left>2612</left>
+            <top>890</top>
+            <width>26</width>
+            <height>4</height>
+        </platform>
+
+        <platform>
+            <id>SueloPiedra2</id>
+            <left>2636</left>
+            <top>874</top>
+            <width>361</width>
+            <height>50</height>
+        </platform>
+
+        <platform>
+            <id>Bloque1.1</id>
+            <left>2</left>
+            <top>242</top>
+            <width>180</width>
+            <height>50</height>
+        </platform>
+        <platform>
+            <id>Bloque1.2</id>
+            <left>177</left>
+            <top>145</top>
+            <width>102</width>
+            <height>50</height>
+        </platform>
+        <platform>
+            <id>Bloque1.3</id>
+            <left>280</left>
+            <top>165</top>
+            <width>106</width>
+            <height>50</height>
+        </platform>
+        <platform>
+            <id>Bloque1.4</id>
+            <left>384</left>
+            <top>245</top>
+            <width>181</width>
+            <height>50</height>
+        </platform>
+
+        <platform>
+            <id>Bloque2.1</id>
+            <left>625</left>
+            <top>329</top>
+            <width>57</width>
+            <height>50</height>
+        </platform>
+        <platform>
+            <id>Bloque2.2</id>
+            <left>684</left>
+            <top>425</top>
+            <width>122</width>
+            <height>12</height>
+        </platform>
+        <platform>
+            <id>Bloque2.3</id>
+            <left>682</left>
+            <top>575</top>
+            <width>125</width>
+            <height>12</height>
+        </platform>
+        <platform>
+            <id>Bloque2.4</id>
+            <left>685</left>
+            <top>678</top>
+            <width>256</width>
+            <height>12</height>
+        </platform>
+
+        <!--TODO: faltan los bloque3 -->
+
     </platforms>
+
+    <!--TODO: barriers and their five parameters: id and four position points-->
+    <!--you cannot collide with barriers laterally-->
 
     <!--Player's starting position in the map-->
     <playerPosition>
-        <x>200</x>
-        <y>551</y>
+        <x>0</x>
+        <y>450</y>
     </playerPosition>
 
     <!--Enemies Spawn Point-->
-    <spawnPoints>
-        <spawnPoint>
-            <id>1</id>
-            <enemies>
-                <enemy>
-                    <id>Walker</id>
-                    <spawnFrecuency>0.2</spawnFrecuency>
-                </enemy>
-                <enemy>
-                    <id>Ghost</id>
-                    <spawnFrecuency>3</spawnFrecuency>
-                </enemy>
-            </enemies>
-            <x>400</x>
-            <y>551</y>
-        </spawnPoint>
-    </spawnPoints>
 
 </level>

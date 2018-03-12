@@ -62,8 +62,8 @@ def loadLevelData(level):
         width = int(platform.find("width").text)
         height = int(platform.find("height").text)
 
-        platformList.append(Platform(pygame.Rect(top,left,width,height)))
-        platformList.append(Platform(pygame.Rect(top,left,width,height)))
+        platformList.append(Platform(pygame.Rect(left,top,width,height)))
+        platformList.append(Platform(pygame.Rect(left,top,width,height)))
 
     # Images on the front
     frontImages = root.find("frontImages")

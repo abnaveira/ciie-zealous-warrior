@@ -135,15 +135,15 @@
     <platforms>
         <platform>
             <id>suelo</id>
-            <top>0</top>
-            <left>550</left>
+            <left>0</left>
+            <top>550</top>
             <width>1200</width>
             <height>15</height>
         </platform>
         <platform>
             <id>casa</id>
-            <top>870</top>
-            <left>417</left>
+            <left>870</left>
+            <top>417</top>
             <width>200</width>
             <height>10</height>
         </platform>

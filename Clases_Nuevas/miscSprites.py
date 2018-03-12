@@ -12,7 +12,9 @@ class Platform(MySprite):
         # The position will be set as the size of the platform
         self.setPosition((self.rect.left, self.rect.bottom))
         # The platforms are invisible
-        self.image = pygame.Surface((0, 0))
+        #self.image = pygame.Surface((0, 0))
+        self.image = pygame.Surface((rectangle.width, rectangle.height))
+        self.image.fill((255,0,0))
 
 
 # -------------------------------------------------
