@@ -112,7 +112,7 @@ class scrollControl:
         updatedScrollX = self.updateScrollX(player)
         updatedScrollY = self.updateScrollY(player)
         if updatedScrollX or updatedScrollY:
-            # Update the sprite positions with the new scroll
+            # Update the sprite positions and animations with the new scroll
             for group in spritesList:
                 for sprite in iter(group):
                     sprite.setScreenPosition(self.scroll)

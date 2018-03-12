@@ -207,10 +207,51 @@ class scaleAndPlacementClass:
         self.x = x
         self.y = y
 
+def calculateInitialWindow(posx, posy, winHeight, winWidth, imHeight, imWidth):
+    # Left distance
+    distanceX1 = posx
+    # Right Distance
+    distanceX2 = imWidth - posx
+    # Top distance
+    distanceY1 = posy
+    # Bottom distance
+    distanceY2 = imHeight - posy
+
+    mediumWindowWidth = winWidth / 2
+    mediumWindowHeigth = winHeight / 2
+
+    # If left distance is bigger than middle window
+    if distanceX1 > mediumWindowWidth:
+        # If right distance is bigger than middle window
+        if distanceX2 > mediumWindowWidth:
+            # Set the window x in the middle of the player
+            x = distanceX1 - mediumWindowWidth
+        else:
+            # Set player x in the most right window possible
+            x = imWidth - winWidth
+    else:
+        # Set player x in the most left window possible
+        x = 0
+
+    # If top distance is bigger than middle window
+    if distanceY1 > mediumWindowHeigth:
+        # If bottom distance is bigger than middle window
+        if distanceY2 > mediumWindowHeigth:
+            # Set the window y in the middle of the player
+            y = distanceY1 - mediumWindowHeigth
+        else:
+            # Set player y in the most right window possible
+            y = imWidth - winWidth
+    else:
+        # Set player y in the most left window possible
+        y = 0
+    print(str(x) + ", " + str(y))
+    return (x, y)
+
 
 
 def main():
     loadLevelData("level1Example.xml")
 
 if __name__ == "__main__":
-    main()
+    calculateInitialWindow(1200,300,600,800,300,1200)

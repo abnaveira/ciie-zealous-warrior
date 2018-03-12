@@ -66,7 +66,6 @@ class PhaseScene(PygameScene):
                 animation.positionX = scaleAndPlacement.x
                 animation.positionY = scaleAndPlacement.y
                 animation.play()
-                # Animation next frame?
                 self.backAnimations.append(animation)
 
         # Creates a group for the dinamic sprites
