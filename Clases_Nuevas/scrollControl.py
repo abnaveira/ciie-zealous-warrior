@@ -38,7 +38,7 @@ class scrollControl:
             if self.scroll[0] <= 0:
                 self.scroll = (0, self.scroll[1])
                 #TODO: establecer posicion?
-                player.establecerPosicion((self.minX, player.posicion[1]))
+                player.setPosition((self.minX, player.position[1]))
 
                 return False
 
@@ -54,8 +54,8 @@ class scrollControl:
             # If there is no more scenary in the right
             if self.scroll[0] + self.wWidth >= self.scenery.rect.right:
                 self.scroll = (self.scenery.rect.right - self.wWidth, self.scroll[1])
-                player.establecerPosicion(
-                    (self.scroll[0] + self.maxX - player.rect.width, player.posicion[1]))
+                player.setPosition(
+                    (self.scroll[0] + self.maxX - player.rect.width, player.position[1]))
 
                 return False
 
@@ -115,7 +115,7 @@ class scrollControl:
         if updatedScrollX or updatedScrollY:
             # Update the sprite positions with the new scroll
             for sprite in iter(sprites):
-                sprite.establecerPosicionPantalla(self.scroll)
+                sprite.setScreenPosition(self.scroll)
 
             # Update the scenery to show the new position
             self.scenery.update(self.scroll)

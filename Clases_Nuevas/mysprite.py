@@ -15,7 +15,7 @@ class MySprite(pygame.sprite.Sprite):
     def setPosition(self, position):
         self.position = position
         self.rect.left = self.position[0] - self.scroll[0]
-        self.rect.bottom = self.position[1] - self.scroll[1]
+        self.rect.bottom = self.position[1] + self.scroll[1]
 
     def setScreenPosition(self, sceneryScroll):
         self.scroll = sceneryScroll

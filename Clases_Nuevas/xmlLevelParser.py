@@ -3,7 +3,7 @@
 import sys
 import os
 import xml.etree.ElementTree as ET
-from phase import Platform
+from miscSprites import *
 import pygame
 
 def openXmlGetTree(xmlFileName):
@@ -11,7 +11,7 @@ def openXmlGetTree(xmlFileName):
     directory = sys.path[0]
 
     # Append the directory where levels are located
-    directory = os.path.join(directory, "Clases_Nuevas")
+    #directory = os.path.join(directory, "Clases_Nuevas")
 
     # Append the level we want to open
     xmlFile = os.path.join(directory, xmlFileName)

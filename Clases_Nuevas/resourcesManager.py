@@ -12,7 +12,7 @@ class ResourcesManager(object):
     resources = {}
 
     @classmethod
-    def LoadImage(cls, name, colorkey=None):
+    def loadImage(cls, name, colorkey=None):
         # If the name of the file is amongst the already loaded resources
         if name in cls.resources:
             # That resource is returned
@@ -37,7 +37,7 @@ class ResourcesManager(object):
             return image
 
     @classmethod
-    def LoadFileCoordinates(cls, name):
+    def loadFileCoordinates(cls, name):
         # If the name of the file is amongst the already loaded resources
         if name in cls.resources:
             # That resource is returned

@@ -1,6 +1,7 @@
 
 from gestorRecursos import *
 from mysprite import MySprite
+from resourcesManager import *
 
 STILL   = 0
 LEFT    = 1
@@ -21,14 +22,14 @@ class Projectile(MySprite):
         MySprite.__init__(self)
 
         # Loading the spritesheet.
-        self.sheet = GestorRecursos.CargarImagen(imageFile, -1)
+        self.sheet = ResourcesManager.loadImage(imageFile, -1)
         self.sheet = self.sheet.convert_alpha()
         # Starting movement
         self.movement = looking
         self.looking = looking
 
         # Reading the coordinates
-        data = GestorRecursos.CargarArchivoCoordenadas(coordFile)
+        data = ResourcesManager.loadFileCoordinates(coordFile)
         data = data.split()
         self.numStance = 1
         self.numImageStance = 0

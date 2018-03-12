@@ -4,8 +4,8 @@ from scene import PygameScene
 from xmlLevelParser import *
 from characters import *
 from scrollControl import *
-from resourcesManager import *
 from animationsPygame import *
+from miscSprites import *
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
@@ -33,11 +33,14 @@ class PhaseScene(PygameScene):
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
 
-        # Initialize the enemy sprites group
+        # Initializes the enemy sprites group
         self.enemiesGroup = pygame.sprite.Group()
 
+        # Initializes the projectiles sprites group
+        self.projectilesGroup = pygame.sprite.Group()
+
         # Stores all the platforms of the level
-        self.platformsGroup = pygame.sprite.Group.empty()
+        self.platformsGroup = pygame.sprite.Group()
         for platform in platformList:
             self.platformsGroup.add(platform)
 
@@ -75,6 +78,8 @@ class PhaseScene(PygameScene):
             self.spritesGroup.add(sprite)
         for sprite in self.dinamicSpritesGroup.sprites():
             self.spritesGroup.add(sprite)
+        for sprite in self.projectilesGroup.sprites():
+            self.spritesGroup.add(sprite)
 
         # Creates the class that will control the scroll
         self.controlScroll = scrollControl(self.scroll, sceneryObj.leftMin, sceneryObj.windowWidth - sceneryObj.leftMin,
@@ -88,9 +93,21 @@ class PhaseScene(PygameScene):
         self.spritesGroup.add(enemySprite)
 
     def update(self, time):
+        # Executes enemy AI
+        for enemy in self.enemiesGroup:
+            enemy.move_cpu(self.player)
 
-        # Update dinamic sprites
-        self.dinamicSpritesGroup.update(self.platformsGroup, time)
+        # Updates the player
+        self.player.update(self.platformsGroup, self.projectilesGroup, time)
+
+        # Updates the enemies
+        self.enemiesGroup.update(self.platformsGroup, self.projectilesGroup, time)
+
+        # Updates the projectiles
+        self.projectilesGroup.update(self.player, self.enemiesGroup, self.platformsGroup, self.projectilesGroup, time)
+
+        # Updates the platforms
+        self.platformsGroup.update(time)
 
         # Update scroll
         self.controlScroll.updateScroll(self.player, self.spritesGroup)
@@ -121,58 +138,4 @@ class PhaseScene(PygameScene):
 
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         keysPressed = pygame.key.get_pressed()
-        self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT)
-
-# -------------------------------------------------
-# Class created for the scenery platforms
-
-class Platform(MySprite):
-    def __init__(self, rectangle):
-        MySprite.__init__(self)
-        # The platforms will be rectangles
-        self.rect = rectangle
-        # The position will be set as the size of the platform
-        self.setPosition((self.rect.left, self.rect.bottom))
-        # The platforms are invisible
-        self.image = pygame.Surface((0, 0))
-
-
-# -------------------------------------------------
-# Class for the background
-
-class Background:
-    def __init__(self, sceneryObj):
-        self.color = (sceneryObj.red, sceneryObj.green, sceneryObj.blue)
-
-    # It has to be implmented if there is some variations over time in the background
-    def update(self, time):
-        return
-
-    def draw(self, screen):
-        screen.fill(self.color)
-
-
-# -------------------------------------------------
-# Class for the scenary
-
-class Scenary:
-    def __init__(self, sceneryObj):
-        self.image = ResourcesManager.LoadImage(sceneryObj.file, -1)
-        self.image = pygame.transform.scale(self.image, (sceneryObj.scaleX, sceneryObj.scaleY))
-
-        self.rect = self.image.get_rect()
-
-        # The subimage that we see
-        self.rectSubimage = pygame.Rect(0, 0, sceneryObj.windowWidth, sceneryObj.windowHeight)
-        self.rectSubimage.left = 0  # Starts on the left
-        self.rectSubimage.bottom = self.rect.bottom # Starts on the bottom
-
-    def update(self, scroll):
-        self.rectSubimage.left = scroll[0]
-        self.rectSubimage.bottom = self.rect.bottom - scroll[1]
-
-    def draw(self, screen):
-        screen.blit(self.image, self.rect, self.rectSubimage)
-
-
-
+        self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
