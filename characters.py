@@ -4,6 +4,8 @@ import pygame, sys, os
 from pygame.locals import *
 from escena import *
 from gestorRecursos import *
+from mysprite import MySprite
+from projectiles import *
 
 #---------------------------
 #---------Constants---------
@@ -17,6 +19,7 @@ UP      = 3
 DOWN    = 4
 UPRIGHT = 5
 UPLEFT  = 6
+STUNNED = 7
 
 # Sprite Animations
 SPRITE_STILL = 0
@@ -28,10 +31,13 @@ PLAYER_SPEED        = 0.2   # px / ms
 PLAYER_JUMP_SPEED   = 0.37  # px / ms
 PLAYER_ANIM_DELAY   = 5     # updates / image
 PLAYER_BASE_JUMP    = 350   # time to "keep jumping" to go higher
+PLAYER_ATTACK_DELAY = 400   # time between attacks
+PLAYER_STUN_DELAY   = 400
 
 SNIPER_SPEED        = 0.12  # px / ms
 SNIPER_JUMP_SPEED   = 0.27  # px / ms
 SNIPER_ANIM_DELAY   = 5     # updates / image
+SNIPER_STUN_DELAY    = 350
 
 # World constants
 GRAVITY = 0.0009    # px / ms^2
@@ -40,38 +46,6 @@ GRAVITY = 0.0009    # px / ms^2
 #---------Classes-----------
 #---------------------------
 
-# --------------------------
-# MySprite Class
-
-class MySprite(pygame.sprite.Sprite):
-    "Sprites for the game"
-    def __init__(self):
-        pygame.sprite.Sprite.__init(self)
-        self.position = (0, 0)
-        self.speed = (0, 0)
-        self.scroll = (0, 0)
-
-    def setPosition(self, position):
-        self.position = position
-        self.rect.left = self.position[0] - self.scroll[0]
-        self.rect.bottom = self.position[1] - self.scroll[1]
-
-    def setScreenPosition(self, sceneryScroll):
-        self.scroll = sceneryScroll
-        (scrollx, scrolly) = self.scroll
-        (posx, posy) = self.position
-        self.rect.left = posx - scrollx
-        self.rect.bottom = posy - scrolly
-
-    def increasePosition(self, increment):
-        (posx, posy) = self.position
-        (incrementx, incrementy) = increment
-        self.setPosition((posx + incrementx, posy + incrementy))
-
-    def update(self, time):
-        incrementx = self.speed[0] * time
-        incrementy = self.speed[1] * time
-        self.increasePosition((incrementx, incrementy))
 
 #------------------------------------
 # Character classes
@@ -79,7 +53,9 @@ class MySprite(pygame.sprite.Sprite):
 class Character(MySprite):
 
     jumpTime = PLAYER_BASE_JUMP  # Time you can keep jumping to increase height
-
+    attackTime = 0               # If this is larger than 0 character has to wait to attack
+    attacking = False
+    stunnedTime = 0              # Time left in stun
     # Parameters:
     #   Spritesheet file
     #   Coordinate file
@@ -91,7 +67,7 @@ class Character(MySprite):
     def __init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay):
 
         # First we call parent's constructor
-        MySprite.__init__(self);
+        MySprite.__init__(self)
 
         # Loading the spritesheet.
         self.sheet = GestorRecursos.CargarImagen(imageFile, -1)
@@ -105,7 +81,7 @@ class Character(MySprite):
         data = data.split()
         self.numStance = 1
         self.numImageStance = 0
-        counter = 1
+        counter = 0
         self.sheetCoords = []
         for line in range(0, 3):
             self.sheetCoords.append([])
@@ -126,30 +102,33 @@ class Character(MySprite):
         self.runSpeed = runSpeed
         self.jumpSpeed = jumpSpeed
 
-        self.animDelay = animDelay
+        self.animationDelay = animDelay
 
         self.updateStance()
 
     def move(self, movement):
-        if movement == UP:
-            if self.numStance == SPRITE_JUMP:
-                if self.jumpTime <= 0:
-                    self.movement = STILL
-            else:
-                self.movement = UP
-        elif movement == UPRIGHT:
-            if self.numStance == SPRITE_JUMP:
-                if self.jumpTime <= 0:
-                    self.movement = RIGHT
-            else: self.movement = UPRIGHT
-        elif movement == UPLEFT:
-            if self.numStance == SPRITE_JUMP:
-                if self.jumpTime <= 0:
-                    self.movement = LEFT
-            else:
-                self.movement = UPLEFT
+        if self.stunnedTime >= 0:
+            self.movement = STUNNED
         else:
-            self.movement = movement
+            if movement == UP:
+                if self.numStance == SPRITE_JUMP:
+                    if self.jumpTime <= 0:
+                        self.movement = STILL
+                else:
+                    self.movement = UP
+            elif movement == UPRIGHT:
+                if self.numStance == SPRITE_JUMP:
+                    if self.jumpTime <= 0:
+                        self.movement = RIGHT
+                else: self.movement = UPRIGHT
+            elif movement == UPLEFT:
+                if self.numStance == SPRITE_JUMP:
+                    if self.jumpTime <= 0:
+                        self.movement = LEFT
+                else:
+                    self.movement = UPLEFT
+            else:
+                self.movement = movement
 
 
 
@@ -171,7 +150,7 @@ class Character(MySprite):
                     self.sheet.subsurface(self.sheetCoords[self.numStance][self.numImageStance]), 1, 0)
 
 
-    def update(self, platformGroup, time):
+    def update(self, platformGroup, projectileGroup, time):
 
         (speedx, speedy) = self.speed
 
@@ -206,6 +185,10 @@ class Character(MySprite):
                 self.numStance = SPRITE_STILL
             speedx = 0
 
+        if self.movement == STUNNED:
+            self.stunnedTime -= time
+
+
         if self.numStance == SPRITE_JUMP:
 
             platform = pygame.sprite.spritecollideany(self, platformGroup)
@@ -225,14 +208,16 @@ class Character(MySprite):
         return
 
 
+
+
 class Player(Character):
     # Any player character
     def __init__(self):
         Character.__init__(self, 'Soma.png', 'coordSoma.txt',
                     [5, 12, 5], PLAYER_SPEED, PLAYER_JUMP_SPEED, PLAYER_ANIM_DELAY)
 
-    def move(self, pressedKeys, up, down, left, right):
-#   def move(self, pressedKeys, up, down, left, right, attack):
+    #def move(self, pressedKeys, up, down, left, right):
+    def move(self, pressedKeys, up, down, left, right, attack):
         if pressedKeys[up]:
             if pressedKeys[right]:
                 Character.move(self, UPRIGHT)
@@ -246,16 +231,34 @@ class Player(Character):
             Character.move(self, RIGHT)
         else:
             Character.move(self, STILL)
-#       if pressedKeys[attack]
-#           Character.attack(self)
+        if pressedKeys[attack]:
+            if self.attackTime <= 0:
+                self.attacking = True
+
+
+
+    def update(self, platformGroup, projectileGroup, time):
+
+        if self.attacking:
+            self.attackTime = PLAYER_ATTACK_DELAY
+
+            if (self.looking == RIGHT):
+                projectileGroup.add(swordSlash(self.position, self.looking))
+            else :
+                projectileGroup.add(swordSlash((self.position[0] , self.position[1]), self.looking))
+            self.attacking = False
+        elif self.attackTime > 0:
+            self.attackTime -= time
+        Character.update(self, platformGroup, projectileGroup, time)
+
 
 class NPC(Character):
 
     def __init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay):
         Character.__init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay)
 
-    def move_cpu(self, player1, player2):
-#   def move_cpu(self, player)
+#    def move_cpu(self, player1, player2):
+    def move_cpu(self, player):
         return
 
 class Sniper(NPC):
@@ -264,8 +267,8 @@ class Sniper(NPC):
         NPC.__init__(self, 'Sniper.png', 'coordSniper.txt', [5, 10, 6],
                      SNIPER_SPEED, SNIPER_JUMP_SPEED, SNIPER_ANIM_DELAY)
 
-    def move_cpu(self, player1, player2):
-#   def move_cpu(self, player1)
+    def move_cpu(self, player1):
+
         if (self.rect.left > 0) and (self.rect.right < ANCHO_PANTALLA) \
                 and (self.rect.bottom > 0) and (self.rect.top < ALTO_PANTALLA):
             if player1.position[0] <  self.position[0]:
@@ -281,3 +284,8 @@ class Sniper(NPC):
 
         else:
             Character.move(self, STILL)
+
+    def stun(self, speedx, speedy, damage):
+        self.stunnedTime = SNIPER_STUN_DELAY
+        self.speedx = speedx
+        self.speedy = speedy

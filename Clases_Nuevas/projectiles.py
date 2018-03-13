@@ -10,6 +10,7 @@ UP      = 3
 DOWN    = 4
 UPRIGHT = 5
 UPLEFT  = 6
+STUNNED = 7
 
 SWORD_SLASH_ANIM_DELAY = 2
 SWORD_MOVE_SPEED = 0.01
@@ -97,7 +98,10 @@ class swordSlash(Projectile):
         enemyCollision = pygame.sprite.spritecollide(self, enemyGroup, False)
         for enemy in iter(enemyCollision):
             #What do we do when we hit an enemy
-            enemyGroup.remove(enemy)
+            if (self.looking == RIGHT):
+                enemy.stun((.2,-.4),10)
+            else:
+                enemy.stun((-.2,-.4),10)
 
 
         Projectile.update(self, platformGroup, projectileGroup, time)
