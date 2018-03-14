@@ -192,20 +192,31 @@
         </platform>
         <!--Mas mierda -->
 
-    </platforms>
-
-    <!--TODO: barriers and their five parameters: id and four position points-->
-    <!--you cannot collide with barriers laterally-->
-
-    <barriers>
-        <barrier>
-            <id>Barrier.1</id>
+        <!-- Plataforma puesta solo para probar -->
+        <platform>
+            <id>Barrier1</id>
             <left>200</left>
             <top>700</top>
             <width>50</width>
             <height>170</height>
-        </barrier>
-    </barriers>
+        </platform>
+
+        <platform>
+            <id>Techo</id>
+            <left>0</left>
+            <top>0</top>
+            <width>3000</width>
+            <height>10</height>
+        </platform>
+    </platforms>
+
+    <!--Rectangle to put the flag, to change level-->
+    <flag>
+       <left>870</left>
+        <top>417</top>
+        <width>200</width>
+        <height>10</height>
+    </flag>
 
     <!--Player's starting position in the map-->
     <playerPosition>

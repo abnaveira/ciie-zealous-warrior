@@ -113,6 +113,15 @@ def loadLevelData(level):
 
             barrierList.append(Barrier(pygame.Rect(left, top, width, height)))
 
+    # Flag
+    flag = root.find("flag")
+    left = int(flag.find("left").text) - winImageX
+    top = int(flag.find("top").text) - winImageY
+    width = int(flag.find("width").text)
+    height = int(flag.find("height").text)
+    flagRect = pygame.Rect(left, top, width, height)
+
+
     # Images on the front
     frontImages = root.find("frontImages")
     frontImagesList = []
@@ -203,10 +212,7 @@ def loadLevelData(level):
             spawnPointList.append(spawnPointClass(id, enemyList, x, y))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, barrierList, playerX, playerY, spawnPointList
-
-
-# TODO: Define an enemy parser as well with ids
+           platformList, flagRect, playerX, playerY, spawnPointList
 
 class enemyInSpawnPoint:
     def __init__(self, id, spawnFrecuency):

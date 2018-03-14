@@ -149,6 +149,14 @@
         </platform>
     </platforms>
 
+    <!--Rectangle to put the flag, to change level-->
+    <flag>
+       <left>770</left>
+        <top>450</top>
+        <width>100</width>
+        <height>100</height>
+    </flag>
+
     <!--Player's starting position in the map-->
     <playerPosition>
         <x>200</x>
