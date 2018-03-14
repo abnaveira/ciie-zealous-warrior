@@ -223,35 +223,30 @@ class Character(MySprite):
             # These allow diagonal jumps
             if (self.movement == UPLEFT):
                 ## CAMBIAR EST
-                speedx = -self.runSpeed
-                platforms = pygame.sprite.spritecollide(self, platformGroup, False)
-                for platform in iter(platforms):
-                    if (platform.rect.top < self.rect.bottom) and (platform.rect.right < self.rect.left):
-                        speedx = 0
+                speedx = self.checkWall(LEFT, platformGroup)
             elif (self.movement == UPRIGHT):
-                speedx = self.runSpeed
-                platforms = pygame.sprite.spritecollide(self, platformGroup, False)
-                for platform in iter(platforms):
-                    if (platform.rect.top < self.rect.bottom) and (platform.rect.left > self.rect.right):
-                        speedx = 0
+                speedx = self.checkWall(RIGHT, platformGroup)
 
         # If not doing anything, stand still and reset jump timer
         elif self.movement == STILL:
-            self.timejumping = PLAYER_BASE_JUMP
+            self.jumpTime = PLAYER_BASE_JUMP
             if not self.numStance == SPRITE_JUMP:
                 self.numStance = SPRITE_STILL
             speedx = 0
 
         # If on the air, we have to check if we are landing on a platform
         if self.numStance == SPRITE_JUMP:
-            platform = pygame.sprite.spritecollideany(self, platformGroup)
-            if (platform is not None) and (speedy > 0) and (platform.rect.bottom>self.rect.bottom):
-                # Set y value to top of the platform and break fall
-                self.setPosition((self.position[0], platform.position[1]-platform.rect.height+1))
-                self.numStance = SPRITE_STILL
-                speedy = 0
+            platforms = pygame.sprite.spritecollide(self, platformGroup, False)
+            for platform in iter(platforms):
+                if (speedy > 0) and (platform.rect.top < self.rect.bottom) \
+                            and ((self.rect.bottom - self.rect.height/2) < platform.rect.top):
+                    # Set y value to top of the platform and break fall
+                    self.setPosition((self.position[0], platform.position[1]-platform.rect.height+1))
+                    self.numStance = SPRITE_STILL
+                    speedy = 0
+
             # Otherwise, keep falling accelerated by gravity
-            else:
+            if self.numStance != SPRITE_STILL:
                 speedy += GRAVITY * time
         self.updateStance()
         self.speed = (speedx, speedy)
