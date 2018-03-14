@@ -113,20 +113,6 @@ class Character(MySprite):
 
     # move determines which movement the character will perform based on
     # intention and status
-    def checkWall(self, direction, platformGroup):
-        platforms = pygame.sprite.spritecollide(self, platformGroup, False)
-        if direction == LEFT:
-            for platform in iter(platforms):
-                if (platform.rect.top + 5 < self.rect.bottom) and (platform.rect.right - 5 < self.rect.left):
-                    return 0
-            return -self.runSpeed
-        elif direction == RIGHT:
-            for platform in iter(platforms):
-                if (platform.rect.top + 5 < self.rect.bottom) and (platform.rect.left + 5 > self.rect.right):
-                    return 0
-            return self.runSpeed
-
-
     def move(self, movement):
         # If character has been hit, it will be hitstunned and unable to move.
         if self.stunnedTime >= 0:
@@ -183,13 +169,34 @@ class Character(MySprite):
                 self.image = pygame.transform.flip(
                     self.sheet.subsurface(self.sheetCoords[self.numStance][self.numImageStance]), 1, 0)
 
+    def checkWall(self, direction, platforms):
+        if direction == LEFT:
+            for platform in iter(platforms):
+                if (platform.rect.top + 5 < self.rect.bottom) and (
+                        platform.rect.right - 5 < self.rect.left):
+                    return 0
+            return -self.runSpeed
+        elif direction == RIGHT:
+            for platform in iter(platforms):
+                if (platform.rect.top + 5 < self.rect.bottom) and (
+                        platform.rect.left + 5 > self.rect.right):
+                    return 0
+            return self.runSpeed
+
+    def checkCeiling(self, platforms):
+        for platform in iter(platforms):
+            if (self.rect.top > platform.rect.top) and (self.rect.bottom < platform.rect.bottom)\
+                    and (self.rect.left > platform.rect.left) and (self.rect.right < platform.rect.right):
+                return True
+        return False
+
     # update is run every frame to move and change the characters
     # it is the "important" procedure in every cycle
     def update(self, platformGroup, projectileGroup, time):
         # Separate speed into components for code legibility
         # these are local and are set to the character at the end of the procedure
         (speedx, speedy) = self.speed
-
+        platforms = pygame.sprite.spritecollide(self, platformGroup, False)
         # If character is hitstunned, decrease the hitstun counter
         if self.movement == STUNNED:
             self.stunnedTime -= time
@@ -203,29 +210,31 @@ class Character(MySprite):
 
             # Set movement speeds
             if self.movement == LEFT:
-                speedx = self.checkWall(LEFT, platformGroup)
+                speedx = self.checkWall(LEFT, platforms)
             else:
-                speedx = self.checkWall(RIGHT, platformGroup)
+                speedx = self.checkWall(RIGHT, platforms)
 
             if self.numStance != SPRITE_JUMP:
                 # If player is standing on solid ground, reset jump timer
                 self.jumpTime = PLAYER_BASE_JUMP
                 self.numStance = SPRITE_WALK
                 # If we've run out of solid ground (walking out of a platform), start falling
-                if pygame.sprite.spritecollideany(self, platformGroup) is None:
+                if not platforms:
                     self.numStance = SPRITE_JUMP
 
         elif (self.movement == UP) or (self.movement == UPLEFT) or (self.movement == UPRIGHT):
             # If player is jumping, decrease time to keep jumping and set vert. speed accordingly
             self.jumpTime -= time
             self.numStance = SPRITE_JUMP
-            speedy = -self.jumpSpeed
+            if self.checkCeiling(platforms):
+                speedy = 0
+            else:
+                speedy = -self.jumpSpeed
             # These allow diagonal jumps
             if (self.movement == UPLEFT):
-                ## CAMBIAR EST
-                speedx = self.checkWall(LEFT, platformGroup)
+                speedx = self.checkWall(LEFT, platforms)
             elif (self.movement == UPRIGHT):
-                speedx = self.checkWall(RIGHT, platformGroup)
+                speedx = self.checkWall(RIGHT, platforms)
 
         # If not doing anything, stand still and reset jump timer
         elif self.movement == STILL:
@@ -236,7 +245,6 @@ class Character(MySprite):
 
         # If on the air, we have to check if we are landing on a platform
         if self.numStance == SPRITE_JUMP:
-            platforms = pygame.sprite.spritecollide(self, platformGroup, False)
             for platform in iter(platforms):
                 if (speedy > 0) and (platform.rect.top < self.rect.bottom) \
                             and ((self.rect.bottom - self.rect.height/2) < platform.rect.top):
