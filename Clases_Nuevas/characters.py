@@ -92,32 +92,46 @@ class Character(MySprite):
                                        (int(data[counter + 2]), int(data[counter + 3]))))
                 counter += 4
 
-        # Delay when changing sprite image
-        self.movementDelay = 0;
 
+
+        # Default stance is standing
         self.numStance = STILL
 
+        # TODO Define custom hitboxes
         self.rect = pygame.Rect(100,100, self.sheetCoords[self.numStance][self.numImageStance][2],
                                 self.sheetCoords[self.numStance][self.numImageStance][3])
 
+        # Default running and jumping speed
         self.runSpeed = runSpeed
         self.jumpSpeed = jumpSpeed
-
+        # Constant to reset sprite change
         self.animationDelay = animDelay
+        # Counter to delay sprite change
+        self.movementDelay = 0;
 
         self.updateStance()
 
+    # move determines which movement the character will perform based on
+    # intention and status
     def move(self, movement):
+        # If character has been hit, it will be hitstunned and unable to move.
         if self.stunnedTime >= 0:
             self.numStance = SPRITE_JUMP
             self.movement = STUNNED
+
         else:
+            # If trying to jump:
+            # First check if we are standing or on the air
+            #   If we are on the air, we will be able to keep jumping as long
+            #   as we still have jumpTime
+            #   If we are grounded we can simply jump
             if movement == UP:
                 if self.numStance == SPRITE_JUMP:
                     if self.jumpTime <= 0:
                         self.movement = STILL
                 else:
                     self.movement = UP
+            # These cases allow diagonal jumps
             elif movement == UPRIGHT:
                 if self.numStance == SPRITE_JUMP:
                     if self.jumpTime <= 0:
@@ -133,75 +147,87 @@ class Character(MySprite):
             else:
                 self.movement = movement
 
-
+    # updateStance updates the sprite to be shown
+    # (makes characters animate)
     def updateStance(self):
+        # Every frame a counter is decreased
         self.movementDelay -= 1
+        # If it runs out, it's time to change the sprite shown.
         if (self.movementDelay < 0):
             self.movementDelay = self.animationDelay
             self.numImageStance += 1
+            # If we run out of stances, the loop is reset
             if self.numImageStance >= len(self.sheetCoords[self.numStance]):
                 self.numImageStance = 0
             if self.numImageStance < 0:
                 self.numImageStance = len(self.sheetCoords[self.numStance])-1
             self.image = self.sheet.subsurface(self.sheetCoords[self.numStance][self.numImageStance])
-
+            # TODO I don't like this, it implies all sprites must be facing the same way on the spritesheet
             if self.looking == RIGHT:
                 self.image = self.sheet.subsurface(self.sheetCoords[self.numStance][self.numImageStance])
             elif self.looking == LEFT:
                 self.image = pygame.transform.flip(
                     self.sheet.subsurface(self.sheetCoords[self.numStance][self.numImageStance]), 1, 0)
 
-
+    # update is run every frame to move and change the characters
+    # it is the "important" procedure in every cycle
     def update(self, platformGroup, projectileGroup, time):
-
+        # Separate speed into components for code legibility
+        # these are local and are set to the character at the end of the procedure
         (speedx, speedy) = self.speed
 
+        # If character is hitstunned, decrease the hitstun counter
         if self.movement == STUNNED:
             self.stunnedTime -= time
+
+        # If moving left or right
+        # TODO horizontal collisions with walls
         elif (self.movement == LEFT) or (self.movement == RIGHT):
+            # Set direction the character is facing
             self.looking = self.movement
 
+
+            # Set movement speeds
             if self.movement == LEFT:
                 speedx = -self.runSpeed
             else:
                 speedx = self.runSpeed
 
             if self.numStance != SPRITE_JUMP:
-                # if player is standing on solid ground, reset jump timer
+                # If player is standing on solid ground, reset jump timer
                 self.jumpTime = PLAYER_BASE_JUMP
                 self.numStance = SPRITE_WALK
+                # If we've run out of solid ground (walking out of a platform), start falling
                 if pygame.sprite.spritecollideany(self, platformGroup) is None:
                     self.numStance = SPRITE_JUMP
 
         elif (self.movement == UP) or (self.movement == UPLEFT) or (self.movement == UPRIGHT):
-            # if player is jumping, decrease time to keep jumping
+            # If player is jumping, decrease time to keep jumping and set vert. speed accordingly
             self.jumpTime -= time
             self.numStance = SPRITE_JUMP
             speedy = -self.jumpSpeed
+            # These allow diagonal jumps
             if (self.movement == UPLEFT):
                 speedx = -self.runSpeed
             elif (self.movement == UPRIGHT):
                 speedx = self.runSpeed
 
+        # If not doing anything, stand still and reset jump timer
         elif self.movement == STILL:
             self.timejumping = PLAYER_BASE_JUMP
             if not self.numStance == SPRITE_JUMP:
                 self.numStance = SPRITE_STILL
             speedx = 0
 
-
-
-
+        # If on the air, we have to check if we are landing on a platform
         if self.numStance == SPRITE_JUMP:
-
             platform = pygame.sprite.spritecollideany(self, platformGroup)
-            # if falling onto a platform
             if (platform is not None) and (speedy > 0) and (platform.rect.bottom>self.rect.bottom):
-                # set y value to top of the platform and break fall
+                # Set y value to top of the platform and break fall
                 self.setPosition((self.position[0], platform.position[1]-platform.rect.height+1))
                 self.numStance = SPRITE_STILL
                 speedy = 0
-
+            # Otherwise, keep falling accelerated by gravity
             else:
                 speedy += GRAVITY * time
         self.updateStance()
@@ -211,12 +237,14 @@ class Character(MySprite):
         return
 
 class Player(Character):
-    # Any player character
+    # The player character
     def __init__(self):
         Character.__init__(self, 'Soma.png', 'coordSoma.txt',
                     [5, 12, 5], PLAYER_SPEED, PLAYER_JUMP_SPEED, PLAYER_ANIM_DELAY)
 
-    #def move(self, pressedKeys, up, down, left, right):
+    # Defines movement intention
+    # Whatever the player presses on their keyboard will set an intention that will
+    # be checked on Character.move. All abilities should start here too.
     def move(self, pressedKeys, up, down, left, right, attack):
         if pressedKeys[up]:
             if pressedKeys[right]:
@@ -236,26 +264,28 @@ class Player(Character):
                 self.attacking = True
 
 
-
+    # Player's update deals mainly with spawning attacks
     def update(self, platformGroup, projectileGroup, time):
+        # If player is attacking, start cooldown and spawn a projectile.
         if self.attacking:
+            self.attacking = False
             self.attackTime = PLAYER_ATTACK_DELAY
+            # TODO change this when correct hitboxes are used
+            # Otherwise character attacks from its back
             if (self.looking == RIGHT):
                 projectileGroup.add(swordSlash(self.position, self.looking))
             else :
                 projectileGroup.add(swordSlash((self.position[0] - 50, self.position[1]), self.looking))
-            self.attacking = False
         elif self.attackTime > 0:
             self.attackTime -= time
         Character.update(self, platformGroup, projectileGroup, time)
 
 
 class NPC(Character):
-
+    # Mainly enemies
     def __init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay):
         Character.__init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay)
 
-#    def move_cpu(self, player1, player2):
     def move_cpu(self, player):
         return
 
@@ -266,6 +296,8 @@ class Sniper(NPC):
                      SNIPER_SPEED, SNIPER_JUMP_SPEED, SNIPER_ANIM_DELAY)
 
     def move_cpu(self, player1):
+        # TODO make some real AI BS
+        # Currently enemies don't move if outside the screen
         if (self.rect.left > 0) and (self.rect.right < ANCHO_PANTALLA) \
                 and (self.rect.bottom > 0) and (self.rect.top < ALTO_PANTALLA):
             if player1.position[0] <  self.position[0]:
@@ -282,8 +314,10 @@ class Sniper(NPC):
         else:
             Character.move(self, STILL)
 
+    # This procedure is to be executed whenever an enemy takes damage
     def stun(self, speed, damage):
         if(self.stunnedTime <= 0):
             self.stunnedTime = SNIPER_STUN_DELAY
             self.speed = speed
+
             
