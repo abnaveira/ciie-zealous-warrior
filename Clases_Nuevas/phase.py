@@ -15,7 +15,7 @@ class PhaseScene(PygameScene):
     def __init__(self, director, levelFile):
         # It reads the file with the level paramethers
         sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
-        platformList, playerX, playerY, spawnPointList = loadLevelData(levelFile)
+        platformList, barrierList, playerX, playerY, spawnPointList = loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, sceneryObj.windowWidth, sceneryObj.windowHeight)
 
@@ -46,6 +46,12 @@ class PhaseScene(PygameScene):
         for platform in platformList:
             self.platformsGroup.add(platform)
 
+        # Stores all the barriers of the level
+        # TODO implement barrier logic in the updates
+        self.barriersGroup = pygame.sprite.Group()
+        for barrier in barrierList:
+            self.barriersGroup.add(barrier)
+
         # Loads the animations in the front
         self.frontAnimations = []
         for frontAnimation in frontAnimationsList:
@@ -75,7 +81,7 @@ class PhaseScene(PygameScene):
 
         # Creates a list for all the group sprites
         self.spritesList = [self.playersGroup, self.enemiesGroup, self.projectilesGroup,
-                            self.platformsGroup]
+                            self.platformsGroup, self.barriersGroup ]
 
         # Creates the class that will control the scroll
         self.controlScroll = scrollControl(self.scroll, sceneryObj.leftMin, sceneryObj.windowWidth - sceneryObj.leftMin,

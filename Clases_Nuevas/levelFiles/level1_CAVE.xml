@@ -197,6 +197,16 @@
     <!--TODO: barriers and their five parameters: id and four position points-->
     <!--you cannot collide with barriers laterally-->
 
+    <barriers>
+        <barrier>
+            <id>Barrier.1</id>
+            <left>500</left>
+            <top>800</top>
+            <width>50</width>
+            <height>100</height>
+        </barrier>
+    </barriers>
+
     <!--Player's starting position in the map-->
     <playerPosition>
         <x>50</x>
