@@ -3,15 +3,24 @@
 # Importar modulos
 from director import Director
 from phase import PhaseScene
+from xmlLevelParser import getAllLevelFiles
 
 
 if __name__ == '__main__':
 
-    # Creamos el director
+    # Create the director
     director = Director()
-    # Creamos la escena con el menu
-    escena = PhaseScene(director, "level1_CAVE.xml")
-    # Le decimos al director que apile esta escena
-    director.apilarEscena(escena)
-    # Y ejecutamos el juego
+
+    # Get level files from an xml
+    levelFilesList = getAllLevelFiles("zealous_warrior_all_levels.xml")
+    # Reverse the order of the levels (to put in the stack)
+    levelFilesList.reverse()
+
+    for level in levelFilesList:
+        # Create the scene for the level
+        scene = PhaseScene(director, level)
+        # Put it on top of the stack
+        director.apilarEscena(scene)
+
+    # Execute the game
     director.ejecutar()
