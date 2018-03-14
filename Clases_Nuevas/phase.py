@@ -35,8 +35,8 @@ class PhaseScene(PygameScene):
 
         # Initializes the enemy sprites group
         enemy1 = Sniper()
-        enemy1.setPosition((500, 418))
-        self.enemiesGroup = pygame.sprite.Group(enemy1)
+        enemy1.setPosition((50, 418))
+        self.enemiesGroup = pygame.sprite.Group()
 
         # Initializes the projectiles sprites group
         self.projectilesGroup = pygame.sprite.Group()
@@ -51,6 +51,7 @@ class PhaseScene(PygameScene):
         self.barriersGroup = pygame.sprite.Group()
         for barrier in barrierList:
             self.barriersGroup.add(barrier)
+            self.platformsGroup.add(barrier)
 
         # Loads the animations in the front
         self.frontAnimations = []

@@ -113,6 +113,20 @@ class Character(MySprite):
 
     # move determines which movement the character will perform based on
     # intention and status
+    def checkWall(self, direction, platformGroup):
+        platforms = pygame.sprite.spritecollide(self, platformGroup, False)
+        if direction == LEFT:
+            for platform in iter(platforms):
+                if (platform.rect.top + 5 < self.rect.bottom) and (platform.rect.right - 5 < self.rect.left):
+                    return 0
+            return -self.runSpeed
+        elif direction == RIGHT:
+            for platform in iter(platforms):
+                if (platform.rect.top + 5 < self.rect.bottom) and (platform.rect.left + 5 > self.rect.right):
+                    return 0
+            return self.runSpeed
+
+
     def move(self, movement):
         # If character has been hit, it will be hitstunned and unable to move.
         if self.stunnedTime >= 0:
@@ -189,9 +203,9 @@ class Character(MySprite):
 
             # Set movement speeds
             if self.movement == LEFT:
-                speedx = -self.runSpeed
+                speedx = self.checkWall(LEFT, platformGroup)
             else:
-                speedx = self.runSpeed
+                speedx = self.checkWall(RIGHT, platformGroup)
 
             if self.numStance != SPRITE_JUMP:
                 # If player is standing on solid ground, reset jump timer
@@ -208,9 +222,18 @@ class Character(MySprite):
             speedy = -self.jumpSpeed
             # These allow diagonal jumps
             if (self.movement == UPLEFT):
+                ## CAMBIAR EST
                 speedx = -self.runSpeed
+                platforms = pygame.sprite.spritecollide(self, platformGroup, False)
+                for platform in iter(platforms):
+                    if (platform.rect.top < self.rect.bottom) and (platform.rect.right < self.rect.left):
+                        speedx = 0
             elif (self.movement == UPRIGHT):
                 speedx = self.runSpeed
+                platforms = pygame.sprite.spritecollide(self, platformGroup, False)
+                for platform in iter(platforms):
+                    if (platform.rect.top < self.rect.bottom) and (platform.rect.left > self.rect.right):
+                        speedx = 0
 
         # If not doing anything, stand still and reset jump timer
         elif self.movement == STILL:
