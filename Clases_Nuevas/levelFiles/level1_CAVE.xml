@@ -30,7 +30,8 @@
             <id>SueloTierra1</id>
             <left>0</left>
             <top>854</top>
-            <width>197</width>
+            <!-- OJO, width era 197, puse 1200 para poder ver el nivel-->
+            <width>1200</width>
             <height>50</height>
         </platform>
         <platform>

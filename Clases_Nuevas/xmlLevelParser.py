@@ -11,13 +11,25 @@ def openXmlGetTree(xmlFileName):
     directory = sys.path[0]
 
     # Append the directory where levels are located
-    #directory = os.path.join(directory, "Clases_Nuevas")
+    directory = os.path.join(directory, "levelFiles")
 
     # Append the level we want to open
     xmlFile = os.path.join(directory, xmlFileName)
 
     # Parse the file and get the tree
     return ET.parse(xmlFile)
+
+def getAllLevelFiles(levelsFile):
+    tree = openXmlGetTree(levelsFile)
+    # We get the "levels" tag
+    root = tree.getroot()
+
+    levelFilesList = []
+    #Load all levels
+    for level in root.iter("level"):
+        levelFilesList.append(level.text)
+
+    return levelFilesList
 
 
 def loadLevelData(level):
@@ -266,11 +278,3 @@ def calculateInitialWindow(posx, posy, winHeight, winWidth, imHeight, imWidth):
         y = 0
     print(str(x) + ", " + str(y))
     return (x, y)
-
-
-
-def main():
-    loadLevelData("level1Example.xml")
-
-if __name__ == "__main__":
-    calculateInitialWindow(50,450,600,800,1000,3000)
