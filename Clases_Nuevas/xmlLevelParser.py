@@ -99,20 +99,6 @@ def loadLevelData(level):
 
         platformList.append(Platform(pygame.Rect(left,top,width,height)))
 
-    # Barriers
-    barriers = root.find("barriers")
-    barrierList = []
-    if(barriers != None):
-        for barrier in barriers.iter("barrier"):
-            # Id has only informative use
-            id = barrier.find("id").text
-            left = int(barrier.find("left").text) - winImageX
-            top = int(barrier.find("top").text) - winImageY
-            width = int(barrier.find("width").text)
-            height = int(barrier.find("height").text)
-
-            barrierList.append(Barrier(pygame.Rect(left, top, width, height)))
-
     # Flag
     flag = root.find("flag")
     left = int(flag.find("left").text) - winImageX
