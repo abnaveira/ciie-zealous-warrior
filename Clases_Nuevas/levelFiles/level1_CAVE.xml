@@ -200,10 +200,10 @@
     <barriers>
         <barrier>
             <id>Barrier.1</id>
-            <left>500</left>
-            <top>800</top>
+            <left>200</left>
+            <top>700</top>
             <width>50</width>
-            <height>100</height>
+            <height>170</height>
         </barrier>
     </barriers>
 
