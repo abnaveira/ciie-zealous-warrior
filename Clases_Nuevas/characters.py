@@ -40,6 +40,11 @@ SNIPER_JUMP_SPEED   = 0.27  # px / ms
 SNIPER_ANIM_DELAY   = 5     # updates / image
 SNIPER_STUN_DELAY   = 1000
 
+SKELETON_SPEED      = 0.08
+SKELETON_JUMP_SPEED = 0.3
+SKELETON_ANIM_DELAY = 7
+SKELETON_STUN_DELAY = 800
+
 # World constants
 GRAVITY = 0.0009    # px / ms^2
 
@@ -308,18 +313,54 @@ class Player(Character):
 
 
 class NPC(Character):
+
     # Mainly enemies
     def __init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay):
         Character.__init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay)
+        self.stunDelay = 0
 
     def move_cpu(self, player):
         return
 
+    # This procedure is to be executed whenever an enemy takes damage
+    def stun(self, speed, damage):
+        if(self.stunnedTime <= 0):
+            self.stunnedTime = self.stunDelay
+            self.speed = speed
+
+class Skeleton(NPC):
+    def __init__(self):
+        NPC.__init__(self, 'Skeletons.png', 'coordSkeletons.txt', [1, 8, 2],
+                     SKELETON_SPEED, SKELETON_JUMP_SPEED, SKELETON_ANIM_DELAY)
+        self.stunDelay = SKELETON_STUN_DELAY
+
+
+    def move_cpu(self, player1):
+        # TODO make some real AI BS
+        # Currently enemies don't move if outside the screen
+        if (self.rect.left > 0) and (self.rect.right < ANCHO_PANTALLA) \
+                and (self.rect.bottom > 0) and (self.rect.top < ALTO_PANTALLA):
+            if player1.position[0] < self.position[0]:
+                if player1.position[1] < self.position[1]:
+                    Character.move(self, UPLEFT)
+                else:
+                    Character.move(self, LEFT)
+            else:
+                if player1.position[1] < self.position[1]:
+                    Character.move(self, UPRIGHT)
+                else:
+                    Character.move(self, RIGHT)
+
+        else:
+            Character.move(self, STILL)
+
+
+
 class Sniper(NPC):
     def __init__(self):
-
         NPC.__init__(self, 'Sniper.png', 'coordSniper.txt', [5, 10, 6],
                      SNIPER_SPEED, SNIPER_JUMP_SPEED, SNIPER_ANIM_DELAY)
+        self.stunDelay = SNIPER_STUN_DELAY
 
     def move_cpu(self, player1):
         # TODO make some real AI BS
@@ -340,10 +381,6 @@ class Sniper(NPC):
         else:
             Character.move(self, STILL)
 
-    # This procedure is to be executed whenever an enemy takes damage
-    def stun(self, speed, damage):
-        if(self.stunnedTime <= 0):
-            self.stunnedTime = SNIPER_STUN_DELAY
-            self.speed = speed
+
 
             
