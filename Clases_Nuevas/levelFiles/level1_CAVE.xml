@@ -11,8 +11,8 @@
         <windowWidth>800</windowWidth>
         <windowHeight>600</windowHeight>
         <!--Minimum distance to the sides-->
-        <leftMin>50</leftMin>
-        <topMin>50</topMin>
+        <leftMin>300</leftMin>
+        <topMin>200</topMin>
         <backgroundColor>
             <r>0</r>
             <g>255</g>

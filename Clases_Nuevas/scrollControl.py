@@ -37,8 +37,6 @@ class scrollControl:
             # If there is no more scenary in the left
             if self.scroll[0] <= 0:
                 self.scroll = (0, self.scroll[1])
-                player.setPosition((self.minX, player.position[1]))
-
                 return False
 
             # If it is possible to scroll left
@@ -53,9 +51,6 @@ class scrollControl:
             # If there is no more scenary in the right
             if self.scroll[0] + self.wWidth >= self.scenery.rect.right:
                 self.scroll = (self.scenery.rect.right - self.wWidth, self.scroll[1])
-                player.setPosition(
-                    (self.scroll[0] + self.maxX - player.rect.width, player.position[1]))
-
                 return False
 
             # If it is possible to scroll right
