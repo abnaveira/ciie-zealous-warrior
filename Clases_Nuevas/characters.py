@@ -35,16 +35,17 @@ PLAYER_BASE_JUMP    = 350   # time to "keep jumping" to go higher
 PLAYER_ATTACK_DELAY = 400   # time between attacks
 PLAYER_STUN_DELAY   = 400
 
-SNIPER_SPEED        = 0.12  # px / ms
-SNIPER_JUMP_SPEED   = 0.27  # px / ms
-SNIPER_ANIM_DELAY   = 5     # updates / image
-SNIPER_STUN_DELAY   = 1000
 
 SKELETON_SPEED      = 0.08
 SKELETON_JUMP_SPEED = 0.3
 SKELETON_ANIM_DELAY = 7
 SKELETON_STUN_DELAY = 800
 
+AXEKNIGHT_SPEED      = 0.04
+AXEKNIGHT_JUMP_SPEED = 0.1
+AXEKNIGHT_ANIM_DELAY = 5
+AXEKNIGHT_ATTACK_DELAY = 1500
+AXEKNIGHT_STUN_DELAY = 300
 # World constants
 GRAVITY = 0.0009    # px / ms^2
 
@@ -58,10 +59,7 @@ GRAVITY = 0.0009    # px / ms^2
 
 class Character(MySprite):
 
-    jumpTime = PLAYER_BASE_JUMP  # Time you can keep jumping to increase height
-    attackTime = 0               # If this is larger than 0 character has to wait to attack
-    attacking = False
-    stunnedTime = 0              # If this is larger than 0 character is hitstunned
+
     # Parameters:
     #   Spritesheet file
     #   Coordinate file
@@ -87,6 +85,7 @@ class Character(MySprite):
         data = data.split()
         self.numStance = 1
         self.numImageStance = 0
+
         counter = 0
         self.sheetCoords = []
         for line in range(0, 3):
@@ -113,6 +112,10 @@ class Character(MySprite):
         self.animationDelay = animDelay
         # Counter to delay sprite change
         self.movementDelay = 0;
+        self.jumpTime = PLAYER_BASE_JUMP  # Time you can keep jumping to increase height
+        self.attackTime = 0  # If this is larger than 0 character has to wait to attack
+        self.attacking = False
+        self.stunnedTime = 0  # If this is larger than 0 character is hitstunned
 
         self.updateStance()
 
@@ -179,14 +182,14 @@ class Character(MySprite):
             for platform in iter(platforms):
                 if (platform.rect.top + 5 < self.rect.bottom) and (
                         platform.rect.right - 5 < self.rect.left):
-                    return 0
-            return -self.runSpeed
+                    return True
+            return False
         elif direction == RIGHT:
             for platform in iter(platforms):
                 if (platform.rect.top + 5 < self.rect.bottom) and (
                         platform.rect.left + 5 > self.rect.right):
-                    return 0
-            return self.runSpeed
+                    return True
+            return False
 
     def checkCeiling(self, platforms):
         for platform in iter(platforms):
@@ -205,9 +208,15 @@ class Character(MySprite):
         # If character is hitstunned, decrease the hitstun counter
         if self.movement == STUNNED:
             self.stunnedTime -= time
+            if (speedx > 0):
+                if self.checkWall(RIGHT, platforms):
+                    speedx = 0
+            elif (speedx < 0):
+                if self.checkWall(LEFT, platforms):
+                    speedx = 0
+
 
         # If moving left or right
-        # TODO horizontal collisions with walls
         elif (self.movement == LEFT) or (self.movement == RIGHT):
             # Set direction the character is facing
             self.looking = self.movement
@@ -215,9 +224,15 @@ class Character(MySprite):
 
             # Set movement speeds
             if self.movement == LEFT:
-                speedx = self.checkWall(LEFT, platforms)
+                if self.checkWall(LEFT, platforms):
+                    speedx = 0
+                else:
+                    speedx = -self.runSpeed
             else:
-                speedx = self.checkWall(RIGHT, platforms)
+                if self.checkWall(RIGHT, platforms):
+                    speedx = 0
+                else:
+                    speedx = self.runSpeed
 
             if self.numStance != SPRITE_JUMP:
                 # If player is standing on solid ground, reset jump timer
@@ -237,9 +252,15 @@ class Character(MySprite):
                 speedy = -self.jumpSpeed
             # These allow diagonal jumps
             if (self.movement == UPLEFT):
-                speedx = self.checkWall(LEFT, platforms)
+                if self.checkWall(LEFT, platforms):
+                    speedx = 0
+                else:
+                    speedx = -self.runSpeed
             elif (self.movement == UPRIGHT):
-                speedx = self.checkWall(RIGHT, platforms)
+                if self.checkWall(RIGHT, platforms):
+                    speedx = 0
+                else:
+                    speedx = self.runSpeed
 
         # If not doing anything, stand still and reset jump timer
         elif self.movement == STILL:
@@ -270,8 +291,9 @@ class Character(MySprite):
 class Player(Character):
     # The player character
     def __init__(self):
-        Character.__init__(self, 'Soma.png', 'coordSoma.txt',
-                    [5, 12, 5], PLAYER_SPEED, PLAYER_JUMP_SPEED, PLAYER_ANIM_DELAY)
+        Character.__init__(self, 'Arthur.png', 'coordArthur.txt',
+                    [1, 7, 4], PLAYER_SPEED, PLAYER_JUMP_SPEED, PLAYER_ANIM_DELAY)
+        self.stunDelay = PLAYER_STUN_DELAY
 
     # Defines movement intention
     # Whatever the player presses on their keyboard will set an intention that will
@@ -311,6 +333,10 @@ class Player(Character):
             self.attackTime -= time
         Character.update(self, platformGroup, projectileGroup, time)
 
+    def stun(self, speed, damage):
+        if (self.stunnedTime <= 0):
+            self.stunnedTime = self.stunDelay
+            self.speed = speed
 
 class NPC(Character):
 
@@ -327,6 +353,8 @@ class NPC(Character):
         if(self.stunnedTime <= 0):
             self.stunnedTime = self.stunDelay
             self.speed = speed
+
+
 
 class Skeleton(NPC):
     def __init__(self):
@@ -355,32 +383,43 @@ class Skeleton(NPC):
             Character.move(self, STILL)
 
 
-
-class Sniper(NPC):
+class AxeKnight(NPC):
     def __init__(self):
-        NPC.__init__(self, 'Sniper.png', 'coordSniper.txt', [5, 10, 6],
-                     SNIPER_SPEED, SNIPER_JUMP_SPEED, SNIPER_ANIM_DELAY)
-        self.stunDelay = SNIPER_STUN_DELAY
+        NPC.__init__(self, 'AxeKnight.png', 'coordAxeKnight.txt', [13, 16, 1],
+                     AXEKNIGHT_SPEED, AXEKNIGHT_JUMP_SPEED, AXEKNIGHT_ANIM_DELAY)
+        self.stunDelay = AXEKNIGHT_STUN_DELAY
+        self.attackDelay = AXEKNIGHT_ATTACK_DELAY
+        self.attacking = False
 
-    def move_cpu(self, player1):
-        # TODO make some real AI BS
-        # Currently enemies don't move if outside the screen
-        if (self.rect.left > 0) and (self.rect.right < ANCHO_PANTALLA) \
-                and (self.rect.bottom > 0) and (self.rect.top < ALTO_PANTALLA):
-            if player1.position[0] <  self.position[0]:
-                if player1.position[1] < self.position[1]:
-                    Character.move(self, UPLEFT)
+
+    def move_cpu(self, player):
+        diffPos = self.position[0] - player.position[0]
+        direction = LEFT
+        if  diffPos < 0:
+            direction = RIGHT
+            diffPos = -diffPos
+        if diffPos < 400:
+            if diffPos < 200:
+                if self.attackTime <= 0:
+                    self.attacking = True
                 else:
-                    Character.move(self, LEFT)
+                    Character.move(self, direction)
+
+
             else:
-                if player1.position[1] < self.position[1]:
-                    Character.move(self, UPRIGHT)
-                else:
-                    Character.move(self, RIGHT)
-
+                Character.move(self, direction)
         else:
             Character.move(self, STILL)
 
+    def update(self, platformGroup, projectileGroup, time):
+        if self.attacking:
+            self.attacking = False
+            self.attackTime = AXEKNIGHT_ATTACK_DELAY
+            # TODO change this when correct hitboxes are used
+            # Otherwise character attacks from its back
+            projectileGroup.add(axeProj(self.position, self.looking))
+        elif self.attackTime > 0:
+            self.attackTime -= time
+        Character.update(self, platformGroup, projectileGroup, time)
 
 
-            

@@ -17,6 +17,11 @@ STUNNED = 7
 SWORD_SLASH_ANIM_DELAY = 2
 SWORD_MOVE_SPEED = 0.01
 
+AXE_ANIM_DELAY = 1
+AXE_MOVE_SPEED = 0.15
+
+GRAVITY = 0.0009
+
 class Projectile(MySprite):
     # Any "hitting sprite" is a projectile, be it a crossbow bolt or a sword slash
     def __init__(self, imageFile, coordFile, nImages, moveSpeed, animDelay, looking):
@@ -79,7 +84,6 @@ class Projectile(MySprite):
 
     def update(self, platformGroup, projectileGroup, time):
 
-
         self.updateStance()
         MySprite.update(self, time)
 
@@ -88,13 +92,13 @@ class Projectile(MySprite):
 
 class swordSlash(Projectile):
     # A slash from the Player's sword
-    ended = False
     def __init__(self, position, looking):
         Projectile.__init__(self, 'swordSlashes.png', 'coordSword.txt',
                            [8], SWORD_MOVE_SPEED, SWORD_SLASH_ANIM_DELAY, looking)
         self.position = position
         self.damage = 10
         self. knockback = (.2,-.4)
+        self.ended = False
 
     def update(self, player, enemyGroup, platformGroup, projectileGroup, time):
         # The slash follows the player character
@@ -115,4 +119,41 @@ class swordSlash(Projectile):
 
         Projectile.update(self, platformGroup, projectileGroup, time)
         if self.ended:
+            self.kill()
+
+class axeProj(Projectile):
+    def __init__(self, position, looking):
+        Projectile.__init__(self, 'AxeKnight.png', 'coordAxeProj.txt',
+                           [16], AXE_MOVE_SPEED, AXE_ANIM_DELAY, looking)
+        self.position = position
+        self.damage = 10
+        self.knockback = (.2,-.4)
+        self.ended = False
+        self.collided = False
+        if (looking == RIGHT):
+            self.speed = (0.17, -0.45)
+        else:
+            self.speed = (-0.17, -0.45)
+
+
+    def update(self, player, enemyGroup, platformGroup, projectileGroup, time):
+        # A thrown axe describes a parabola
+        self.scroll = player.scroll
+        speedx, speedy = self.speed
+
+        speedy += GRAVITY * time
+
+        self.speed = (speedx, speedy)
+        if self.rect.colliderect(player.rect):
+            self.collided = True
+            if (self.looking == RIGHT):
+                player.stun(self.knockback, self.damage)
+            else:
+                player.stun((-self.knockback[0], self.knockback[1]), self.damage)
+        collision = pygame.sprite.spritecollideany(self, platformGroup)
+        if collision is not None:
+            self.collided = True
+
+        Projectile.update(self, platformGroup, projectileGroup, time)
+        if self.collided:
             self.kill()
