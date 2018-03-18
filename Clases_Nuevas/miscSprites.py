@@ -17,6 +17,21 @@ class Platform(MySprite):
         self.image.fill((255,0,0))
 
 # -------------------------------------------------
+# Class created for the flag
+
+class Flag(MySprite):
+    def __init__(self, rectangle):
+        MySprite.__init__(self)
+        # The flag will be a rectangle
+        self.rect = rectangle
+        # The position will be set as the size of the Flag
+        self.setPosition((self.rect.left, self.rect.bottom))
+        # The flag are invisible
+        #self.image = pygame.Surface((0, 0))
+        self.image = pygame.Surface((rectangle.width, rectangle.height))
+        self.image.fill((0,255,0))
+
+# -------------------------------------------------
 # Class for the background
 
 class Background:

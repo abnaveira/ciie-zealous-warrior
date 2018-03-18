@@ -105,7 +105,7 @@ def loadLevelData(level):
     top = int(flag.find("top").text) - winImageY
     width = int(flag.find("width").text)
     height = int(flag.find("height").text)
-    flagRect = pygame.Rect(left, top, width, height)
+    flag = Flag(pygame.Rect(left, top, width, height))
 
 
     # Images on the front
@@ -198,7 +198,7 @@ def loadLevelData(level):
             spawnPointList.append(spawnPointClass(id, enemyList, x, y))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, flagRect, playerX, playerY, spawnPointList
+           platformList, flag, playerX, playerY, spawnPointList
 
 class enemyInSpawnPoint:
     def __init__(self, id, spawnFrecuency):
@@ -282,5 +282,4 @@ def calculateInitialWindow(posx, posy, winHeight, winWidth, imHeight, imWidth):
     else:
         # Set player y in the most left window possible
         y = 0
-    print(str(x) + ", " + str(y))
     return (x, y)

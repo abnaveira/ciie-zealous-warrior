@@ -6,6 +6,7 @@ from characters import *
 from scrollControl import *
 from animationsPygame import *
 from miscSprites import *
+from director import *
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
@@ -13,9 +14,12 @@ from miscSprites import *
 class PhaseScene(PygameScene):
 
     def __init__(self, director, levelFile):
+        # Save the director to call the end of the phase when necessary
+        self.director = director
+
         # It reads the file with the level paramethers
         sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
-        platformList, flagRect, playerX, playerY, spawnPointList\
+        platformList, flag, playerX, playerY, spawnPointList\
             = loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, sceneryObj.windowWidth, sceneryObj.windowHeight)
@@ -48,6 +52,14 @@ class PhaseScene(PygameScene):
         self.platformsGroup = pygame.sprite.Group()
         for platform in platformList:
             self.platformsGroup.add(platform)
+        # ---------------------------------------------------
+        # FLAG AS PLATFORM TEMPORARY
+        # self.platformsGroup.add(Platform(flag))
+        # TODO: implement this well
+        self.flagRaised = False
+        self.flagGroup = pygame.sprite.Group()
+        self.flagGroup.add(flag)
+        # ---------------------------------------------------
 
         # Loads the animations in the front
         self.frontAnimations = []
@@ -78,7 +90,7 @@ class PhaseScene(PygameScene):
 
         # Creates a list for all the group sprites
         self.spritesList = [self.playersGroup, self.enemiesGroup, self.projectilesGroup,
-                            self.platformsGroup ]
+                            self.platformsGroup, self.flagGroup ]
 
         # Creates the class that will control the scroll
         self.controlScroll = scrollControl(self.scroll, sceneryObj.leftMin, sceneryObj.windowWidth - sceneryObj.leftMin,
@@ -97,6 +109,15 @@ class PhaseScene(PygameScene):
 
         # Updates the player
         self.player.update(self.platformsGroup, self.projectilesGroup, time)
+        # ---------------------------------------------------
+        # CODE TO TRY FLAGS
+        # TODO: implement this in a good way
+        if not self.flagRaised:
+            flagRaised = PhaseScene.checkFlag(self)
+            if flagRaised:
+                Director.salirEscena(self.director)
+
+        # ---------------------------------------------------
 
         # Updates the enemies
         self.enemiesGroup.update(self.platformsGroup, self.projectilesGroup, time)
@@ -138,3 +159,12 @@ class PhaseScene(PygameScene):
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         keysPressed = pygame.key.get_pressed()
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
+
+    def checkFlag (self):
+        (speedx, speedy) = self.player.speed
+        for flag in self.flagGroup:
+            if (self.player.rect.top >= flag.rect.top) and \
+                (self.player.rect.right <= flag.rect.right) and \
+                (self.player.rect.left >= flag.rect.left):
+                return True
+        return False
