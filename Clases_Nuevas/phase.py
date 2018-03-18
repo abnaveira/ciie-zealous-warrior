@@ -139,7 +139,7 @@ class PhaseScene(PygameScene):
         self.background.draw(screen)
         # Back animations
         for animation in self.backAnimations:
-            animation.dibujar(screen)
+            animation.draw(screen)
         # Scenery
         self.scenery.draw(screen)
         # Sprites
@@ -147,7 +147,7 @@ class PhaseScene(PygameScene):
             group.draw(screen)
         # Front animations
         for animation in self.frontAnimations:
-            animation.dibujar(screen)
+            animation.draw(screen)
 
     def events(self, events_list):
         # Miramos a ver si hay algun evento de salir del programa

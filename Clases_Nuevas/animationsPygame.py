@@ -10,12 +10,11 @@ class Animation(pyganim.PygAnimation):
         self.positionX = 0
         self.positionY = 0
 
-    def mover(self, distanceX, distanceY):
+    def move(self, distanceX, distanceY):
         self.positionX += distanceX
         self.positionY += distanceY
 
-    #HERE THE NAMES "dibujar" CAN'T BE CHANGED UNLESS I CHANGE OTHER CODE IN OTHER PLACES
-    def dibujar(self, screen):
+    def draw(self, screen):
         self.blit(screen, (self.positionX, self.positionY))
 
 
