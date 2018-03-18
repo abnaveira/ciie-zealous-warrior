@@ -272,7 +272,7 @@ class Fase(EscenaPygame):
         for evento in lista_eventos:
             # Si se quiere salir, se le indica al director
             if evento.type == pygame.QUIT:
-                self.director.salirPrograma()
+                self.director.leaveProgram()
 
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         teclasPulsadas = pygame.key.get_pressed()

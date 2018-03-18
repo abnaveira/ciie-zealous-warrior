@@ -60,7 +60,7 @@ class BotonSalir(Boton):
     def __init__(self, pantalla):
         Boton.__init__(self, pantalla, 'boton_rojo.png', (580,560))
     def accion(self):
-        self.pantalla.menu.salirPrograma()
+        self.pantalla.menu.leaveProgram()
 
 # -------------------------------------------------
 # Clase TextoGUI y los distintos textos
@@ -90,7 +90,7 @@ class TextoSalir(TextoGUI):
         fuente = pygame.font.SysFont('arial', 26);
         TextoGUI.__init__(self, pantalla, fuente, (0, 0, 0), 'Salir', (610, 565))
     def accion(self):
-        self.pantalla.menu.salirPrograma()
+        self.pantalla.menu.leaveProgram()
 
 # -------------------------------------------------
 # Clase PantallaGUI y las distintas pantallas
@@ -204,7 +204,7 @@ class Menu(EscenaPygame):
                 if evento.key == K_ESCAPE:
                     self.salirPrograma()
             elif evento.type == pygame.QUIT:
-                self.director.salirPrograma()
+                self.director.leaveProgram()
 
         # Se pasa la lista de eventos a la pantalla actual
         self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
@@ -216,12 +216,12 @@ class Menu(EscenaPygame):
     # Metodos propios del menu
 
     def salirPrograma(self):
-        self.director.salirPrograma()
+        self.director.leaveProgram()
 
     def ejecutarJuego(self):
         # Creamos la escena con la animacion antes de jugar
         escena = EscenaAnimacion(self.director)
-        self.director.apilarEscena(escena)
+        self.director.stackScene(escena)
 
     def mostrarPantallaInicial(self):
         self.pantallaActual = 0

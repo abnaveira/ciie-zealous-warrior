@@ -91,7 +91,7 @@ class EscenaMenu(EscenaPyglet, pyglet.window.Window):
     def on_key_press(self, symbol, modifiers):
         # Si se pulsa Escape, se sale del programa
         if symbol == pyglet.window.key.ESCAPE:
-            self.director.salirPrograma()
+            self.director.leaveProgram()
 
 
     # el evento que se ejecuta cada vez que hay que dibujar la pantalla
@@ -113,7 +113,7 @@ class EscenaMenu(EscenaPyglet, pyglet.window.Window):
 
     # Si intentan cerrar esta ventana, saldremos del programa
     def on_close(self):
-        self.director.salirPrograma()
+        self.director.leaveProgram()
 
     # El evento relativo al clic del raton
     def on_mouse_press(self, x, y, button, modifiers):
@@ -121,9 +121,9 @@ class EscenaMenu(EscenaPyglet, pyglet.window.Window):
         if(pyglet.window.mouse.LEFT == button):
             # Miramos a ver en que boton se ha pulsado, y se hace la accion correspondiente
             if  (x>=self.botonJugar.x) and (x<=(self.botonJugar.x + self.botonJugar.width)) and (y>=self.botonJugar.y) and (y<=(self.botonJugar.y + self.botonJugar.height)):
-                self.director.salirEscena()
+                self.director.leaveScene()
             elif  (x>=self.botonSalir.x) and (x<=(self.botonSalir.x + self.botonSalir.width)) and (y>=self.botonSalir.y) and (y<=(self.botonSalir.y + self.botonSalir.height)):
-                self.director.salirPrograma()
+                self.director.leaveProgram()
     
     def update(self, *args):
         return

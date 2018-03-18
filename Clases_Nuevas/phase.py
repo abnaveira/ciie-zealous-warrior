@@ -89,8 +89,8 @@ class PhaseScene(PygameScene):
         self.dinamicSpritesGroup = pygame.sprite.Group(self.player)
 
         # Creates a list for all the group sprites
-        self.spritesList = [self.playersGroup, self.enemiesGroup, self.projectilesGroup,
-                            self.platformsGroup, self.flagGroup ]
+        self.spritesList = [self.flagGroup, self.playersGroup, self.enemiesGroup, self.projectilesGroup,
+                            self.platformsGroup ]
 
         # Creates the class that will control the scroll
         self.controlScroll = scrollControl(self.scroll, sceneryObj.leftMin, sceneryObj.windowWidth - sceneryObj.leftMin,
@@ -111,11 +111,18 @@ class PhaseScene(PygameScene):
         self.player.update(self.platformsGroup, self.projectilesGroup, time)
         # ---------------------------------------------------
         # CODE TO TRY FLAGS
-        # TODO: implement this in a good way
+        # TODO: implement this in a good way, this does not work
         if not self.flagRaised:
-            flagRaised = PhaseScene.checkFlag(self)
-            if flagRaised:
-                Director.salirEscena(self.director)
+            self.flagRaised = PhaseScene.checkFlag(self)
+            if self.flagRaised:
+                flagList = self.flagGroup.sprites()
+                flag = flagList.pop()
+                flagSprite = Character('banner.png', 'coordBanner.txt',
+                    [1, 1, 1], 0, 0, 0.1)
+                flagSprite.setPosition((int(flag.rect.left+flag.rect.right/2), flag.rect.top))
+                self.flagGroup.add(flagSprite)
+                # This changes scene
+                Director.leaveScene(self.director)
 
         # ---------------------------------------------------
 
@@ -154,17 +161,22 @@ class PhaseScene(PygameScene):
         for event in events_list:
             # Si se quiere salir, se le indica al director
             if event.type == pygame.QUIT:
-                self.director.salirPrograma()
+                self.director.leaveProgram()
 
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         keysPressed = pygame.key.get_pressed()
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
 
+    # If the player is contained within the flag rectangle of influence
+    # return true
     def checkFlag (self):
         (speedx, speedy) = self.player.speed
-        for flag in self.flagGroup:
-            if (self.player.rect.top >= flag.rect.top) and \
-                (self.player.rect.right <= flag.rect.right) and \
-                (self.player.rect.left >= flag.rect.left):
-                return True
-        return False
+        flagList = self.flagGroup.sprites()
+        flag = flagList.pop()
+        if (self.player.rect.top >= flag.rect.top) and \
+            (self.player.rect.bottom <= flag.rect.bottom) and \
+            (self.player.rect.right <= flag.rect.right) and \
+            (self.player.rect.left >= flag.rect.left):
+            return True
+        else:
+            return False

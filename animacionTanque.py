@@ -277,6 +277,6 @@ class EscenaAnimacion(EscenaPyglet, pyglet.window.Window):
         # Creamos la nueva escena
         escena = Fase(self.director)
         # Y cambiamos la actual por la nueva
-        self.director.cambiarEscena(escena)
+        self.director.changeScene(escena)
 
 

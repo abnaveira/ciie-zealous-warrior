@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-# Modulos
+# Modules
 import pygame, pyglet
 import sys
 from escena import *
@@ -12,113 +12,111 @@ FPS = 60
 class Director():
 
     def __init__(self):
-        # Pila de escenas
-        self.pila = []
-        # Flag que nos indica cuando quieren salir de la escena de pygame
-        self.salir_escena_pygame = False
+        # Scene stack
+        self.stack = []
+        # Flag that indicates when to leave pygame scene
+        self.leave_scene_pygame = False
 
-    def buclePygame(self, escena):
+    def loopPygame(self, scene):
 
-        # Cogemos el reloj de pygame
-        reloj = pygame.time.Clock()
+        # Take pygame clock
+        clock = pygame.time.Clock()
 
-        # Ponemos el flag de salir de la escena a False
-        self.salir_escena_pygame = False
+        # Leave scene flag is false
+        self.leave_scene_pygame = False
 
-        # Eliminamos todos los eventos producidos antes de entrar en el bucle
+        # Erase all events prior to entering the loop
         pygame.event.clear()
-        
-        # El bucle del juego, las acciones que se realicen se harán en cada escena
-        while not self.salir_escena_pygame:
 
-            # Sincronizar el juego a 60 fps
-            tiempo_pasado = reloj.tick(FPS)
-            
-            # Pasamos los eventos a la escena
-            escena.events(pygame.event.get())
+        # The loop of the game, actions that will take place in each scene
+        while not self.leave_scene_pygame:
 
-            # Actualiza la escena
-            escena.update(tiempo_pasado)
+            # Synchronize the game at 60 fps
+            time_passed = clock.tick(FPS)
 
-            # Se dibuja en pantalla
-            escena.draw(escena.screen)
+            # Hand on the events to the secene
+            scene.events(pygame.event.get())
+
+            # Update the scene
+            scene.update(time_passed)
+
+            # Draw in the screen
+            scene.draw(scene.screen)
             pygame.display.flip()
 
 
 
 
-    def ejecutar(self):
+    def execute(self):
 
-        # Inicializamos la libreria de pygame (si no esta inicializada ya)
+        # Initialize pygame library (if it wasn't already)
         pygame.init()
-        # Creamos la pantalla de pygame (si no esta creada ya)
+        # Create pygame display (if it wasn't already)
         #self.screen = pygame.display.set_mode((ANCHO_PANTALLA, ALTO_PANTALLA))
-        # Estas dos lineas realmente no son necesarias, se ponen aqui por seguridad,
 
-        # Mientras haya escenas en la pila, ejecutaremos la de arriba
-        while (len(self.pila)>0):
+        # While the stack contains scenes, we execute the top one
+        while (len(self.stack) > 0):
 
-            # Se coge la escena a ejecutar como la que este en la cima de la pila
-            escena = self.pila[len(self.pila)-1]
+            # We take the scene on the top of the stack to execute it
+            scene = self.stack[len(self.stack) - 1]
 
-            # Si la escena es de pyame
-            if isinstance(escena, PygameScene):
+            # If the scene is pygame's
+            if isinstance(scene, PygameScene):
 
-                # Ejecutamos el bucle
-                self.buclePygame(escena)
+                # Execute the loop
+                self.loopPygame(scene)
 
-            # Si no, si la escena es de pyglet
-            elif isinstance(escena, EscenaPyglet):
+            # If not, if it is pyglet's
+            elif isinstance(scene, EscenaPyglet):
 
-                # Ejecutamos la aplicacion de pyglet
+                # Execute pyglet app
                 pyglet.app.run()
 
-                # Cuando hayamos terminado la animacion con pyglet, cerramos la ventana
-                escena.close()
+                # When pyglet animation is done, close the window
+                scene.close()
 
             else:
-                raise Exception('No se que tipo de escena es')
+                raise Exception('Unrecogniced scene type')
 
-        # Finalizamos la libreria de pygame y cerramos las ventanas
+        # Stop pygame library and close all windows
         pygame.quit()
 
 
-    def pararEscena(self):
-        if (len(self.pila)>0):
-            escena = self.pila[len(self.pila)-1]
-            # Si la escena es de pygame
-            if isinstance(escena, PygameScene):
-                # Indicamos en el flag que se quiere salir de la escena
-                self.salir_escena_pygame = True
-            # Si es una escena de pyglet
-            elif isinstance(escena, EscenaPyglet):
-                # Salimos del bucle de pyglet
+    def stopScene(self):
+        if (len(self.stack)>0):
+            scene = self.stack[len(self.stack) - 1]
+            # If the scene is pygame's
+            if isinstance(scene, PygameScene):
+                # We indicate with the flag we want to leave it
+                self.leave_scene_pygame = True
+            # If it is pyglet's
+            elif isinstance(scene, EscenaPyglet):
+                # Exit pyglet loop
                 pyglet.app.exit()
             else:
-                raise Exception('No se que tipo de escena es')
+                raise Exception('Unrecogniced scene type')
 
-    def salirEscena(self):
-        self.pararEscena()
-        # Eliminamos la escena actual de la pila (si la hay)
-        if (len(self.pila)>0):
-            self.pila.pop()
+    def leaveScene(self):
+        self.stopScene()
+        # Erase scene on top of the stack (if there's any)
+        if (len(self.stack)>0):
+            self.stack.pop()
 
-    def salirPrograma(self):
-        self.pararEscena()
-        # Vaciamos la lista de escenas pendientes
-        self.pila = []
+    def leaveProgram(self):
+        self.stopScene()
+        # Clear scene stack
+        self.stack = []
 
-    def cambiarEscena(self, escena):
-        self.pararEscena()
-        # Eliminamos la escena actual de la pila (si la hay)
-        if (len(self.pila)>0):
-            self.pila.pop()
-        # Ponemos la escena pasada en la cima de la pila
-        self.pila.append(escena)
+    def changeScene(self, scene):
+        self.stopScene()
+        # Erase scene on top of the stack (if there's any)
+        if (len(self.stack)>0):
+            self.stack.pop()
+        # Put argument scene on top of the stack
+        self.stack.append(scene)
 
-    def apilarEscena(self, escena):
-        self.pararEscena()
-        # Ponemos la escena pasada en la cima de la pila
-        #  (por encima de la actual)
-        self.pila.append(escena)
+    def stackScene(self, scene):
+        self.stopScene()
+        # Put argument scene on top of the stack (over the current one)
+        self.stack.append(scene)
 

@@ -20,7 +20,7 @@ if __name__ == '__main__':
         # Create the scene for the level
         scene = PhaseScene(director, level)
         # Put it on top of the stack
-        director.apilarEscena(scene)
+        director.stackScene(scene)
 
     # Execute the game
-    director.ejecutar()
+    director.execute()
