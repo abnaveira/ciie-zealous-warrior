@@ -436,12 +436,6 @@ class AxeKnight(NPC):
             self.attackTime -= time
         Character.update(self, platformGroup, projectileGroup, time)
 
-class FlagSprite(Character):
-    # The flag sprite
-    def __init__(self):
-        Character.__init__(self, 'banner.png', 'coordBanner.txt',
-                    [1, 1, 1], 0, 0, 0.1)
-
 class MeltyZombie(NPC):
     def __init__(self):
         NPC.__init__(self, 'MeltyZombie.png', 'coordMeltyZombie.txt', [4, 8, 1],

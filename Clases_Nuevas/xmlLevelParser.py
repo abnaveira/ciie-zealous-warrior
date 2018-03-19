@@ -5,6 +5,7 @@ import os
 import xml.etree.ElementTree as ET
 from miscSprites import *
 import pygame
+BANNER_WIDTH = 58
 
 def openXmlGetTree(xmlFileName):
     # Get the directory where this file is
@@ -99,13 +100,17 @@ def loadLevelData(level):
 
         platformList.append(Platform(pygame.Rect(left,top,width,height)))
 
-    # Flag
-    flag = root.find("flag")
-    left = int(flag.find("left").text) - winImageX
-    top = int(flag.find("top").text) - winImageY
-    width = int(flag.find("width").text)
-    height = int(flag.find("height").text)
-    flag = FlagArea(pygame.Rect(left, top, width, height))
+    # Flag area of influence
+    flagArea = root.find("flag")
+    left = int(flagArea.find("left").text) - winImageX
+    top = int(flagArea.find("top").text) - winImageY
+    width = int(flagArea.find("width").text)
+    height = int(flagArea.find("height").text)
+
+    # Position where the Banner will spawn within the flag area of influence
+    realFlagXPos = (int(flagArea.find("left").text) - BANNER_WIDTH / 2 + int(flagArea.find("width").text) / 2)
+
+    flagArea = FlagArea(pygame.Rect(left, top, width, height))
 
 
     # Images on the front
@@ -198,7 +203,7 @@ def loadLevelData(level):
             spawnPointList.append(spawnPointClass(id, enemyList, x, y))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, flag, playerX, playerY, spawnPointList
+           platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList
 
 class enemyInSpawnPoint:
     def __init__(self, id, spawnFrecuency):

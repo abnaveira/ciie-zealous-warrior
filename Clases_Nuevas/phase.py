@@ -7,6 +7,7 @@ from scrollControl import *
 from animationsPygame import *
 from miscSprites import *
 from director import *
+from standingSprites import *
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
@@ -19,7 +20,7 @@ class PhaseScene(PygameScene):
 
         # It reads the file with the level paramethers
         sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
-        platformList, flag, playerX, playerY, spawnPointList\
+        platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList\
             = loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, sceneryObj.windowWidth, sceneryObj.windowHeight)
@@ -58,8 +59,9 @@ class PhaseScene(PygameScene):
         # TODO: implement this well
         self.flagRaised = False
         self.flagGroup = pygame.sprite.Group()
-        self.flagSpriteGroup = pygame.sprite.Group()
-        self.flagGroup.add(flag)
+        self.bannerSpriteGroup = pygame.sprite.Group()
+        self.flagGroup.add(flagArea)
+        self.realFlagXPos = realFlagXPos
         # ---------------------------------------------------
 
         # Loads the animations in the front
@@ -112,22 +114,21 @@ class PhaseScene(PygameScene):
         self.player.update(self.platformsGroup, self.projectilesGroup, time)
         # ---------------------------------------------------
         # CODE TO TRY FLAGS
-        # TODO: implement this in a good way, this does not work
         if not self.flagRaised:
             self.flagRaised = PhaseScene.checkFlag(self)
             if self.flagRaised:
                 flagList = self.flagGroup.sprites()
                 flag = flagList.pop()
-                flagSprite = FlagSprite()
-                flagSprite.setPosition((int(flag.rect.left+flag.rect.right/2), flag.rect.top))
-                self.flagSpriteGroup.add(flagSprite)
+                # We set the Banner in its position
+                bannerSprite = Banner((self.realFlagXPos,flag.rect.bottom))
+                self.bannerSpriteGroup.add(bannerSprite)
                 # This changes scene
                 #Director.leaveScene(self.director)
 
         # ---------------------------------------------------
 
-        # OJETE, esto tampoco
-        self.flagSpriteGroup.update(self.platformsGroup, self.projectilesGroup, time)
+        # Updates the banner sprite
+        self.bannerSpriteGroup.update(self.player, time)
 
         # Updates the enemies
         self.enemiesGroup.update(self.platformsGroup, self.projectilesGroup, time)
@@ -152,6 +153,8 @@ class PhaseScene(PygameScene):
             animation.draw(screen)
         # Scenery
         self.scenery.draw(screen)
+        # Flag Sprite
+        self.bannerSpriteGroup.draw(screen)
         # Sprites
         for group in self.spritesList:
             group.draw(screen)
