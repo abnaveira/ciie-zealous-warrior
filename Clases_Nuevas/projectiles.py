@@ -20,7 +20,7 @@ SWORD_MOVE_SPEED = 0.01
 AXE_ANIM_DELAY = 1
 AXE_MOVE_SPEED = 0.15
 
-MELTYGOO_ANIM_DELAY = 4
+MELTYGOO_ANIM_DELAY = 6
 
 GRAVITY = 0.0009
 
@@ -172,10 +172,9 @@ class MeltyGoo(Projectile):
 
     def update(self, player, enemyGroup, platformGroup, projectileGroup, time):
         # Goo travels down onto a platform, and stays there a bit
-        print(self.position)
         if not self.collided :
             speedx, speedy = self.speed
-            speedy += GRAVITY * time
+            speedy += 3*GRAVITY * time
             self.speed = (speedx, speedy)
         if self.rect.colliderect(player.rect):
             self.collided = True
