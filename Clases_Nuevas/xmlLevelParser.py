@@ -105,7 +105,7 @@ def loadLevelData(level):
     top = int(flag.find("top").text) - winImageY
     width = int(flag.find("width").text)
     height = int(flag.find("height").text)
-    flag = Flag(pygame.Rect(left, top, width, height))
+    flag = FlagArea(pygame.Rect(left, top, width, height))
 
 
     # Images on the front

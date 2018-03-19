@@ -58,6 +58,7 @@ class PhaseScene(PygameScene):
         # TODO: implement this well
         self.flagRaised = False
         self.flagGroup = pygame.sprite.Group()
+        self.flagSpriteGroup = pygame.sprite.Group()
         self.flagGroup.add(flag)
         # ---------------------------------------------------
 
@@ -117,14 +118,16 @@ class PhaseScene(PygameScene):
             if self.flagRaised:
                 flagList = self.flagGroup.sprites()
                 flag = flagList.pop()
-                flagSprite = Character('banner.png', 'coordBanner.txt',
-                    [1, 1, 1], 0, 0, 0.1)
+                flagSprite = FlagSprite()
                 flagSprite.setPosition((int(flag.rect.left+flag.rect.right/2), flag.rect.top))
-                self.flagGroup.add(flagSprite)
+                self.flagSpriteGroup.add(flagSprite)
                 # This changes scene
-                Director.leaveScene(self.director)
+                #Director.leaveScene(self.director)
 
         # ---------------------------------------------------
+
+        # OJETE, esto tampoco
+        self.flagSpriteGroup.update(self.platformsGroup, self.projectilesGroup, time)
 
         # Updates the enemies
         self.enemiesGroup.update(self.platformsGroup, self.projectilesGroup, time)
