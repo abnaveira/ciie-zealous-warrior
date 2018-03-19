@@ -34,18 +34,29 @@ PLAYER_ANIM_DELAY   = 5     # updates / image
 PLAYER_BASE_JUMP    = 350   # time to "keep jumping" to go higher
 PLAYER_ATTACK_DELAY = 400   # time between attacks
 PLAYER_STUN_DELAY   = 400
+PLAYER_BASE_HEALTH = 100
 
 
 SKELETON_SPEED      = 0.08
 SKELETON_JUMP_SPEED = 0.3
 SKELETON_ANIM_DELAY = 7
 SKELETON_STUN_DELAY = 800
+SKELETON_BASE_HEALTH = 20
 
 AXEKNIGHT_SPEED      = 0.04
 AXEKNIGHT_JUMP_SPEED = 0.1
 AXEKNIGHT_ANIM_DELAY = 5
 AXEKNIGHT_ATTACK_DELAY = 1500
 AXEKNIGHT_STUN_DELAY = 300
+AXEKNIGHT_BASE_HEALTH = 60
+
+MELTYZOMBIE_SPEED = 0.03
+MELTYZOMBIE_JUMP_SPEED = 0.1
+MELTYZOMBIE_ANIM_DELAY = 9
+MELTYZOMBIE_ATTACK_DELAY = 1500
+MELTYZOMBIE_STUN_DELAY = 800
+MELTYZOMBIE_BASE_HEALTH = 35
+
 # World constants
 GRAVITY = 0.0009    # px / ms^2
 
@@ -115,6 +126,7 @@ class Character(MySprite):
         self.jumpTime = PLAYER_BASE_JUMP  # Time you can keep jumping to increase height
         self.attackTime = 0  # If this is larger than 0 character has to wait to attack
         self.attacking = False
+        self.dead = False
         self.stunnedTime = 0  # If this is larger than 0 character is hitstunned
 
         self.updateStance()
@@ -205,6 +217,8 @@ class Character(MySprite):
         # these are local and are set to the character at the end of the procedure
         (speedx, speedy) = self.speed
         platforms = pygame.sprite.spritecollide(self, platformGroup, False)
+        if self.dead:
+            self.onDeath(platformGroup, projectileGroup, time)
         # If character is hitstunned, decrease the hitstun counter
         if self.movement == STUNNED:
             self.stunnedTime -= time
@@ -288,12 +302,24 @@ class Character(MySprite):
 
         return
 
+    def stun(self, speed, damage):
+        if (self.stunnedTime <= 0):
+            self.stunnedTime = self.stunDelay
+            self.speed = speed
+            self.HP -= damage
+            if self.HP <= 0:
+                self.dead = True
+
+    def onDeath(self, platformGroup, projectileGroup, time):
+        self.kill()
+
 class Player(Character):
     # The player character
     def __init__(self):
         Character.__init__(self, 'Arthur.png', 'coordArthur.txt',
                     [1, 7, 4], PLAYER_SPEED, PLAYER_JUMP_SPEED, PLAYER_ANIM_DELAY)
         self.stunDelay = PLAYER_STUN_DELAY
+        self.HP = PLAYER_BASE_HEALTH
 
     # Defines movement intention
     # Whatever the player presses on their keyboard will set an intention that will
@@ -323,7 +349,6 @@ class Player(Character):
         if self.attacking:
             self.attacking = False
             self.attackTime = PLAYER_ATTACK_DELAY
-            # TODO change this when correct hitboxes are used
             # Otherwise character attacks from its back
             if (self.looking == RIGHT):
                 projectileGroup.add(swordSlash(self.position, self.looking))
@@ -333,10 +358,6 @@ class Player(Character):
             self.attackTime -= time
         Character.update(self, platformGroup, projectileGroup, time)
 
-    def stun(self, speed, damage):
-        if (self.stunnedTime <= 0):
-            self.stunnedTime = self.stunDelay
-            self.speed = speed
 
 class NPC(Character):
 
@@ -345,14 +366,8 @@ class NPC(Character):
         Character.__init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay)
         self.stunDelay = 0
 
-    def move_cpu(self, player):
+    def move_cpu(self, player, platformGroup):
         return
-
-    # This procedure is to be executed whenever an enemy takes damage
-    def stun(self, speed, damage):
-        if(self.stunnedTime <= 0):
-            self.stunnedTime = self.stunDelay
-            self.speed = speed
 
 
 
@@ -361,11 +376,13 @@ class Skeleton(NPC):
         NPC.__init__(self, 'Skeletons.png', 'coordSkeletons.txt', [1, 8, 2],
                      SKELETON_SPEED, SKELETON_JUMP_SPEED, SKELETON_ANIM_DELAY)
         self.stunDelay = SKELETON_STUN_DELAY
+        self.HP = SKELETON_BASE_HEALTH
 
 
-    def move_cpu(self, player1):
+    def move_cpu(self, player1, platformGroup):
         # TODO make some real AI BS
         # Currently enemies don't move if outside the screen
+        print(self.HP)
         if (self.rect.left > 0) and (self.rect.right < ANCHO_PANTALLA) \
                 and (self.rect.bottom > 0) and (self.rect.top < ALTO_PANTALLA):
             if player1.position[0] < self.position[0]:
@@ -390,9 +407,10 @@ class AxeKnight(NPC):
         self.stunDelay = AXEKNIGHT_STUN_DELAY
         self.attackDelay = AXEKNIGHT_ATTACK_DELAY
         self.attacking = False
+        self.HP = AXEKNIGHT_BASE_HEALTH
 
 
-    def move_cpu(self, player):
+    def move_cpu(self, player, platformGroup):
         diffPos = self.position[0] - player.position[0]
         direction = LEFT
         if  diffPos < 0:
@@ -404,8 +422,6 @@ class AxeKnight(NPC):
                     self.attacking = True
                 else:
                     Character.move(self, direction)
-
-
             else:
                 Character.move(self, direction)
         else:
@@ -415,11 +431,39 @@ class AxeKnight(NPC):
         if self.attacking:
             self.attacking = False
             self.attackTime = AXEKNIGHT_ATTACK_DELAY
-            # TODO change this when correct hitboxes are used
-            # Otherwise character attacks from its back
             projectileGroup.add(axeProj(self.position, self.looking))
         elif self.attackTime > 0:
             self.attackTime -= time
         Character.update(self, platformGroup, projectileGroup, time)
 
 
+class MeltyZombie(NPC):
+    def __init__(self):
+        NPC.__init__(self, 'MeltyZombie.png', 'coordMeltyZombie.txt', [4, 8, 1],
+                     MELTYZOMBIE_SPEED, MELTYZOMBIE_JUMP_SPEED, MELTYZOMBIE_ANIM_DELAY)
+        self.stunDelay = MELTYZOMBIE_STUN_DELAY
+        self.HP = MELTYZOMBIE_BASE_HEALTH
+
+    def move_cpu(self, player, platformGroup):
+        diffPos = self.position[0] - player.position[0]
+        direction = LEFT
+        edge = False
+        if diffPos < 0:
+            direction = RIGHT
+            diffPos = -diffPos
+        if diffPos < 500:
+            platform = pygame.sprite.spritecollideany(self, platformGroup)
+            if (platform is not None) and (platform.rect.top >= self.rect.bottom - 2 ):
+                if (direction == RIGHT) and (platform.rect.right < self.rect.right):
+                    edge = True
+                elif (direction == LEFT) and (platform.rect.left > self.rect.left):
+                    edge = True
+            if edge :
+                Character.move(self, STILL)
+            else:
+                Character.move(self, direction)
+        else: Character.move(self, STILL)
+
+    def onDeath(self, platformGroup, projectileGroup, time):
+        projectileGroup.add(MeltyGoo(self.position, self.looking))
+        Character.onDeath(self, platformGroup, projectileGroup, time)

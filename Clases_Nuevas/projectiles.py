@@ -20,6 +20,8 @@ SWORD_MOVE_SPEED = 0.01
 AXE_ANIM_DELAY = 1
 AXE_MOVE_SPEED = 0.15
 
+MELTYGOO_ANIM_DELAY = 4
+
 GRAVITY = 0.0009
 
 class Projectile(MySprite):
@@ -94,7 +96,7 @@ class swordSlash(Projectile):
     # A slash from the Player's sword
     def __init__(self, position, looking):
         Projectile.__init__(self, 'swordSlashes.png', 'coordSword.txt',
-                           [8], SWORD_MOVE_SPEED, SWORD_SLASH_ANIM_DELAY, looking)
+                           [9], SWORD_MOVE_SPEED, SWORD_SLASH_ANIM_DELAY, looking)
         self.position = position
         self.damage = 10
         self. knockback = (.2,-.4)
@@ -106,7 +108,7 @@ class swordSlash(Projectile):
         self.scroll = player.scroll
         # This compensates for the slash' starting position so the player doesn't attack from its back
         if (self.looking <> RIGHT):
-            self.increasePosition((-50, 0))
+            self.increasePosition((-55, 0))
 
         enemyCollision = pygame.sprite.spritecollide(self, enemyGroup, False)
         for enemy in iter(enemyCollision):
@@ -156,4 +158,36 @@ class axeProj(Projectile):
 
         Projectile.update(self, platformGroup, projectileGroup, time)
         if self.collided:
+            self.kill()
+
+class MeltyGoo(Projectile):
+    def __init__(self, position, looking):
+        Projectile.__init__(self, 'MeltyZombie.png', 'coordMeltyGoo.txt',
+                           [10], 0, MELTYGOO_ANIM_DELAY, looking)
+        self.position = position
+        self.damage = 5
+        self.knockback = (.1,-.3)
+        self.ended = False
+        self.collided = False
+
+    def update(self, player, enemyGroup, platformGroup, projectileGroup, time):
+        # Goo travels down onto a platform, and stays there a bit
+        print(self.position)
+        if not self.collided :
+            speedx, speedy = self.speed
+            speedy += GRAVITY * time
+            self.speed = (speedx, speedy)
+        if self.rect.colliderect(player.rect):
+            self.collided = True
+            if (self.looking == RIGHT):
+                player.stun(self.knockback, self.damage)
+            else:
+                player.stun((-self.knockback[0], self.knockback[1]), self.damage)
+        collision = pygame.sprite.spritecollideany(self, platformGroup)
+        if collision is not None:
+            self.setPosition((self.position[0],collision.position[1]-collision.rect.height+1))
+            self.collided = True
+
+        Projectile.update(self, platformGroup, projectileGroup, time)
+        if self.ended:
             self.kill()
