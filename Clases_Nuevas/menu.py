@@ -53,7 +53,7 @@ class LeaveButton(Button):
     def __init__(self, screen, window_width, window_height):
         Button.__init__(self, screen, 'ExitButton.png', (window_width/5*2, window_height/8*7))
     def action(self):
-        self.screen.menu.leaveProgram()
+        self.screen.menu.exitProgram()
 
 # -------------------------------------------------
 # Class GUIText and different text implementations
