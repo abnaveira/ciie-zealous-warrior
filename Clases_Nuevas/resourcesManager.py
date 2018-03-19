@@ -53,3 +53,17 @@ class ResourcesManager(object):
             cls.resources[name] = data
             # It is returned
             return data
+
+    @classmethod
+    def loadFont(cls, name, size):
+        # If the name of the file is amongst the already loaded resources
+        if name in cls.resources:
+            # That resource is returned
+            return cls.resources[name + str(size)]
+        # If it hasn't been loaded previously
+        else:
+            # Ask to the system for the font
+            font = pygame.font.SysFont(name, size)
+            cls.resources[name + str(size)] = font
+            return font
+
