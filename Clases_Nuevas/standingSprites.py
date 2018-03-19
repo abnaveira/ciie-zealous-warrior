@@ -17,7 +17,7 @@ STUNNED = 7
 SWORD_SLASH_ANIM_DELAY = 2
 SWORD_MOVE_SPEED = 0.01
 
-FLAG_ANIM_DELAY = 1
+FLAG_ANIM_DELAY = 6
 AXE_MOVE_SPEED = 0.15
 
 GRAVITY = 0.0009
@@ -91,7 +91,7 @@ class Banner(StandingSprites):
     # The banner sprite
     def __init__(self, position):
         StandingSprites.__init__(self, 'banner.png', 'coordBanner.txt',
-                    [1], 0.1, LEFT)
+                    [10], FLAG_ANIM_DELAY, LEFT)
         self.position = position
 
     def update(self, player, time):
