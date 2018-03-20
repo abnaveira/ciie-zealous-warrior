@@ -4,6 +4,7 @@
 from director import Director
 from phase import PhaseScene
 from xmlLevelParser import getAllLevelFiles
+from menu import *
 
 
 if __name__ == '__main__':
@@ -16,11 +17,17 @@ if __name__ == '__main__':
     # Reverse the order of the levels (to put in the stack)
     levelFilesList.reverse()
 
+
+
     for level in levelFilesList:
         # Create the scene for the level
         scene = PhaseScene(director, level)
         # Put it on top of the stack
         director.stackScene(scene)
+
+    # Loads the game menu in the director
+    menu = Menu(director, 800, 600)#960, 540)
+    director.stackScene(menu)
 
     # Execute the game
     director.execute()
