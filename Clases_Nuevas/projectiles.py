@@ -20,7 +20,7 @@ SWORD_MOVE_SPEED = 0.01
 AXE_ANIM_DELAY = 1
 AXE_MOVE_SPEED = 0.15
 
-MELTYGOO_ANIM_DELAY = 6
+MELTYGOO_ANIM_DELAY = 16
 
 GRAVITY = 0.0009
 
@@ -163,7 +163,7 @@ class axeProj(Projectile):
 class MeltyGoo(Projectile):
     def __init__(self, position, looking):
         Projectile.__init__(self, 'MeltyZombie.png', 'coordMeltyGoo.txt',
-                           [10], 0, MELTYGOO_ANIM_DELAY, looking)
+                           [16], 0, MELTYGOO_ANIM_DELAY, looking)
         self.position = position
         self.damage = 5
         self.knockback = (.1,-.3)
@@ -171,21 +171,14 @@ class MeltyGoo(Projectile):
         self.collided = False
 
     def update(self, player, enemyGroup, platformGroup, projectileGroup, time):
-        # Goo travels down onto a platform, and stays there a bit
-        if not self.collided :
-            speedx, speedy = self.speed
-            speedy += 3*GRAVITY * time
-            self.speed = (speedx, speedy)
+        # Goo  stays on the platform
+        self.scroll = player.scroll
         if self.rect.colliderect(player.rect):
             self.collided = True
             if (self.looking == RIGHT):
                 player.stun(self.knockback, self.damage)
             else:
                 player.stun((-self.knockback[0], self.knockback[1]), self.damage)
-        collision = pygame.sprite.spritecollideany(self, platformGroup)
-        if collision is not None:
-            self.setPosition((self.position[0],collision.position[1]-collision.rect.height+1))
-            self.collided = True
 
         Projectile.update(self, platformGroup, projectileGroup, time)
         if self.ended:

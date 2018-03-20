@@ -365,6 +365,7 @@ class NPC(Character):
     def __init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay):
         Character.__init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay)
         self.stunDelay = 0
+        self.attackTime = 0
 
     def move_cpu(self, player, platformGroup):
         return
@@ -430,7 +431,7 @@ class AxeKnight(NPC):
     def update(self, platformGroup, projectileGroup, time):
         if self.attacking:
             self.attacking = False
-            self.attackTime = AXEKNIGHT_ATTACK_DELAY
+            self.attackTime = self.attackDelay
             projectileGroup.add(axeProj(self.position, self.looking))
         elif self.attackTime > 0:
             self.attackTime -= time
@@ -442,6 +443,8 @@ class MeltyZombie(NPC):
                      MELTYZOMBIE_SPEED, MELTYZOMBIE_JUMP_SPEED, MELTYZOMBIE_ANIM_DELAY)
         self.stunDelay = MELTYZOMBIE_STUN_DELAY
         self.HP = MELTYZOMBIE_BASE_HEALTH
+        self.attackDelay = MELTYZOMBIE_ATTACK_DELAY
+        self.attacking = False
 
     def move_cpu(self, player, platformGroup):
         diffPos = self.position[0] - player.position[0]
@@ -461,8 +464,16 @@ class MeltyZombie(NPC):
                 Character.move(self, STILL)
             else:
                 Character.move(self, direction)
+                if self.numStance != SPRITE_JUMP:
+                    if self.attackTime <= 0:
+                        self.attacking = True
         else: Character.move(self, STILL)
 
-    def onDeath(self, platformGroup, projectileGroup, time):
-        projectileGroup.add(MeltyGoo(self.position, self.looking))
-        Character.onDeath(self, platformGroup, projectileGroup, time)
+    def update(self, platformGroup, projectileGroup, time):
+        if self.attacking:
+            self.attacking = False
+            self.attackTime = self.attackDelay
+            projectileGroup.add(MeltyGoo((self.position[0],self.position[1] + 22), self.looking))
+        elif self.attackTime > 0:
+            self.attackTime -= time
+        Character.update(self, platformGroup, projectileGroup, time)
