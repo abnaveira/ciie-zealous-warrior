@@ -35,6 +35,7 @@ PLAYER_ANIM_DELAY   = 5     # updates / image
 PLAYER_BASE_JUMP    = 350   # time to "keep jumping" to go higher
 PLAYER_ATTACK_DELAY = 400   # time between attacks
 PLAYER_STUN_DELAY   = 400
+PLAYER_INVUL_DELAY  = 1500
 PLAYER_BASE_HEALTH  = 100
 
 
@@ -144,6 +145,7 @@ class Character(MySprite):
         self.attacking = False
         self.dead = False
         self.stunnedTime = 0  # If this is larger than 0 character is hitstunned
+        self.invulTime = 0
 
         self.updateStance()
 
@@ -235,6 +237,9 @@ class Character(MySprite):
         platforms = pygame.sprite.spritecollide(self, platformGroup, False)
         if self.dead:
             self.onDeath(platformGroup, projectileGroup, time)
+
+        if self.invulTime >= 0:
+            self.invulTime -= time
         # If character is hitstunned, decrease the hitstun counter
         if self.movement == STUNNED:
             self.stunnedTime -= time
@@ -244,8 +249,6 @@ class Character(MySprite):
             elif (speedx < 0):
                 if self.checkWall(LEFT, platforms):
                     speedx = 0
-
-
         # If moving left or right
         elif (self.movement == LEFT) or (self.movement == RIGHT):
             # Set direction the character is facing
@@ -319,8 +322,9 @@ class Character(MySprite):
         return
 
     def stun(self, speed, damage):
-        if (self.stunnedTime <= 0):
+        if (self.invulTime <= 0):
             self.stunnedTime = self.stunDelay
+            self.invulTime = self.invulDelay
             self.speed = speed
             self.HP -= damage
             if self.HP <= 0:
@@ -335,6 +339,7 @@ class Player(Character):
         Character.__init__(self, 'Arthur.png', 'coordArthur.txt',
                     [1, 7, 4], PLAYER_SPEED, PLAYER_JUMP_SPEED, PLAYER_ANIM_DELAY)
         self.stunDelay = PLAYER_STUN_DELAY
+        self.invulDelay = PLAYER_INVUL_DELAY
         self.HP = PLAYER_BASE_HEALTH
 
     # Defines movement intention
@@ -381,6 +386,7 @@ class NPC(Character):
     def __init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay):
         Character.__init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay)
         self.stunDelay = 0
+        self.invulDelay = 0
         self.attackTime = 0
         self.hitPlayer = None
         self.damage = 0
@@ -408,6 +414,7 @@ class Skeleton(NPC):
         NPC.__init__(self, 'Skeletons.png', 'coordSkeletons.txt', [1, 8, 2],
                      SKELETON_SPEED, SKELETON_JUMP_SPEED, SKELETON_ANIM_DELAY)
         self.stunDelay = SKELETON_STUN_DELAY
+        self.invulDelay = SKELETON_STUN_DELAY
         self.HP = SKELETON_BASE_HEALTH
         self.knockback = SKELETON_HIT_KB
         self.damage = SKELETON_HIT_DMG
@@ -440,6 +447,7 @@ class AxeKnight(NPC):
         NPC.__init__(self, 'AxeKnight.png', 'coordAxeKnight.txt', [13, 16, 1],
                      AXEKNIGHT_SPEED, AXEKNIGHT_JUMP_SPEED, AXEKNIGHT_ANIM_DELAY)
         self.stunDelay = AXEKNIGHT_STUN_DELAY
+        self.invulDelay = AXEKNIGHT_STUN_DELAY
         self.attackDelay = AXEKNIGHT_ATTACK_DELAY
         self.attacking = False
         self.HP = AXEKNIGHT_BASE_HEALTH
@@ -479,6 +487,7 @@ class MeltyZombie(NPC):
         NPC.__init__(self, 'MeltyZombie.png', 'coordMeltyZombie.txt', [4, 8, 1],
                      MELTYZOMBIE_SPEED, MELTYZOMBIE_JUMP_SPEED, MELTYZOMBIE_ANIM_DELAY)
         self.stunDelay = MELTYZOMBIE_STUN_DELAY
+        self.invulDelay = MELTYZOMBIE_STUN_DELAY
         self.HP = MELTYZOMBIE_BASE_HEALTH
         self.attackDelay = MELTYZOMBIE_ATTACK_DELAY
         self.attacking = False
@@ -495,9 +504,8 @@ class MeltyZombie(NPC):
         if diffPos < 500:
             platform = pygame.sprite.spritecollideany(self, platformGroup)
             if (platform is not None) and (platform.rect.top >= self.rect.bottom - 2 ):
-                if (direction == RIGHT) and (platform.rect.right < self.rect.right):
-                    edge = True
-                elif (direction == LEFT) and (platform.rect.left > self.rect.left):
+                if ((direction == RIGHT) and (platform.rect.right < self.rect.right)) \
+                        or ((direction == LEFT) and (platform.rect.left > self.rect.left)):
                     edge = True
             if edge :
                 Character.move(self, STILL)
@@ -523,6 +531,7 @@ class Imp(NPC):
         NPC.__init__(self, 'Imp.png', 'coordImp.txt', [6, 6, 6],
                      IMP_SPEED, IMP_JUMP_SPEED, IMP_ANIM_DELAY)
         self.stunDelay = IMP_STUN_DELAY
+        self.invulDelay = IMP_STUN_DELAY
         self.HP = IMP_BASE_HEALTH
         self.attackDelay = IMP_ATTACK_DELAY
         self.attacking = False

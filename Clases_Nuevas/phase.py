@@ -45,12 +45,10 @@ class PhaseScene(PygameScene):
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
 
-        # Initializes the enemy sprites group
-        enemy1 = Imp()
+        # Initialises the enemy sprites group
+        enemy1 = Skeleton()
         enemy1.setPosition((741, 210))
-        enemy2 = AxeKnight()
-        enemy2.setPosition((300, 418))
-        self.enemiesGroup = pygame.sprite.Group(enemy1, enemy2)
+        self.enemiesGroup = pygame.sprite.Group(enemy1)
 
         # Initializes the projectiles sprites group
         self.projectilesGroup = pygame.sprite.Group()
