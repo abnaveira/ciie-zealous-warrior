@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from scene import PygameScene
 from xmlLevelParser import *
 from characters import *
 from scrollControl import *
@@ -8,7 +7,7 @@ from animationsPygame import *
 from miscSprites import *
 from director import *
 from standingSprites import *
-from potionSprites import *
+from HUDElements import *
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
@@ -27,7 +26,7 @@ class PhaseScene(PygameScene):
         PygameScene.__init__(self, director, sceneryObj.windowWidth, sceneryObj.windowHeight)
 
         # Creates the scenary and background
-        self.scenery= Scenary(sceneryObj)
+        self.scenery = Scenary(sceneryObj)
         self.background = Background(sceneryObj)
 
         # Set scroll to (0,0)
@@ -36,6 +35,10 @@ class PhaseScene(PygameScene):
         # Creates the player and adds it to the group of players
         self.player = Player()
         self.playersGroup = pygame.sprite.Group(self.player)
+
+        # Creates the HUD elements
+        self.HUDElementsGroup = pygame.sprite.Group(HealthBar(self.player))
+        self.HUDElementsGroup.add(HealthBarDecoration())
 
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
@@ -65,16 +68,6 @@ class PhaseScene(PygameScene):
         self.realFlagXPos = realFlagXPos
         # ---------------------------------------------------
 
-        # Potions group
-        self.potionsGroup = pygame.sprite.Group()
-        # Put a potion in the map
-        potion1 = PotionLarge()
-        potion1.setPosition((300,418))
-        self.addPotions(potion1)
-        potion2 = PotionMedium()
-        potion2.setPosition((400, 418))
-        self.addPotions(potion2)
-
         # Loads the animations in the front
         self.frontAnimations = []
         for frontAnimation in frontAnimationsList:
@@ -103,8 +96,8 @@ class PhaseScene(PygameScene):
         self.dinamicSpritesGroup = pygame.sprite.Group(self.player)
 
         # Creates a list for all the group sprites
-        self.spritesList = [self.flagGroup, self.playersGroup,self.potionsGroup,
-                            self.enemiesGroup, self.projectilesGroup, self.platformsGroup ]
+        self.spritesList = [self.flagGroup, self.playersGroup, self.enemiesGroup, self.projectilesGroup,
+                            self.platformsGroup]
 
         # Creates the class that will control the scroll
         self.controlScroll = scrollControl(self.scroll, sceneryObj.leftMin, sceneryObj.windowWidth - sceneryObj.leftMin,
@@ -116,10 +109,6 @@ class PhaseScene(PygameScene):
         self.enemiesGroup.add(enemySprite)
         self.dinamicSpritesGroup.add(enemySprite)
 
-    # Allows to add potions to the phase
-    def addPotions(self, potionSprite):
-        self.potionsGroup.add(potionSprite)
-
     def update(self, time):
         # Executes enemy AI
         for enemy in self.enemiesGroup:
@@ -127,10 +116,6 @@ class PhaseScene(PygameScene):
 
         # Updates the player
         self.player.update(self.platformsGroup, self.projectilesGroup, time)
-
-        # Updates the potions (destroys them if used)
-        self.potionsGroup.update(self.player, self.platformsGroup, time)
-
         # ---------------------------------------------------
         # CODE TO TRY FLAGS
         if not self.flagRaised:
@@ -164,6 +149,9 @@ class PhaseScene(PygameScene):
         # Update the background if it is necessary
         self.background.update(time)
 
+        # Update HUD elements
+        self.HUDElementsGroup.update(time)
+
     def draw(self, screen):
         # Background
         self.background.draw(screen)
@@ -180,6 +168,8 @@ class PhaseScene(PygameScene):
         # Front animations
         for animation in self.frontAnimations:
             animation.draw(screen)
+        # Update HUD elements
+        self.HUDElementsGroup.draw(screen)
 
     def events(self, events_list):
         # Miramos a ver si hay algun evento de salir del programa
@@ -198,4 +188,10 @@ class PhaseScene(PygameScene):
         (speedx, speedy) = self.player.speed
         flagList = self.flagGroup.sprites()
         flag = flagList.pop()
-        return flag.rect.colliderect(self.player.rect)
+        if (self.player.rect.top >= flag.rect.top) and \
+            (self.player.rect.bottom <= flag.rect.bottom) and \
+            (self.player.rect.right <= flag.rect.right) and \
+            (self.player.rect.left >= flag.rect.left):
+            return True
+        else:
+            return False
