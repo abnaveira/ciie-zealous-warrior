@@ -40,7 +40,6 @@ class PhaseScene(PygameScene):
 
         # Creates the HUD elements
         self.HUDElementsGroup = pygame.sprite.Group(HealthBar(self.player))
-        self.HUDElementsGroup.add(HealthBarDecoration())
 
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
