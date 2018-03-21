@@ -15,8 +15,8 @@
         <topMin>200</topMin>
         <backgroundColor>
             <r>0</r>
-            <g>255</g>
-            <b>255</b>
+            <g>0</g>
+            <b>0</b>
         </backgroundColor>
     </scenery>
 

@@ -39,7 +39,7 @@ class PhaseScene(PygameScene):
         self.playersGroup = pygame.sprite.Group(self.player)
 
         # Creates the HUD elements
-        self.HUDElementsGroup = pygame.sprite.Group(HealthBar(self.player))
+        self.HUD = HUD(self.player)
 
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
@@ -170,7 +170,7 @@ class PhaseScene(PygameScene):
         self.background.update(time)
 
         # Update HUD elements
-        self.HUDElementsGroup.update(time)
+        self.HUD.update()
 
     def draw(self, screen):
         # Background
@@ -189,7 +189,7 @@ class PhaseScene(PygameScene):
         for animation in self.frontAnimations:
             animation.draw(screen)
         # Update HUD elements
-        self.HUDElementsGroup.draw(screen)
+        self.HUD.draw(screen)
 
     def events(self, events_list):
         # Miramos a ver si hay algun evento de salir del programa
