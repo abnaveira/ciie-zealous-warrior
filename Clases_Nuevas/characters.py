@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 import pygame, sys, os
+import math
 from pygame.locals import *
 from escena import *
 from gestorRecursos import *
@@ -34,28 +35,43 @@ PLAYER_ANIM_DELAY   = 5     # updates / image
 PLAYER_BASE_JUMP    = 350   # time to "keep jumping" to go higher
 PLAYER_ATTACK_DELAY = 400   # time between attacks
 PLAYER_STUN_DELAY   = 400
-PLAYER_BASE_HEALTH = 100
+PLAYER_BASE_HEALTH  = 100
 
 
-SKELETON_SPEED      = 0.08
-SKELETON_JUMP_SPEED = 0.3
-SKELETON_ANIM_DELAY = 7
-SKELETON_STUN_DELAY = 800
+SKELETON_SPEED       = 0.08
+SKELETON_JUMP_SPEED  = 0.3
+SKELETON_ANIM_DELAY  = 7
+SKELETON_STUN_DELAY  = 800
 SKELETON_BASE_HEALTH = 20
+SKELETON_HIT_DMG     = 8
+SKELETON_HIT_KB      = (.1,-.3)
 
-AXEKNIGHT_SPEED      = 0.04
-AXEKNIGHT_JUMP_SPEED = 0.1
-AXEKNIGHT_ANIM_DELAY = 5
+AXEKNIGHT_SPEED        = 0.04
+AXEKNIGHT_JUMP_SPEED   = 0.1
+AXEKNIGHT_ANIM_DELAY   = 5
 AXEKNIGHT_ATTACK_DELAY = 1500
-AXEKNIGHT_STUN_DELAY = 300
-AXEKNIGHT_BASE_HEALTH = 60
+AXEKNIGHT_STUN_DELAY   = 300
+AXEKNIGHT_BASE_HEALTH  = 60
+AXEKNIGHT_HIT_DMG      = 20
+AXEKNIGHT_HIT_KB       = (.3, -.4)
 
-MELTYZOMBIE_SPEED = 0.03
-MELTYZOMBIE_JUMP_SPEED = 0.1
-MELTYZOMBIE_ANIM_DELAY = 9
+MELTYZOMBIE_SPEED        = 0.03
+MELTYZOMBIE_JUMP_SPEED   = 0.1
+MELTYZOMBIE_ANIM_DELAY   = 9
 MELTYZOMBIE_ATTACK_DELAY = 1500
-MELTYZOMBIE_STUN_DELAY = 800
-MELTYZOMBIE_BASE_HEALTH = 35
+MELTYZOMBIE_STUN_DELAY   = 800
+MELTYZOMBIE_BASE_HEALTH  = 35
+MELTYZOMBIE_HIT_DMG      = 10
+MELTYZOMBIE_HIT_KB       = (.15, -.2)
+
+IMP_SPEED        = 0.19
+IMP_JUMP_SPEED   = 0
+IMP_ANIM_DELAY   = 4
+IMP_ATTACK_DELAY = 1500
+IMP_STUN_DELAY   = 1500
+IMP_BASE_HEALTH  = 5
+IMP_HIT_DMG      = 6
+IMP_HIT_KB       = (.15, -.25)
 
 # World constants
 GRAVITY = 0.0009    # px / ms^2
@@ -366,9 +382,24 @@ class NPC(Character):
         Character.__init__(self, imageFile, coordFile, nImages, runSpeed, jumpSpeed, animDelay)
         self.stunDelay = 0
         self.attackTime = 0
+        self.hitPlayer = None
+        self.damage = 0
+        self.knockback = (0,0)
 
     def move_cpu(self, player, platformGroup):
+        if self.rect.colliderect(player.rect):
+            self.hitPlayer = player
         return
+
+    def update(self, platformGroup, projectileGroup, time):
+        if self.hitPlayer is not None:
+            if self.stunnedTime <= 0:
+                if (self.hitPlayer.looking == RIGHT):
+                    self.hitPlayer.stun(self.knockback, self.damage)
+                else:
+                    self.hitPlayer.stun((-self.knockback[0], self.knockback[1]), self.damage)
+            self.hitPlayer = None
+        Character.update(self, platformGroup, projectileGroup, time)
 
 
 
@@ -378,27 +409,30 @@ class Skeleton(NPC):
                      SKELETON_SPEED, SKELETON_JUMP_SPEED, SKELETON_ANIM_DELAY)
         self.stunDelay = SKELETON_STUN_DELAY
         self.HP = SKELETON_BASE_HEALTH
+        self.knockback = SKELETON_HIT_KB
+        self.damage = SKELETON_HIT_DMG
 
 
-    def move_cpu(self, player1, platformGroup):
+    def move_cpu(self, player, platformGroup):
         # TODO make some real AI BS
         # Currently enemies don't move if outside the screen
-        print(self.HP)
         if (self.rect.left > 0) and (self.rect.right < ANCHO_PANTALLA) \
                 and (self.rect.bottom > 0) and (self.rect.top < ALTO_PANTALLA):
-            if player1.position[0] < self.position[0]:
-                if player1.position[1] < self.position[1]:
+            if player.position[0] < self.position[0]:
+                if player.position[1] < self.position[1]:
                     Character.move(self, UPLEFT)
                 else:
                     Character.move(self, LEFT)
             else:
-                if player1.position[1] < self.position[1]:
+                if player.position[1] < self.position[1]:
                     Character.move(self, UPRIGHT)
                 else:
                     Character.move(self, RIGHT)
 
         else:
             Character.move(self, STILL)
+        NPC.move_cpu(self, player, platformGroup)
+
 
 
 class AxeKnight(NPC):
@@ -409,6 +443,8 @@ class AxeKnight(NPC):
         self.attackDelay = AXEKNIGHT_ATTACK_DELAY
         self.attacking = False
         self.HP = AXEKNIGHT_BASE_HEALTH
+        self.knockback = AXEKNIGHT_HIT_KB
+        self.damage = AXEKNIGHT_HIT_DMG
 
 
     def move_cpu(self, player, platformGroup):
@@ -427,6 +463,7 @@ class AxeKnight(NPC):
                 Character.move(self, direction)
         else:
             Character.move(self, STILL)
+        NPC.move_cpu(self, player, platformGroup)
 
     def update(self, platformGroup, projectileGroup, time):
         if self.attacking:
@@ -435,7 +472,7 @@ class AxeKnight(NPC):
             projectileGroup.add(axeProj(self.position, self.looking))
         elif self.attackTime > 0:
             self.attackTime -= time
-        Character.update(self, platformGroup, projectileGroup, time)
+        NPC.update(self, platformGroup, projectileGroup, time)
 
 class MeltyZombie(NPC):
     def __init__(self):
@@ -445,6 +482,8 @@ class MeltyZombie(NPC):
         self.HP = MELTYZOMBIE_BASE_HEALTH
         self.attackDelay = MELTYZOMBIE_ATTACK_DELAY
         self.attacking = False
+        self.knockback = MELTYZOMBIE_HIT_KB
+        self.damage = MELTYZOMBIE_HIT_DMG
 
     def move_cpu(self, player, platformGroup):
         diffPos = self.position[0] - player.position[0]
@@ -468,6 +507,7 @@ class MeltyZombie(NPC):
                     if self.attackTime <= 0:
                         self.attacking = True
         else: Character.move(self, STILL)
+        NPC.move_cpu(self, player, platformGroup)
 
     def update(self, platformGroup, projectileGroup, time):
         if self.attacking:
@@ -476,4 +516,53 @@ class MeltyZombie(NPC):
             projectileGroup.add(MeltyGoo((self.position[0],self.position[1] + 22), self.looking))
         elif self.attackTime > 0:
             self.attackTime -= time
-        Character.update(self, platformGroup, projectileGroup, time)
+        NPC.update(self, platformGroup, projectileGroup, time)
+
+class Imp(NPC):
+    def __init__(self):
+        NPC.__init__(self, 'Imp.png', 'coordImp.txt', [6, 6, 6],
+                     IMP_SPEED, IMP_JUMP_SPEED, IMP_ANIM_DELAY)
+        self.stunDelay = IMP_STUN_DELAY
+        self.HP = IMP_BASE_HEALTH
+        self.attackDelay = IMP_ATTACK_DELAY
+        self.attacking = False
+        self.direction = (0,0)
+        self.numStance = SPRITE_JUMP
+        self.knockback = IMP_HIT_KB
+        self.damage = IMP_HIT_DMG
+
+    def move_cpu(self, player, platformGroup):
+        distx = self.position[0] - player.position[0]
+        disty = self.position[1] - player.position[1]
+        #If total distance from player is less than 500
+        if(distx*distx + disty*disty) < 250000:
+            #Set direction towards player
+            angle = math.atan(disty/distx)
+            facAngle = 1
+            if distx > 0:
+                facAngle = -1
+            self.direction = (facAngle * self.runSpeed*math.cos(angle), facAngle * self.runSpeed*math.sin(angle))
+        else:
+            self.direction = (0,0)
+        NPC.move_cpu(self, player, platformGroup)
+
+
+    def update(self, platformGroup, projectileGroup, time):
+        self.updateStance()
+        if (self.stunnedTime <= 0):
+            self.speed = self.direction
+            if self.attackTime > 0:
+                self.attackTime -= time
+            if self.hitPlayer is not None and (self.attackTime <= 0):
+                if (self.hitPlayer.looking == LEFT):
+                    self.hitPlayer.stun(self.knockback, self.damage)
+                else:
+                    self.hitPlayer.stun((-self.knockback[0], self.knockback[1]), self.damage)
+                self.attackTime = IMP_ATTACK_DELAY
+                self.stunnedTime = IMP_STUN_DELAY
+            self.hitPlayer = None
+        else:
+            self.stunnedTime -= time
+        MySprite.update(self, time)
+        if self.dead:
+            self.onDeath(platformGroup, projectileGroup, time)

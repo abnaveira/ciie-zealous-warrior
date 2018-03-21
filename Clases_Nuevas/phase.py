@@ -40,7 +40,7 @@ class PhaseScene(PygameScene):
         self.player.setPosition((playerX, playerY))
 
         # Initializes the enemy sprites group
-        enemy1 = MeltyZombie()
+        enemy1 = Imp()
         enemy1.setPosition((741, 210))
         enemy2 = AxeKnight()
         enemy2.setPosition((300, 418))
