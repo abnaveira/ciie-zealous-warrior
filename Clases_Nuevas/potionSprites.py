@@ -10,12 +10,13 @@ class Potion(StandingSprites):
         # Potion Value is assigned as a pectenage (I.E.: 25 will be 25% of the health)
         self.potionValue = potionValue
         self.onPlatform = False
-        self.speedy = 0
+        self.speed = (0,0)
 
 
     def update(self, player, platforms, time):
 
         # If on the air, we have to check if we are landing on a platform
+        (speedx, speedy) = self.speed
         if not self.onPlatform:
             for platform in iter(platforms):
                 if (platform.rect.top < self.rect.bottom) \
@@ -23,13 +24,14 @@ class Potion(StandingSprites):
                     # Set y value to top of the platform and break fall
                     self.setPosition((self.position[0], platform.position[1]-platform.rect.height+1))
                     self.onPlatform = True
-                    self.speedy = 0
+                    speedy = 0
 
             # Otherwise, keep falling accelerated by gravity
             if not self.onPlatform:
-                self.speedy += GRAVITY * time
-                # TODO: potions fall to the ground?
+                speedy += GRAVITY * time
 
+            # Update speed
+            self.speed = (speedx, speedy)
         self.updateStance()
 
         # Update the scroll
