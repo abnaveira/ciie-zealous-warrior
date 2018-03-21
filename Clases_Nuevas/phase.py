@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from scene import PygameScene
 from xmlLevelParser import *
 from characters import *
 from scrollControl import *
@@ -7,6 +8,7 @@ from animationsPygame import *
 from miscSprites import *
 from director import *
 from standingSprites import *
+from potionSprites import *
 from HUDElements import *
 
 # -------------------------------------------------
@@ -26,7 +28,7 @@ class PhaseScene(PygameScene):
         PygameScene.__init__(self, director, sceneryObj.windowWidth, sceneryObj.windowHeight)
 
         # Creates the scenary and background
-        self.scenery = Scenary(sceneryObj)
+        self.scenery= Scenary(sceneryObj)
         self.background = Background(sceneryObj)
 
         # Set scroll to (0,0)
@@ -68,6 +70,19 @@ class PhaseScene(PygameScene):
         self.realFlagXPos = realFlagXPos
         # ---------------------------------------------------
 
+        # Potions group
+        self.potionsGroup = pygame.sprite.Group()
+        # Put a potion in the map
+        potion1 = PotionLarge()
+        potion1.setPosition((300,418))
+        self.addPotions(potion1)
+        potion2 = PotionMedium()
+        potion2.setPosition((400, 418))
+        self.addPotions(potion2)
+        potion3 = PotionSmall()
+        potion3.setPosition((500, 418))
+        self.addPotions(potion3)
+
         # Loads the animations in the front
         self.frontAnimations = []
         for frontAnimation in frontAnimationsList:
@@ -96,8 +111,8 @@ class PhaseScene(PygameScene):
         self.dinamicSpritesGroup = pygame.sprite.Group(self.player)
 
         # Creates a list for all the group sprites
-        self.spritesList = [self.flagGroup, self.playersGroup, self.enemiesGroup, self.projectilesGroup,
-                            self.platformsGroup]
+        self.spritesList = [self.flagGroup, self.potionsGroup, self.playersGroup,
+                            self.enemiesGroup, self.projectilesGroup, self.platformsGroup ]
 
         # Creates the class that will control the scroll
         self.controlScroll = scrollControl(self.scroll, sceneryObj.leftMin, sceneryObj.windowWidth - sceneryObj.leftMin,
@@ -109,6 +124,10 @@ class PhaseScene(PygameScene):
         self.enemiesGroup.add(enemySprite)
         self.dinamicSpritesGroup.add(enemySprite)
 
+    # Allows to add potions to the phase
+    def addPotions(self, potionSprite):
+        self.potionsGroup.add(potionSprite)
+
     def update(self, time):
         # Executes enemy AI
         for enemy in self.enemiesGroup:
@@ -116,6 +135,10 @@ class PhaseScene(PygameScene):
 
         # Updates the player
         self.player.update(self.platformsGroup, self.projectilesGroup, time)
+
+        # Updates the potions (destroys them if used)
+        self.potionsGroup.update(self.player, self.platformsGroup, time)
+
         # ---------------------------------------------------
         # CODE TO TRY FLAGS
         if not self.flagRaised:
@@ -188,10 +211,4 @@ class PhaseScene(PygameScene):
         (speedx, speedy) = self.player.speed
         flagList = self.flagGroup.sprites()
         flag = flagList.pop()
-        if (self.player.rect.top >= flag.rect.top) and \
-            (self.player.rect.bottom <= flag.rect.bottom) and \
-            (self.player.rect.right <= flag.rect.right) and \
-            (self.player.rect.left >= flag.rect.left):
-            return True
-        else:
-            return False
+        return flag.rect.colliderect(self.player.rect)
