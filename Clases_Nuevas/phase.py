@@ -80,6 +80,16 @@ class PhaseScene(PygameScene):
         potion3.setPosition((500, 418))
         self.addPotions(potion3)
 
+        #-----------
+        # TODO: implement this on enemy kill. Percentage can be changed in potionSprites constants
+        # 30% chance of random potion
+        potion = getRandomPotion()
+        print("hola")
+        if (potion != None):
+            potion.setPosition((600, 418))
+            self.addPotions(potion)
+        #--------------
+
         # Loads the animations in the front
         self.frontAnimations = []
         for frontAnimation in frontAnimationsList:

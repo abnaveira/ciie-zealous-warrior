@@ -1,8 +1,17 @@
 from standingSprites import *
 from characters import *
-import pygame
+import random
+
 
 POTIONS_ANIM_DELAY = 6
+
+# Potion spawn chance after enemy kill is 30%
+POTION_SPAWN_CHANCE = 0.3
+
+# Potion chances must be ranges from 0 to 1, with differences being probabilities of each potion
+POTION_SMALL_CHANCE_RANGE = 0.5
+POTION_MEDIUM_CHANCE_RANGE = 0.85
+POTION_LARGE_CHANCE_RANGE = 1.0
 
 class Potion(StandingSprites):
     # Superclass with the behavior of potions
@@ -82,4 +91,23 @@ class PotionLarge(Potion):
                         LEFT, potionValue)
 
 # -------------------------------------------------------------------------
-# TODO: functions to create a random potion with given chances of any potion appearing and individual %
+
+# Function that returns a random potion or none, based on chances in the constant of this file
+def getRandomPotion():
+    # Initialize random seed
+    random.seed
+    # Get random number from 1.0 to 0.0
+    drop = random.random()
+    # If it is less than the spawn chance, get potion
+    if (drop <= POTION_SPAWN_CHANCE):
+        # Get another random number from 1.0 to 0.0
+        potion = random.random()
+        # Choose potion based on number
+        if(potion <= POTION_SMALL_CHANCE_RANGE):
+            return PotionSmall()
+        elif(potion <= POTION_MEDIUM_CHANCE_RANGE):
+            return PotionMedium()
+        else:
+            return PotionLarge()
+    else:
+        return None
