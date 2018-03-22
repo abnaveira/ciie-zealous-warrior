@@ -45,8 +45,8 @@ class PhaseScene(PygameScene):
         self.player.setPosition((playerX, playerY))
 
         # Initialises the enemy sprites group
-        enemy1 = Skeleton()
-        enemy1.setPosition((741, 210))
+        enemy1 = Zebesian()
+        enemy1.setPosition((741, 270))
         self.enemiesGroup = pygame.sprite.Group(enemy1)
 
         # Initializes the projectiles sprites group
@@ -141,7 +141,7 @@ class PhaseScene(PygameScene):
     def update(self, time):
         # Executes enemy AI
         for enemy in self.enemiesGroup:
-            enemy.move_cpu(self.player, self.platformsGroup)
+            enemy.move_cpu(self.spriteStructure)
 
         # Updates the player
         self.player.update(self.spriteStructure, time)

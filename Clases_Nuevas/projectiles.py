@@ -22,6 +22,11 @@ AXE_MOVE_SPEED = 0.15
 
 MELTYGOO_ANIM_DELAY = 16
 
+ZEBESIANBEAM_ANIM_DELAY = 5
+ZEBESIANBEAM_MOVE_SPEED = 0.4
+ZEBESIANBEAM_DAMAGE     = 20
+ZEBESIANBEAM_KB         = (.3,-.35)
+
 GRAVITY = 0.0009
 
 class Projectile(MySprite):
@@ -182,4 +187,35 @@ class MeltyGoo(Projectile):
 
         Projectile.update(self, spriteStructure, time)
         if self.ended:
+            self.kill()
+
+class ZebesianBeam(Projectile):
+    def __init__(self, position, looking):
+        Projectile.__init__(self, 'Zebesian.png', 'coordBeam.txt',
+                           [2], ZEBESIANBEAM_MOVE_SPEED, ZEBESIANBEAM_ANIM_DELAY, looking)
+        self.position = position
+        self.damage = ZEBESIANBEAM_DAMAGE
+        self.knockback = ZEBESIANBEAM_KB
+        self.ended = False
+        self.collided = False
+        if (looking == RIGHT):
+            self.speed = (ZEBESIANBEAM_MOVE_SPEED, 0)
+        else:
+            self.speed = (-ZEBESIANBEAM_MOVE_SPEED, 0)
+
+
+    def update(self, spriteStructure, time):
+        # Zebesian beam goes straight
+        self.scroll = spriteStructure.player.scroll
+        if self.rect.colliderect(spriteStructure.player.rect):
+            self.collided = True
+            if (self.looking == RIGHT):
+                spriteStructure.player.stun(self.knockback, self.damage)
+            else:
+                spriteStructure.player.stun((-self.knockback[0], self.knockback[1]), self.damage)
+        collision = pygame.sprite.spritecollideany(self, spriteStructure.platformGroup)
+        if collision is not None:
+            self.collided = True
+        Projectile.update(self, spriteStructure, time)
+        if self.collided:
             self.kill()

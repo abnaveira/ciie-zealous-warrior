@@ -74,9 +74,9 @@ IMP_BASE_HEALTH  = 5
 IMP_HIT_DMG      = 6
 IMP_HIT_KB       = (.15, -.25)
 
-ZEBESIAN_SPEED        = 0.15
+ZEBESIAN_SPEED        = 0.12
 ZEBESIAN_JUMP_SPEED   = 0.3
-ZEBESIAN_ANIM_DELAY   = 5
+ZEBESIAN_ANIM_DELAY   = 9
 ZEBESIAN_ATTACK_DELAY = 2000
 ZEBESIAN_STUN_DELAY   = 1500
 ZEBESIAN_BASE_HEALTH  = 25
@@ -246,7 +246,7 @@ class Character(MySprite):
         (speedx, speedy) = self.speed
         platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
         if self.dead:
-            self.onDeath(spriteStructure.platformGroup, spriteStructure.projectileGroup, time)
+            self.onDeath(spriteStructure, time)
 
         if self.invulTime >= 0:
             self.invulTime -= time
@@ -328,7 +328,8 @@ class Character(MySprite):
         self.updateStance()
         self.speed = (speedx, speedy)
         MySprite.update(self, time)
-
+        if(self.position[1] > 3000):
+            self.kill()
         return
 
     def stun(self, speed, damage):
@@ -340,7 +341,7 @@ class Character(MySprite):
             if self.HP <= 0:
                 self.dead = True
 
-    def onDeath(self, platformGroup, projectileGroup, time):
+    def onDeath(self, spriteStructure, time):
         self.kill()
 
 class Player(Character):
@@ -402,9 +403,9 @@ class NPC(Character):
         self.damage = 0
         self.knockback = (0,0)
 
-    def move_cpu(self, player, spriteStructure):
-        if self.rect.colliderect(player.rect):
-            self.hitPlayer = player
+    def move_cpu(self, spriteStructure):
+        if self.rect.colliderect(spriteStructure.player.rect):
+            self.hitPlayer = spriteStructure.player
         return
 
     def update(self, spriteStructure, time):
@@ -430,18 +431,18 @@ class Skeleton(NPC):
         self.damage = SKELETON_HIT_DMG
 
 
-    def move_cpu(self, player, spriteStructure):
+    def move_cpu(self, spriteStructure):
         # TODO make some real AI BS
         # Currently enemies don't move if outside the screen
         if (self.rect.left > 0) and (self.rect.right < ANCHO_PANTALLA) \
                 and (self.rect.bottom > 0) and (self.rect.top < ALTO_PANTALLA):
-            if player.position[0] < self.position[0]:
-                if player.position[1] < self.position[1]:
+            if spriteStructure.player.position[0] < self.position[0]:
+                if spriteStructure.player.position[1] < self.position[1]:
                     Character.move(self, UPLEFT)
                 else:
                     Character.move(self, LEFT)
             else:
-                if player.position[1] < self.position[1]:
+                if spriteStructure.player.position[1] < self.position[1]:
                     Character.move(self, UPRIGHT)
                 else:
                     Character.move(self, RIGHT)
@@ -465,7 +466,7 @@ class AxeKnight(NPC):
         self.damage = AXEKNIGHT_HIT_DMG
 
 
-    def move_cpu(self, player, spriteStructure):
+    def move_cpu(self, spriteStructure):
         diffPos = self.position[0] - player.position[0]
         direction = LEFT
         if  diffPos < 0:
@@ -481,7 +482,7 @@ class AxeKnight(NPC):
                 Character.move(self, direction)
         else:
             Character.move(self, STILL)
-        NPC.move_cpu(self, player, spriteStructure)
+        NPC.move_cpu(self, spriteStructure)
 
     def update(self, spriteStructure, time):
         if self.attacking:
@@ -504,8 +505,8 @@ class MeltyZombie(NPC):
         self.knockback = MELTYZOMBIE_HIT_KB
         self.damage = MELTYZOMBIE_HIT_DMG
 
-    def move_cpu(self, player, spriteStructure):
-        diffPos = self.position[0] - player.position[0]
+    def move_cpu(self, spriteStructure):
+        diffPos = self.position[0] - spriteStructure.player.position[0]
         direction = LEFT
         edge = False
         if diffPos < 0:
@@ -525,7 +526,7 @@ class MeltyZombie(NPC):
                     if self.attackTime <= 0:
                         self.attacking = True
         else: Character.move(self, STILL)
-        NPC.move_cpu(self, player, spriteStructure)
+        NPC.move_cpu(self, spriteStructure)
 
     def update(self, spriteStructure, time):
         if self.attacking:
@@ -550,9 +551,9 @@ class Imp(NPC):
         self.knockback = IMP_HIT_KB
         self.damage = IMP_HIT_DMG
 
-    def move_cpu(self, player, spriteStructure):
-        distx = self.position[0] - player.position[0]
-        disty = self.position[1] - player.position[1]
+    def move_cpu(self, spriteStructure):
+        distx = self.position[0] - spriteStructure.player.position[0]
+        disty = self.position[1] - spriteStructure.player.position[1]
         #If total distance from player is less than 500
         if(distx*distx + disty*disty) < 250000:
             #Set direction towards player
@@ -563,7 +564,7 @@ class Imp(NPC):
             self.direction = (facAngle * self.runSpeed*math.cos(angle), facAngle * self.runSpeed*math.sin(angle))
         else:
             self.direction = (0,0)
-        NPC.move_cpu(self, player, spriteStructure)
+        NPC.move_cpu(self, spriteStructure)
 
 
     def update(self, spriteStructure, time):
@@ -589,7 +590,7 @@ class Imp(NPC):
 
 class Zebesian(NPC):
     def __init__(self):
-        NPC.__init__(self, 'Zebesian.png', 'Zebesian.txt', [8, 5, 4],
+        NPC.__init__(self, 'Zebesian.png', 'coordZebesian.txt', [12, 5, 4],
                      ZEBESIAN_SPEED, ZEBESIAN_JUMP_SPEED, ZEBESIAN_ANIM_DELAY)
         self.stunDelay = ZEBESIAN_STUN_DELAY
         self.invulDelay = ZEBESIAN_STUN_DELAY
@@ -599,29 +600,39 @@ class Zebesian(NPC):
         self.knockback = ZEBESIAN_HIT_KB
         self.damage = ZEBESIAN_HIT_DMG
 
-    def move_cpu(self, player, spriteStructure):
-        diffPos = self.position[0] - player.position[0]
+    def move_cpu(self, spriteStructure):
+        diffPos = self.position[0] - spriteStructure.player.position[0]
         directionP = LEFT
         directionM = RIGHT
+        jump = False
         if diffPos < 0:
             directionP = RIGHT
             directionM = LEFT
             diffPos = -diffPos
-            if diffPos < 1000:
-                #Move enemy towards player
-                Character.move(self, directionP)
-                if diffPos < 200:
+        if diffPos < 700:
+            #Move enemy towards player
+            Character.move(self, directionP)
+            if diffPos < 200:
+                platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
+                for platform in iter(platforms):
+                    if (self.rect.bottom - 5 > platform.rect.top):
+                        jump = True
+                if jump:
+                    Character.move(self, directionM + 4)
+                else:
                     Character.move(self, directionM)
-                elif diffPos < 600:
+            elif diffPos < 500:
+                if (self.attackTime <= 0) and (abs(self.position[1] - spriteStructure.player.position[1]) < 50):
                     self.attacking = True
-                    self.looking = directionP
-        NPC.move_cpu(self, player, spriteStructure)
+                self.looking = directionP
+                Character.move(self, STILL)
+        NPC.move_cpu(self, spriteStructure)
 
     def update(self, spriteStructure, time):
         if self.attacking:
             self.attacking = False
             self.attackTime = self.attackDelay
-            spriteStructure.projectileGroup.add(axeProj(self.position, self.looking))
+            spriteStructure.projectileGroup.add(ZebesianBeam((self.position[0], self.position[1] - 25), self.looking))
         elif self.attackTime > 0:
             self.attackTime -= time
         NPC.update(self, spriteStructure, time)
