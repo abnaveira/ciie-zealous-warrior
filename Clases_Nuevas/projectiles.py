@@ -84,7 +84,7 @@ class Projectile(MySprite):
                 self.image = pygame.transform.flip(
                     self.sheet.subsurface(self.sheetCoords[self.numStance][self.numImageStance]), 1, 0)
 
-    def update(self, platformGroup, projectileGroup, time):
+    def update(self, spriteStructure, time):
 
         self.updateStance()
         MySprite.update(self, time)
@@ -102,15 +102,15 @@ class swordSlash(Projectile):
         self. knockback = (.2,-.4)
         self.ended = False
 
-    def update(self, player, enemyGroup, platformGroup, projectileGroup, time):
+    def update(self, spriteStructure, time):
         # The slash follows the player character
-        self.position = player.position
-        self.scroll = player.scroll
+        self.position = spriteStructure.player.position
+        self.scroll = spriteStructure.player.scroll
         # This compensates for the slash' starting position so the player doesn't attack from its back
         if (self.looking <> RIGHT):
             self.increasePosition((-55, 0))
 
-        enemyCollision = pygame.sprite.spritecollide(self, enemyGroup, False)
+        enemyCollision = pygame.sprite.spritecollide(self, spriteStructure.enemyGroup, False)
         for enemy in iter(enemyCollision):
             #What we do when we hit an enemy
             if (self.looking == RIGHT):
@@ -119,7 +119,7 @@ class swordSlash(Projectile):
                 enemy.stun((-self.knockback[0], self.knockback[1]),self.damage)
 
 
-        Projectile.update(self, platformGroup, projectileGroup, time)
+        Projectile.update(self, spriteStructure, time)
         if self.ended:
             self.kill()
 
@@ -138,25 +138,25 @@ class axeProj(Projectile):
             self.speed = (-0.17, -0.45)
 
 
-    def update(self, player, enemyGroup, platformGroup, projectileGroup, time):
+    def update(self, spriteStructure, time):
         # A thrown axe describes a parabola
-        self.scroll = player.scroll
+        self.scroll = spriteStructure.player.scroll
         speedx, speedy = self.speed
 
         speedy += GRAVITY * time
 
         self.speed = (speedx, speedy)
-        if self.rect.colliderect(player.rect):
+        if self.rect.colliderect(spriteStructure.player.rect):
             self.collided = True
             if (self.looking == RIGHT):
-                player.stun(self.knockback, self.damage)
+                spriteStructure.player.stun(self.knockback, self.damage)
             else:
-                player.stun((-self.knockback[0], self.knockback[1]), self.damage)
-        collision = pygame.sprite.spritecollideany(self, platformGroup)
+                spriteStructure.player.stun((-self.knockback[0], self.knockback[1]), self.damage)
+        collision = pygame.sprite.spritecollideany(self, spriteStructure.platformGroup)
         if collision is not None:
             self.collided = True
 
-        Projectile.update(self, platformGroup, projectileGroup, time)
+        Projectile.update(self, spriteStructure, time)
         if self.collided:
             self.kill()
 
@@ -170,16 +170,16 @@ class MeltyGoo(Projectile):
         self.ended = False
         self.collided = False
 
-    def update(self, player, enemyGroup, platformGroup, projectileGroup, time):
+    def update(self, spriteStructure, time):
         # Goo  stays on the platform
-        self.scroll = player.scroll
-        if self.rect.colliderect(player.rect):
+        self.scroll = spriteStructure.player.scroll
+        if self.rect.colliderect(spriteStructure.player.rect):
             self.collided = True
             if (self.looking == RIGHT):
-                player.stun(self.knockback, self.damage)
+                spriteStructure.player.stun(self.knockback, self.damage)
             else:
-                player.stun((-self.knockback[0], self.knockback[1]), self.damage)
+                spriteStructure.player.stun((-self.knockback[0], self.knockback[1]), self.damage)
 
-        Projectile.update(self, platformGroup, projectileGroup, time)
+        Projectile.update(self, spriteStructure, time)
         if self.ended:
             self.kill()

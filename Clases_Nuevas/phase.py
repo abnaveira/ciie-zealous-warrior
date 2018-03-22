@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from Clases_Nuevas.SpriteStructure import SpriteStructure
 from scene import PygameScene
 from xmlLevelParser import *
 from characters import *
@@ -116,6 +116,9 @@ class PhaseScene(PygameScene):
                                            sceneryObj.topMin, sceneryObj.windowHeight - sceneryObj.topMin, sceneryObj.windowHeight, \
                                            sceneryObj.windowWidth, self.scenery)
 
+        self.spriteStructure = SpriteStructure(self.player, self.enemiesGroup, self.platformsGroup, \
+                                               self.projectilesGroup, None, None)
+
     # Allows to add enemies to the phase
     def addEnemies(self, enemySprite):
         self.enemiesGroup.add(enemySprite)
@@ -131,7 +134,7 @@ class PhaseScene(PygameScene):
             enemy.move_cpu(self.player, self.platformsGroup)
 
         # Updates the player
-        self.player.update(self.platformsGroup, self.projectilesGroup, time)
+        self.player.update(self.spriteStructure, time)
 
         # Updates the potions (destroys them if used)
         self.potionsGroup.update(self.player, self.platformsGroup, time)
@@ -155,10 +158,10 @@ class PhaseScene(PygameScene):
         self.bannerSpriteGroup.update(self.player, time)
 
         # Updates the enemies
-        self.enemiesGroup.update(self.platformsGroup, self.projectilesGroup, time)
+        self.enemiesGroup.update(self.spriteStructure, time)
 
         # Updates the projectiles
-        self.projectilesGroup.update(self.player, self.enemiesGroup, self.platformsGroup, self.projectilesGroup, time)
+        self.projectilesGroup.update(self.spriteStructure, time)
 
         # Updates the platforms
         self.platformsGroup.update(time)
