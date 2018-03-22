@@ -1,5 +1,6 @@
 from standingSprites import *
 from characters import *
+import pygame
 
 POTIONS_ANIM_DELAY = 6
 
