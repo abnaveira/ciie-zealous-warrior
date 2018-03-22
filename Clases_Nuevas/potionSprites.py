@@ -60,23 +60,23 @@ class Potion(StandingSprites):
 # Potion subclasses
 
 class PotionSmall(Potion):
-    # Small potion with 25% life regeneration
+    # Small potion with 15% life regeneration
     def __init__(self):
-        potionValue = 25
+        potionValue = 0.15
         Potion.__init__(self, 'potions.png', 'coordPotionSmall.txt', [1], POTIONS_ANIM_DELAY,
                         LEFT, potionValue)
 
 class PotionMedium(Potion):
-    # Medium potion with 50% life regeneration
+    # Medium potion with 25% life regeneration
     def __init__(self):
-        potionValue = 50
+        potionValue = 0.25
         Potion.__init__(self, 'potions.png', 'coordPotionMedium.txt', [1], POTIONS_ANIM_DELAY,
                         LEFT, potionValue)
 
 class PotionLarge(Potion):
-    # Large potion with 100% life regeneration
+    # Large potion with 50% life regeneration
     def __init__(self):
-        potionValue = 100
+        potionValue = 0.5
         Potion.__init__(self, 'potions.png', 'coordPotionLarge.txt', [1], POTIONS_ANIM_DELAY,
                         LEFT, potionValue)
 
