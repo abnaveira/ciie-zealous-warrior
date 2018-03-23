@@ -10,6 +10,7 @@ from director import *
 from standingSprites import *
 from potionSprites import *
 from HUDElements import *
+from spawn import *
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
@@ -45,9 +46,13 @@ class PhaseScene(PygameScene):
         self.player.setPosition((playerX, playerY))
 
         # Initialises the enemy sprites group
-        enemy1 = Zebesian()
-        enemy1.setPosition((741, 270))
-        self.enemiesGroup = pygame.sprite.Group(enemy1)
+        self.enemiesGroup = pygame.sprite.Group()
+
+        # Initializes spawn points list
+        self.spawnPoints = []
+        self.spawnPoints.append(Spawn(500, 400, 3))
+        self.spawnPoints.append(Spawn(1300, 400, 4))
+        self.spawnPoints.append(Spawn(2300, 400, 2))
 
         # Initializes the projectiles sprites group
         self.projectilesGroup = pygame.sprite.Group()
@@ -130,9 +135,9 @@ class PhaseScene(PygameScene):
                                                self.projectilesGroup, None, None)
 
     # Allows to add enemies to the phase
-    def addEnemies(self, enemySprite):
-        self.enemiesGroup.add(enemySprite)
-        self.dinamicSpritesGroup.add(enemySprite)
+    #def addEnemies(self, enemySprite):
+        #self.enemiesGroup.add(enemySprite)
+        #self.dinamicSpritesGroup.add(enemySprite)
 
     # Allows to add potions to the phase
     def addPotions(self, potionSprite):
@@ -184,6 +189,10 @@ class PhaseScene(PygameScene):
 
         # Update HUD elements
         self.HUD.update()
+
+        # Spawn enemies
+        for spawnPoint in iter(self.spawnPoints):
+            spawnPoint.spawn(self)
 
     def draw(self, screen):
         # Background
