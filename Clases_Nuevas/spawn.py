@@ -28,7 +28,7 @@ class Spawn:
         move = 0
         for i in range(0, number):
             probability = random.randint(0, 1000)
-            """if probability <= 200:
+            if probability <= 200:
                 enemy = Zebesian()
             elif probability <= 400:
                 enemy = MeltyZombie()
@@ -37,9 +37,8 @@ class Spawn:
             elif probability <= 800:
                 enemy = Skeleton()
             else:
-                enemy = AxeKnight()"""
+                enemy = AxeKnight()
 
-            enemy = Zebesian() # DESCOMENTAR LO ANTERIOR Y COMENTAR ESTA LINEA PARA QUE SALGAN TODOS LOS TIPOS
             enemy.setPosition((self.x + move, self.y))
             self.listEnemies.append(enemy)
             move += 100
