@@ -46,7 +46,9 @@ class PhaseScene(PygameScene):
         self.player.setPosition((playerX, playerY))
 
         # Initialises the enemy sprites group
-        self.enemiesGroup = pygame.sprite.Group()
+        enemy1 = Skeleton()
+        enemy1.setPosition((741, 270))
+        self.enemiesGroup = pygame.sprite.Group(enemy1)
 
         # Initializes spawn points list
         self.spawnPoints = []
@@ -134,9 +136,9 @@ class PhaseScene(PygameScene):
                                                self.projectilesGroup, None, None)
 
     # Allows to add enemies to the phase
-    #def addEnemies(self, enemySprite):
-        #self.enemiesGroup.add(enemySprite)
-        #self.dinamicSpritesGroup.add(enemySprite)
+    def addEnemies(self, enemySprite):
+        self.enemiesGroup.add(enemySprite)
+        self.dinamicSpritesGroup.add(enemySprite)
 
     # Allows to add potions to the phase
     def addPotions(self, potionSprite):

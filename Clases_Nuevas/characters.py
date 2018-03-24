@@ -68,8 +68,8 @@ MELTYZOMBIE_HIT_KB       = (.15, -.25)
 IMP_SPEED        = 0.19
 IMP_JUMP_SPEED   = 0
 IMP_ANIM_DELAY   = 4
-IMP_ATTACK_DELAY = 1500
-IMP_STUN_DELAY   = 1500
+IMP_ATTACK_DELAY = 750
+IMP_STUN_DELAY   = 750
 IMP_BASE_HEALTH  = 5
 IMP_HIT_DMG      = 6
 IMP_HIT_KB       = (.15, -.25)
@@ -403,11 +403,13 @@ class NPC(Character):
         self.damage = 0
         self.knockback = (0,0)
 
+    # This parent function checks if the player has bumped into an enemy.
     def move_cpu(self, spriteStructure):
         if self.rect.colliderect(spriteStructure.player.rect):
             self.hitPlayer = spriteStructure.player
         return
 
+    # This parent function damages a player that has bumped into an enemy.
     def update(self, spriteStructure, time):
         if self.hitPlayer is not None:
             if self.stunnedTime <= 0:
@@ -419,7 +421,7 @@ class NPC(Character):
         Character.update(self, spriteStructure, time)
 
 
-
+# The skeleton walks towards the player (if on view) and tries to bump into him, jumping to match the player's jumps
 class Skeleton(NPC):
     def __init__(self):
         NPC.__init__(self, 'Skeletons.png', 'coordSkeletons.txt', [1, 8, 2],
@@ -433,7 +435,7 @@ class Skeleton(NPC):
 
     def move_cpu(self, spriteStructure):
         # TODO make some real AI BS
-        # Currently enemies don't move if outside the screen
+        # Currently this enemy doesn't move if outside the screen
         if (self.rect.left > 0) and (self.rect.right < ANCHO_PANTALLA) \
                 and (self.rect.bottom > 0) and (self.rect.top < ALTO_PANTALLA):
             if spriteStructure.player.position[0] < self.position[0]:
@@ -449,10 +451,10 @@ class Skeleton(NPC):
 
         else:
             Character.move(self, STILL)
-        NPC.move_cpu(self, player, spriteStructure)
+        NPC.move_cpu(self, spriteStructure)
 
 
-
+#Axeknight walks slowly towards the player (if he sees him) and throws axes in a parabola if on range.
 class AxeKnight(NPC):
     def __init__(self):
         NPC.__init__(self, 'AxeKnight.png', 'coordAxeKnight.txt', [13, 16, 1],
@@ -467,7 +469,7 @@ class AxeKnight(NPC):
 
 
     def move_cpu(self, spriteStructure):
-        diffPos = self.position[0] - player.position[0]
+        diffPos = self.position[0] - spriteStructure.player.position[0]
         direction = LEFT
         if  diffPos < 0:
             direction = RIGHT
@@ -493,6 +495,7 @@ class AxeKnight(NPC):
             self.attackTime -= time
         NPC.update(self, spriteStructure, time)
 
+# MeltyZombie stays on its platform, moves slowly towards the player and leaves a gooey trail that damages the player.
 class MeltyZombie(NPC):
     def __init__(self):
         NPC.__init__(self, 'MeltyZombie.png', 'coordMeltyZombie.txt', [4, 8, 1],
@@ -537,6 +540,7 @@ class MeltyZombie(NPC):
             self.attackTime -= time
         NPC.update(self, spriteStructure, time)
 
+# The imp is able to fly through platforms toward the player. It is very fast.
 class Imp(NPC):
     def __init__(self):
         NPC.__init__(self, 'Imp.png', 'coordImp.txt', [6, 6, 6],
@@ -587,7 +591,8 @@ class Imp(NPC):
         if self.dead:
             self.onDeath(spriteStructure, time)
 
-
+# The Zebesian tries to keep at a controlled distance from the player, getting close if it is too far and
+# fleeing if the player gets too close. It fires when at an optimal distance if it has the player in front of him.
 class Zebesian(NPC):
     def __init__(self):
         NPC.__init__(self, 'Zebesian.png', 'coordZebesian.txt', [12, 5, 4],
@@ -611,12 +616,11 @@ class Zebesian(NPC):
             diffPos = -diffPos
         if diffPos < 700:
             #Move enemy towards player
-            Character.move(self, directionP)
+            platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
+            for platform in iter(platforms):
+                if (self.rect.bottom - 5 > platform.rect.top):
+                    jump = True
             if diffPos < 200:
-                platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
-                for platform in iter(platforms):
-                    if (self.rect.bottom - 5 > platform.rect.top):
-                        jump = True
                 if jump:
                     Character.move(self, directionM + 4)
                 else:
@@ -626,6 +630,10 @@ class Zebesian(NPC):
                     self.attacking = True
                 self.looking = directionP
                 Character.move(self, STILL)
+            elif jump:
+                Character.move(self, directionP + 4)
+            else:
+                Character.move(self, directionP)
         NPC.move_cpu(self, spriteStructure)
 
     def update(self, spriteStructure, time):
