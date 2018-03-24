@@ -190,17 +190,19 @@ def loadLevelData(level):
     spawnPointList = []
     if (spawnPoints != None):
         for spawnPoint in spawnPoints.iter("spawnPoint"):
-            id = spawnPoint.find("id").text
-            enemies = spawnPoint.find("enemies")
-            enemyList = []
-            for enemy in enemies.iter("enemy"):
-                enemyId = enemy.find("id").text
-                spawnFrecuency = enemy.find("spawnFrecuency").text
-                enemyList.append(enemyInSpawnPoint(enemyId,spawnFrecuency))
+            #id = spawnPoint.find("id").text
+            #enemies = spawnPoint.find("enemies")
+            #enemyList = []
+            #for enemy in enemies.iter("enemy"):
+                #enemyId = enemy.find("id").text
+                #spawnFrecuency = enemy.find("spawnFrecuency").text
+                #enemyList.append(enemyInSpawnPoint(enemyId,spawnFrecuency))
             # SpawnPoints position on the map
             x = int(spawnPoint.find("x").text) - winImageX
             y = int(spawnPoint.find("y").text) - winImageY
-            spawnPointList.append(spawnPointClass(id, enemyList, x, y))
+            # Number of enemies
+            enemies = int(spawnPoint.find("enemies").text)
+            spawnPointList.append(spawnPointClass(x, y, enemies))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
            platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList
@@ -211,12 +213,12 @@ class enemyInSpawnPoint:
         self.spawnFrecuency = spawnFrecuency
 
 class spawnPointClass:
-    def __init__(self, id, enemyList, x, y):
-        self.id = id
-        self.enemyList = enemyList
+    def __init__(self, x, y, enemies):
+        #self.id = id
+        #self.enemyList = enemyList
         self.x = x
         self.y = y
-        
+        self.enemies = enemies
 class sceneryClass:
     def __init__(self, file, scaleX, scaleY, windowWidth, windowHeight,
                  leftMin, topMin, red, green, blue, subImagePosition):

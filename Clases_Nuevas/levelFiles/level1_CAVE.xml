@@ -225,5 +225,21 @@
     </playerPosition>
 
     <!--Enemies Spawn Point-->
-
+    <spawnPoints>
+        <spawnPoint>
+            <x>500</x>
+            <y>400</y>
+            <enemies>3</enemies>
+        </spawnPoint>
+        <spawnPoint>
+            <x>1300</x>
+            <y>400</y>
+            <enemies>4</enemies>
+        </spawnPoint>
+        <spawnPoint>
+            <x>2300</x>
+            <y>400</y>
+            <enemies>2</enemies>
+        </spawnPoint>
+    </spawnPoints>
 </level>

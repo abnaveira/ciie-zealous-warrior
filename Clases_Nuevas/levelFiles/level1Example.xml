@@ -167,7 +167,7 @@
     </playerPosition>
 
     <!--Enemies Spawn Point-->
-    <spawnPoints>
+    <!--<spawnPoints>
         <spawnPoint>
             <id>1</id>
             <enemies>
@@ -183,6 +183,6 @@
             <x>400</x>
             <y>551</y>
         </spawnPoint>
-    </spawnPoints>
+    </spawnPoints> -->
 
 </level>

@@ -50,9 +50,8 @@ class PhaseScene(PygameScene):
 
         # Initializes spawn points list
         self.spawnPoints = []
-        self.spawnPoints.append(Spawn(500, 400, 3))
-        self.spawnPoints.append(Spawn(1300, 400, 4))
-        self.spawnPoints.append(Spawn(2300, 400, 2))
+        for spawnPoint in spawnPointList:
+            self.spawnPoints.append(Spawn(spawnPoint))
 
         # Initializes the projectiles sprites group
         self.projectilesGroup = pygame.sprite.Group()

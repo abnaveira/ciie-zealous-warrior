@@ -9,10 +9,10 @@ import time
 
 class Spawn:
 
-    def __init__(self, x, y, enemies):
+    def __init__(self, spawnPoint):
         # Coordinates of the spawn point
-        self.x = x
-        self.y = y
+        self.x = spawnPoint.x
+        self.y = spawnPoint.y
         # Frequency to spawn
         self.frequency = random.randint(0, 1000)
         # List of enemies to spawn
@@ -21,7 +21,7 @@ class Spawn:
         self.lastSpawn = 0
 
         # Add enemies to list
-        self.add_enemies(enemies)
+        self.add_enemies(spawnPoint.enemies)
 
     # Add enemies to be spawned
     def add_enemies(self, number):
