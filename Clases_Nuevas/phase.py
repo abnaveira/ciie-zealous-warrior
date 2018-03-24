@@ -24,9 +24,15 @@ class PhaseScene(PygameScene):
         # It reads the file with the level paramethers
         sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
         platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
-            enemyList= loadLevelData(levelFile)
+            enemyList, musicFile= loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, sceneryObj.windowWidth, sceneryObj.windowHeight)
+
+        # Flag for music playBack (scenes are pre-initialized, we cannot load music in each
+        # of them, as music uses a shared channel
+        self.alreadyPlaying = False
+        # Store musicFile name
+        self.musicFile = musicFile
 
         # Creates the scenary and background
         self.scenery= Scenary(sceneryObj)
@@ -124,6 +130,15 @@ class PhaseScene(PygameScene):
         self.potionsGroup.add(potionSprite)
 
     def update(self, time):
+
+        if not self.alreadyPlaying:
+            # Load background music
+            pygame.mixer.music.load(self.musicFile)
+            # Play it indefinetely until method stop is called
+            pygame.mixer.music.play(-1)
+            # Flag is now true
+            self.alreadyPlaying = True
+
         # Executes enemy AI
         for enemy in self.enemiesGroup:
             enemy.move_cpu(self.spriteStructure)
@@ -136,8 +151,11 @@ class PhaseScene(PygameScene):
 
         # ---------------------------------------------------
         # CODE TO TRY FLAGS
+
+        # If the flag hasn't been raised
         if not self.flagRaised:
             self.flagRaised = PhaseScene.checkFlag(self)
+            # The FIRST time the flag is raised
             if self.flagRaised:
                 flagList = self.flagGroup.sprites()
                 flag = flagList.pop()
@@ -151,12 +169,21 @@ class PhaseScene(PygameScene):
                 for sprite in iter(self.dinamicSpritesGroup):
                     if sprite != self.player:
                         self.dinamicSpritesGroup.remove(sprite)
+                # We add new enemies
                 for spawnPoint in iter(self.spawnPoints):
                     spawnPoint.add_enemies(20)
-                # FALTA COMPROBAR SI ESTAN TODOS MUERTOS
-                # This changes scene
-                #Director.leaveScene(self.director)
 
+        if self.flagRaised:
+            # TODO: check if all enemies are dead,
+            # problema: y si acabamos de matar a todos los enemigos, y
+            # derrepente llamamos a esto? Habrá que esperar un minuto o algo
+            # FALTA COMPROBAR SI ESTAN TODOS MUERTOS
+            # if hemos acabadp
+                # Abort music playback
+                #pygame.mixer.music.stop()
+                # TODO: put a message, and press enter to change level
+                # This changes scene
+                # Director.leaveScene(self.director)
         # ---------------------------------------------------
 
         # Updates the banner sprite

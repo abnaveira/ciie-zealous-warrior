@@ -249,4 +249,7 @@
             <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
     </spawnPoints>
+
+    <!-- Music file for the level-->
+    <musicFile>bensound-extremeaction.mp3</musicFile>
 </level>

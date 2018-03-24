@@ -202,8 +202,13 @@ def loadLevelData(level):
             enemiesNumber = int(spawnPoint.find("enemiesNumber").text)
             spawnPointList.append(spawnPointClass(x, y, enemiesNumber))
 
+    # Music file
+    musicFile = root.find("musicFile").text
+    musicFile = os.path.join("musicAndSounds", musicFile)
+
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, enemyList
+           platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
+           enemyList, musicFile
 
 class enemyInSpawnPoint:
     def __init__(self, id, spawnFrecuency):

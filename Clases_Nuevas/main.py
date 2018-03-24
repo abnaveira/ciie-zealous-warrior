@@ -17,7 +17,10 @@ if __name__ == '__main__':
     # Reverse the order of the levels (to put in the stack)
     levelFilesList.reverse()
 
-
+    # Initialize pygame music player
+    #pygame.mixer.pre_init(44100, 16, 2, 4096)
+    #pygame.mixer.init()
+    # TODO: use this with sounds of characters and enemies, not used for music
 
     for level in levelFilesList:
         # Create the scene for the level
