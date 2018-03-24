@@ -173,7 +173,8 @@ class PhaseScene(PygameScene):
                 for spawnPoint in iter(self.spawnPoints):
                     spawnPoint.add_enemies(20)
 
-        if self.flagRaised:
+        #if self.flagRaised:
+
             # TODO: check if all enemies are dead,
             # problema: y si acabamos de matar a todos los enemigos, y
             # derrepente llamamos a esto? Habrá que esperar un minuto o algo
