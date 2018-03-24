@@ -4,7 +4,7 @@
 from director import Director
 from phase import PhaseScene
 from xmlLevelParser import getAllLevelFiles
-from menu import *
+from menu import Menu
 
 
 if __name__ == '__main__':
@@ -29,7 +29,7 @@ if __name__ == '__main__':
         director.stackScene(scene)
 
     # Loads the game menu in the director
-    menu = Menu(director, 800, 600)#960, 540)
+    menu = Menu(director, 960, 540)
     director.stackScene(menu)
 
     # Execute the game

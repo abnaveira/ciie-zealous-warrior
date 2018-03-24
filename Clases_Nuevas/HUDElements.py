@@ -46,7 +46,7 @@ class HealthBar(HUDElement):
         self.setScreenPosition((posX,posY))
         # Adds color to the healthbar
         self.image.fill((255, 0, 0))
-        # Crestes the decoration
+        # Creates the decoration
         self.decoration = HealthBarDecoration()
 
     def update(self):

@@ -11,6 +11,7 @@ from standingSprites import *
 from potionSprites import *
 from HUDElements import *
 from spawn import *
+from menu import DeathMenu
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
@@ -20,13 +21,14 @@ class PhaseScene(PygameScene):
     def __init__(self, director, levelFile):
         # Save the director to call the end of the phase when necessary
         self.director = director
+        self.levelFile = levelFile
 
         # It reads the file with the level paramethers
-        sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
+        self.sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
         platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
             enemyList, musicFile= loadLevelData(levelFile)
 
-        PygameScene.__init__(self, director, sceneryObj.windowWidth, sceneryObj.windowHeight)
+        PygameScene.__init__(self, director, self.sceneryObj.windowWidth, self.sceneryObj.windowHeight)
 
         # Flag for music playBack (scenes are pre-initialized, we cannot load music in each
         # of them, as music uses a shared channel
@@ -35,8 +37,8 @@ class PhaseScene(PygameScene):
         self.musicFile = musicFile
 
         # Creates the scenary and background
-        self.scenery= Scenary(sceneryObj)
-        self.background = Background(sceneryObj)
+        self.scenery= Scenary(self.sceneryObj)
+        self.background = Background(self.sceneryObj)
 
         # Set scroll to (0,0)
         self.scroll = (0, 0)
@@ -113,11 +115,11 @@ class PhaseScene(PygameScene):
                             self.enemiesGroup, self.projectilesGroup, self.platformsGroup ]
 
         # Creates the class that will control the scroll
-        self.controlScroll = scrollControl(self.scroll, sceneryObj.leftMin, sceneryObj.windowWidth - sceneryObj.leftMin,
-                                           sceneryObj.topMin, sceneryObj.windowHeight - sceneryObj.topMin, sceneryObj.windowHeight, \
-                                           sceneryObj.windowWidth, self.scenery)
+        self.controlScroll = scrollControl(self.scroll, self.sceneryObj.leftMin, self.sceneryObj.windowWidth - self.sceneryObj.leftMin,
+                                           self.sceneryObj.topMin, self.sceneryObj.windowHeight - self.sceneryObj.topMin, self.sceneryObj.windowHeight, \
+                                           self.sceneryObj.windowWidth, self.scenery)
 
-        self.spriteStructure = SpriteStructure(self.player, self.enemiesGroup, self.platformsGroup, \
+        self.spriteStructure = SpriteStructure(self, self.player, self.enemiesGroup, self.platformsGroup, \
                                                self.projectilesGroup, None, None, self.potionsGroup)
 
     # Allows to add enemies to the phase
@@ -241,6 +243,11 @@ class PhaseScene(PygameScene):
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         keysPressed = pygame.key.get_pressed()
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
+
+    def openDeathScreen(self):
+        # Open the death screen passing the file of the level
+        self.director.changeScene(DeathMenu(self.director, self.levelFile,
+                                            self.sceneryObj.windowWidth, self.sceneryObj.windowHeight))
 
     # If the player is contained within the flag rectangle of influence
     # return true

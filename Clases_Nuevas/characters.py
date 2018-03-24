@@ -378,6 +378,8 @@ class Player(Character):
 
     # Player's update deals mainly with spawning attacks
     def update(self, spriteStructure, time):
+        #if self.HP <= 0:
+        #    self.dead = True
         # If player is attacking, start cooldown and spawn a projectile.
         if self.attacking:
             self.attacking = False
@@ -391,6 +393,10 @@ class Player(Character):
             self.attackTime -= time
         Character.update(self, spriteStructure, time)
 
+    def onDeath(self, spriteStructure, time):
+        self.kill()
+        # Open the window that shows that you the player is dead
+        spriteStructure.phase.openDeathScreen()
 
 class NPC(Character):
 
