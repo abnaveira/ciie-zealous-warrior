@@ -75,26 +75,6 @@ class PhaseScene(PygameScene):
 
         # Potions group
         self.potionsGroup = pygame.sprite.Group()
-        # Put a potion in the map
-        potion1 = PotionLarge()
-        potion1.setPosition((300,418))
-        self.addPotions(potion1)
-        potion2 = PotionMedium()
-        potion2.setPosition((400, 418))
-        self.addPotions(potion2)
-        potion3 = PotionSmall()
-        potion3.setPosition((500, 418))
-        self.addPotions(potion3)
-
-        #-----------
-        # TODO: implement this on enemy kill. Percentage can be changed in potionSprites constants
-        # 30% chance of random potion
-        potion = getRandomPotion()
-        print("hola")
-        if (potion != None):
-            potion.setPosition((600, 418))
-            self.addPotions(potion)
-        #--------------
 
         # Loads the animations in the front
         self.frontAnimations = []
@@ -133,7 +113,7 @@ class PhaseScene(PygameScene):
                                            sceneryObj.windowWidth, self.scenery)
 
         self.spriteStructure = SpriteStructure(self.player, self.enemiesGroup, self.platformsGroup, \
-                                               self.projectilesGroup, None, None)
+                                               self.projectilesGroup, None, None, self.potionsGroup)
 
     # Allows to add enemies to the phase
     def addEnemies(self, enemySprite):

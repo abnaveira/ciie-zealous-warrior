@@ -8,6 +8,7 @@ from gestorRecursos import *
 from mysprite import MySprite
 from projectiles import *
 from resourcesManager import *
+from potionSprites import *
 
 #---------------------------
 #---------Constants---------
@@ -420,6 +421,16 @@ class NPC(Character):
             self.hitPlayer = None
         Character.update(self, spriteStructure, time)
 
+    def onDeath(self, spriteStructure, time):
+        # Npc's hace a chance to drop a potion on kill
+        # Potion spawn percentages chan be changed on potionSprites
+        potion = getRandomPotion()
+        if (potion != None):
+            # Put the potion in the place the enemy is before killing it
+            potion.setPosition(self.position)
+            # Add to potions group
+            spriteStructure.potionsGroup.add(potion)
+        self.kill()
 
 # The skeleton walks towards the player (if on view) and tries to bump into him, jumping to match the player's jumps
 class Skeleton(NPC):
