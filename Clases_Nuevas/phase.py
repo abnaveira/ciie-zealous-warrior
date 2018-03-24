@@ -23,8 +23,8 @@ class PhaseScene(PygameScene):
 
         # It reads the file with the level paramethers
         sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
-        platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList\
-            = loadLevelData(levelFile)
+        platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
+            enemyList= loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, sceneryObj.windowWidth, sceneryObj.windowHeight)
 
@@ -46,14 +46,14 @@ class PhaseScene(PygameScene):
         self.player.setPosition((playerX, playerY))
 
         # Initialises the enemy sprites group
-        enemy1 = Skeleton()
+        enemy1 = getNpcFromName('Imp')
         enemy1.setPosition((741, 270))
         self.enemiesGroup = pygame.sprite.Group(enemy1)
 
         # Initializes spawn points list
         self.spawnPoints = []
         for spawnPoint in spawnPointList:
-            self.spawnPoints.append(Spawn(spawnPoint))
+            self.spawnPoints.append(Spawn(spawnPoint, enemyList))
 
         # Initializes the projectiles sprites group
         self.projectilesGroup = pygame.sprite.Group()
@@ -62,6 +62,7 @@ class PhaseScene(PygameScene):
         self.platformsGroup = pygame.sprite.Group()
         for platform in platformList:
             self.platformsGroup.add(platform)
+
         # ---------------------------------------------------
         # FLAG AS PLATFORM TEMPORARY
         # self.platformsGroup.add(Platform(flag))
@@ -73,7 +74,7 @@ class PhaseScene(PygameScene):
         self.realFlagXPos = realFlagXPos
         # ---------------------------------------------------
 
-        # Potions group
+        # Initialize potions group
         self.potionsGroup = pygame.sprite.Group()
 
         # Loads the animations in the front

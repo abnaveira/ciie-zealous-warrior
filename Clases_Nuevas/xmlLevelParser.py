@@ -183,29 +183,27 @@ def loadLevelData(level):
                 scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
             backAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
 
-
+    # List of enemies that can spawn in this level
+    enemies = root.find("enemies")
+    enemyList = []
+    if (enemies != None):
+        for enemy in enemies.iter("enemy"):
+            enemyList.append(enemy.text)
 
     # SpawnPoints
     spawnPoints = root.find("spawnPoints")
     spawnPointList = []
     if (spawnPoints != None):
         for spawnPoint in spawnPoints.iter("spawnPoint"):
-            #id = spawnPoint.find("id").text
-            #enemies = spawnPoint.find("enemies")
-            #enemyList = []
-            #for enemy in enemies.iter("enemy"):
-                #enemyId = enemy.find("id").text
-                #spawnFrecuency = enemy.find("spawnFrecuency").text
-                #enemyList.append(enemyInSpawnPoint(enemyId,spawnFrecuency))
             # SpawnPoints position on the map
             x = int(spawnPoint.find("x").text) - winImageX
             y = int(spawnPoint.find("y").text) - winImageY
             # Number of enemies
-            enemies = int(spawnPoint.find("enemies").text)
-            spawnPointList.append(spawnPointClass(x, y, enemies))
+            enemiesNumber = int(spawnPoint.find("enemiesNumber").text)
+            spawnPointList.append(spawnPointClass(x, y, enemiesNumber))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList
+           platformList, flagArea, realFlagXPos, playerX, playerY, enemyList, spawnPointList
 
 class enemyInSpawnPoint:
     def __init__(self, id, spawnFrecuency):
@@ -213,12 +211,12 @@ class enemyInSpawnPoint:
         self.spawnFrecuency = spawnFrecuency
 
 class spawnPointClass:
-    def __init__(self, x, y, enemies):
+    def __init__(self, x, y, enemiesNumber):
         #self.id = id
         #self.enemyList = enemyList
         self.x = x
         self.y = y
-        self.enemies = enemies
+        self.enemiesNumber = enemiesNumber
 class sceneryClass:
     def __init__(self, file, scaleX, scaleY, windowWidth, windowHeight,
                  leftMin, topMin, red, green, blue, subImagePosition):

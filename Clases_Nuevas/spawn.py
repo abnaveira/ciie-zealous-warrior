@@ -9,12 +9,18 @@ import time
 
 class Spawn:
 
-    def __init__(self, spawnPoint):
+    def __init__(self, spawnPoint, enemyList):
+
         # Coordinates of the spawn point
         self.x = spawnPoint.x
         self.y = spawnPoint.y
         # Frequency to spawn
         self.frequency = random.randint(0, 1000)
+        #-------------
+        # Use enemyList with the method "getNpcFromName(name)"
+        # This way you can transform strings into instances of said enemy
+
+        #-------------
         # List of enemies to spawn
         self.listEnemies = []
 
@@ -76,3 +82,18 @@ class Spawn:
     # Remove the enemies that have not been spawned yet
     def clear(self):
         self.listEnemies = []
+
+# Return NPC instance from name, or none if it is not recognized
+def getNpcFromName(name):
+    if name == 'Skeleton':
+        return Skeleton()
+    elif name == 'Zebesian':
+        return Zebesian()
+    elif name == 'MeltyZombie':
+        return MeltyZombie()
+    elif name == 'Imp':
+        return Imp()
+    elif name == 'AxeKnight':
+        return AxeKnight()
+    else:
+        return None

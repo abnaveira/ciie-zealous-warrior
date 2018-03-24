@@ -224,22 +224,29 @@
         <y>854</y>
     </playerPosition>
 
+    <!--List of enemies of this level-->
+    <enemies>
+        <enemy>Skeleton</enemy>
+        <enemy>MeltyZombie</enemy>
+        <enemy>Imp</enemy>
+    </enemies>
+
     <!--Enemies Spawn Point-->
     <spawnPoints>
         <spawnPoint>
             <x>500</x>
             <y>400</y>
-            <enemies>3</enemies>
+            <enemiesNumber>3</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <x>1300</x>
             <y>400</y>
-            <enemies>4</enemies>
+            <enemiesNumber>4</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <x>2300</x>
             <y>400</y>
-            <enemies>2</enemies>
+            <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
     </spawnPoints>
 </level>
