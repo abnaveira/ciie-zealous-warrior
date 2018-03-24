@@ -46,9 +46,7 @@ class PhaseScene(PygameScene):
         self.player.setPosition((playerX, playerY))
 
         # Initialises the enemy sprites group
-        enemy1 = getNpcFromName('Imp')
-        enemy1.setPosition((741, 270))
-        self.enemiesGroup = pygame.sprite.Group(enemy1)
+        self.enemiesGroup = pygame.sprite.Group()
 
         # Initializes spawn points list
         self.spawnPoints = []
@@ -146,6 +144,16 @@ class PhaseScene(PygameScene):
                 # We set the Banner in its position
                 bannerSprite = Banner((self.realFlagXPos,flag.rect.bottom))
                 self.bannerSpriteGroup.add(bannerSprite)
+                # We destroy enemies
+                for spawnPoint in iter(self.spawnPoints):
+                    spawnPoint.clear()
+                self.enemiesGroup.empty()
+                for sprite in iter(self.dinamicSpritesGroup):
+                    if sprite != self.player:
+                        self.dinamicSpritesGroup.remove(sprite)
+                for spawnPoint in iter(self.spawnPoints):
+                    spawnPoint.add_enemies(20)
+                # FALTA COMPROBAR SI ESTAN TODOS MUERTOS
                 # This changes scene
                 #Director.leaveScene(self.director)
 

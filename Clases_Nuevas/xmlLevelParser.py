@@ -203,7 +203,7 @@ def loadLevelData(level):
             spawnPointList.append(spawnPointClass(x, y, enemiesNumber))
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, flagArea, realFlagXPos, playerX, playerY, enemyList, spawnPointList
+           platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, enemyList
 
 class enemyInSpawnPoint:
     def __init__(self, id, spawnFrecuency):
