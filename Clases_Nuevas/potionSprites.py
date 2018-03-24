@@ -30,7 +30,10 @@ class Potion(StandingSprites):
         (speedx, speedy) = self.speed
         if not self.onPlatform:
             for platform in iter(platforms):
-                if (platform.rect.top < self.rect.bottom) \
+                # If the potion is within the platform's width and just above it, it will stop falling
+                if (platform.rect.left < self.rect.right) \
+                        and (platform.rect.right > self.rect.left) \
+                    and (platform.rect.top < self.rect.bottom) \
                             and ((self.rect.bottom - self.rect.height/2) < platform.rect.top):
                     # Set y value to top of the platform and break fall
                     self.setPosition((self.position[0], platform.position[1]-platform.rect.height+1))
@@ -43,6 +46,7 @@ class Potion(StandingSprites):
 
             # Update speed
             self.speed = (speedx, speedy)
+
         self.updateStance()
 
         # Update the scroll

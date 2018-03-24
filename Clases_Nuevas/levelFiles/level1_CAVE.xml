@@ -11,7 +11,7 @@
         <windowWidth>960</windowWidth>
         <windowHeight>540</windowHeight>
         <!--Minimum distance to the sides-->
-        <leftMin>300</leftMin>
+        <leftMin>400</leftMin>
         <topMin>200</topMin>
         <backgroundColor>
             <r>0</r>

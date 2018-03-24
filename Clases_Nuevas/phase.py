@@ -12,6 +12,7 @@ from potionSprites import *
 from HUDElements import *
 from spawn import *
 from menu import DeathMenu
+import time as pyTime
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
@@ -78,10 +79,16 @@ class PhaseScene(PygameScene):
         self.bannerSpriteGroup = pygame.sprite.Group()
         self.flagGroup.add(flagArea)
         self.realFlagXPos = realFlagXPos
+
+        # To use as a timer when the flag is raised
+        self.flagSpawnEnd = 0
         # ---------------------------------------------------
 
         # Initialize potions group
         self.potionsGroup = pygame.sprite.Group()
+        potion = PotionLarge()
+        potion.setPosition((300,300))
+        self.potionsGroup.add(potion)
 
         # Loads the animations in the front
         self.frontAnimations = []
@@ -127,10 +134,6 @@ class PhaseScene(PygameScene):
         self.enemiesGroup.add(enemySprite)
         self.dinamicSpritesGroup.add(enemySprite)
 
-    # Allows to add potions to the phase
-    def addPotions(self, potionSprite):
-        self.potionsGroup.add(potionSprite)
-
     def update(self, time):
 
         if not self.alreadyPlaying:
@@ -152,7 +155,7 @@ class PhaseScene(PygameScene):
         self.potionsGroup.update(self.player, self.platformsGroup, time)
 
         # ---------------------------------------------------
-        # CODE TO TRY FLAGS
+        # Flag logic
 
         # If the flag hasn't been raised
         if not self.flagRaised:
@@ -174,19 +177,20 @@ class PhaseScene(PygameScene):
                 # We add new enemies
                 for spawnPoint in iter(self.spawnPoints):
                     spawnPoint.add_enemies(20)
+                # Time a minute from now, when the spawning has ended
+                self.flagSpawnEnd = pyTime.time() + 60
 
-        #if self.flagRaised:
-
-            # TODO: check if all enemies are dead,
-            # problema: y si acabamos de matar a todos los enemigos, y
-            # derrepente llamamos a esto? Habrá que esperar un minuto o algo
-            # FALTA COMPROBAR SI ESTAN TODOS MUERTOS
-            # if hemos acabadp
-                # Abort music playback
-                #pygame.mixer.music.stop()
-                # TODO: put a message, and press enter to change level
-                # This changes scene
-                # Director.leaveScene(self.director)
+        # If the flag has already been raised
+        if self.flagRaised:
+            # If a minute has passed since the flag has been raised
+            if pyTime.time() > self.flagSpawnEnd:
+                # If there are no more enemies on the level
+                if (len(self.enemiesGroup.sprites()) == 0):
+                    # Abort music playback
+                    pygame.mixer.music.stop()
+                    # TODO: put a message, and press enter to change level
+                    # This changes scene
+                    self.director.leaveScene()
         # ---------------------------------------------------
 
         # Updates the banner sprite
