@@ -31,14 +31,14 @@ SPRITE_WALK  = 1
 SPRITE_JUMP  = 2
 
 # Character constants
-PLAYER_SPEED        = 0.2   # px / ms
-PLAYER_JUMP_SPEED   = 0.37  # px / ms
-PLAYER_ANIM_DELAY   = 5     # updates / image
+PLAYER_SPEED        = 0.2   # player running speed in px / ms
+PLAYER_JUMP_SPEED   = 0.37  # player vertical jumping max speed in px / ms
+PLAYER_ANIM_DELAY   = 5     # number of updates to change a sprite frame
 PLAYER_BASE_JUMP    = 350   # time to "keep jumping" to go higher
 PLAYER_ATTACK_DELAY = 400   # time between attacks
-PLAYER_STUN_DELAY   = 400
-PLAYER_INVUL_DELAY  = 1500
-PLAYER_BASE_HEALTH  = 100
+PLAYER_STUN_DELAY   = 400   # time the player is hitstunned and can't do nothing
+PLAYER_INVUL_DELAY  = 1500  # time the player is invulnerable after a hit
+PLAYER_BASE_HEALTH  = 100   # player's base health
 
 
 SKELETON_SPEED       = 0.08
@@ -46,8 +46,8 @@ SKELETON_JUMP_SPEED  = 0.3
 SKELETON_ANIM_DELAY  = 7
 SKELETON_STUN_DELAY  = 800
 SKELETON_BASE_HEALTH = 20
-SKELETON_HIT_DMG     = 8
-SKELETON_HIT_KB      = (.1,-.3)
+SKELETON_HIT_DMG     = 8        # damage done by the enemy when bumping into him
+SKELETON_HIT_KB      = (.1,-.3) # knockback produced by said bump on the player
 
 AXEKNIGHT_SPEED        = 0.04
 AXEKNIGHT_JUMP_SPEED   = 0.1
@@ -84,7 +84,6 @@ ZEBESIAN_STUN_DELAY   = 1500
 ZEBESIAN_BASE_HEALTH  = 25
 ZEBESIAN_HIT_DMG      = 10
 ZEBESIAN_HIT_KB       = (.15, -.25)
-
 
 BOSS_SPEED          = 0.7
 BOSS_JUMP_SPEED     = 0.5
@@ -137,7 +136,6 @@ class Character(MySprite):
         data = data.split()
         self.numStance = 1
         self.numImageStance = 0
-
         counter = 0
         self.sheetCoords = []
         for line in range(0, 3):
@@ -150,28 +148,24 @@ class Character(MySprite):
 
 
 
-        # Default stance is standing
-        self.numStance = STILL
-
-        # TODO Define custom hitboxes
         self.rect = pygame.Rect(100,100, self.sheetCoords[self.numStance][self.numImageStance][2],
                                 self.sheetCoords[self.numStance][self.numImageStance][3])
 
         # Default running and jumping speed
         self.runSpeed = runSpeed
         self.jumpSpeed = jumpSpeed
-        # Constant to reset sprite change
-        self.animationDelay = animDelay
-        # Counter to delay sprite change
-        self.movementDelay = 0;
+        # Default stance is standing
+        self.numStance = STILL
+        self.animationDelay = animDelay   # Constant to reset sprite change
+        self.movementDelay = 0            # Counter to delay sprite change
         self.jumpTime = PLAYER_BASE_JUMP  # Time you can keep jumping to increase height
-        self.attackTime = 0  # If this is larger than 0 character has to wait to attack
-        self.attacking = False
-        self.dead = False
-        self.stunDelay = 0
-        self.stunnedTime = 0  # If this is larger than 0 character is hitstunned
-        self.invulTime = 0
-
+        self.attackTime = 0               # If this is larger than 0 character has to wait to attack
+        self.attacking = False            # This indicates if character should attack on current frame
+        self.dead = False                 # This indicates if character should die on current frame
+        self.stunDelay = 0                # This is to reset the stun counter
+        self.stunnedTime = 0              # If this is larger than 0 character is hitstunned and cannot move
+        self.invulTime = 0                # If this is larger than 0 character is invulnerable and cannot be hit
+                                          # For most enemies these two are the same
         self.updateStance()
 
     # move determines which movement the character will perform based on
@@ -225,13 +219,14 @@ class Character(MySprite):
             if self.numImageStance < 0:
                 self.numImageStance = len(self.sheetCoords[self.numStance])-1
             self.image = self.sheet.subsurface(self.sheetCoords[self.numStance][self.numImageStance])
-            # TODO I don't like this, it implies all sprites must be facing the same way on the spritesheet
             if self.looking == RIGHT:
                 self.image = self.sheet.subsurface(self.sheetCoords[self.numStance][self.numImageStance])
             elif self.looking == LEFT:
                 self.image = pygame.transform.flip(
                     self.sheet.subsurface(self.sheetCoords[self.numStance][self.numImageStance]), 1, 0)
 
+    # This function returns true if the character is to bump into a wall on a given direction
+    # It is used to stop characters from going through walls
     def checkWall(self, direction, platforms):
         if direction == LEFT:
             for platform in iter(platforms):
@@ -246,6 +241,8 @@ class Character(MySprite):
                     return True
             return False
 
+    # This function returns true if the character's feet are going to touch a ceiling
+    # It allows characters to pass through thin platforms but stops them from going through the roof
     def checkCeiling(self, platforms):
         for platform in iter(platforms):
             if (self.rect.top > platform.rect.top) and (self.rect.bottom < platform.rect.bottom)\
@@ -255,17 +252,24 @@ class Character(MySprite):
 
     # update is run every frame to move and change the characters
     # it is the "important" procedure in every cycle
+    # It does most of the collision checking, death, invulnerability, etcetera.
     def update(self, spriteStructure, time):
         # Separate speed into components for code legibility
         # these are local and are set to the character at the end of the procedure
         (speedx, speedy) = self.speed
         platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
-        if self.dead:
-            self.onDeath(spriteStructure, time)
 
+        # First we check if for any reason the character has been killed or fallen oob.
+        if self.dead or (self.position[1] > 3000):
+            self.onDeath(spriteStructure, time)
+            return
+
+        # Next we update its invulnerability time
         if self.invulTime >= 0:
             self.invulTime -= time
-        # If character is hitstunned, decrease the hitstun counter
+
+        # Then we check its stun time and update position according to inertia.
+        # Currently there is no friction preventing them from sliding along the x axis
         if self.movement == STUNNED:
             self.stunnedTime -= time
             if (speedx > 0):
@@ -274,13 +278,12 @@ class Character(MySprite):
             elif (speedx < 0):
                 if self.checkWall(LEFT, platforms):
                     speedx = 0
+
         # If moving left or right
         elif (self.movement == LEFT) or (self.movement == RIGHT):
             # Set direction the character is facing
             self.looking = self.movement
-
-
-            # Set movement speeds
+            # Set movement speeds if we are not running into a wall
             if self.movement == LEFT:
                 if self.checkWall(LEFT, platforms):
                     speedx = 0
@@ -301,16 +304,18 @@ class Character(MySprite):
                     self.numStance = SPRITE_JUMP
 
         elif (self.movement == UP) or (self.movement == UPLEFT) or (self.movement == UPRIGHT):
-            # If player is jumping, decrease time to keep jumping and set vert. speed accordingly
+            # If player is jumping, decrease time to keep jumping and set vertical speed accordingly
             if self.numStance != SPRITE_JUMP:
                 self.jumpTime = PLAYER_BASE_JUMP
             self.jumpTime -= time
             self.numStance = SPRITE_JUMP
+            # Check if we bump into a ceiling
             if self.checkCeiling(platforms):
                 speedy = 0
             else:
                 speedy = -self.jumpSpeed
-            # These allow diagonal jumps
+
+            # These allow diagonal jumps and check for walls too
             if (self.movement == UPLEFT):
                 if self.checkWall(LEFT, platforms):
                     speedx = 0
@@ -345,11 +350,12 @@ class Character(MySprite):
         self.updateStance()
         self.speed = (speedx, speedy)
         MySprite.update(self, time)
-        if(self.position[1] > 3000):
-            self.onDeath(spriteStructure, time)
+
         return
 
+    # This function is executed everytime something hits a character, effectively damaging and knocking them back
     def stun(self, speed, damage):
+        # It makes some random adjustments to knockback to add variety
         if (self.invulTime <= 0):
             speedx = speed[0] * random.uniform(.5, 1.5)
             speedy = speed[1] * random.uniform(.5, 1.5)
@@ -360,11 +366,16 @@ class Character(MySprite):
             if self.HP <= 0:
                 self.dead = True
 
+    # This function is executed whenever the character is killed.
     def onDeath(self, spriteStructure, time):
         self.kill()
 
+
+#********************
+#* Player Character *
+#********************
+
 class Player(Character):
-    # The player character
     def __init__(self):
         Character.__init__(self, 'Arthur.png', 'coordArthur.txt',
                     [1, 7, 4], PLAYER_SPEED, PLAYER_JUMP_SPEED, PLAYER_ANIM_DELAY)
@@ -396,7 +407,6 @@ class Player(Character):
 
     # Player's update deals mainly with spawning attacks
     def update(self, spriteStructure, time):
-
         # If player is attacking, start cooldown and spawn a projectile.
         if self.attacking:
             self.attacking = False
@@ -414,6 +424,10 @@ class Player(Character):
         self.kill()
         # Open the window that shows that you the player is dead
         spriteStructure.phase.openDeathScreen()
+
+#********************
+#* Enemy Characters *
+#********************
 
 class NPC(Character):
 
@@ -445,8 +459,8 @@ class NPC(Character):
         Character.update(self, spriteStructure, time)
 
     def onDeath(self, spriteStructure, time):
-        # Npc's hace a chance to drop a potion on kill
-        # Potion spawn percentages chan be changed on potionSprites
+        # Npc's have a chance to drop a potion on kill
+        # Potion spawn percentages can be changed on potionSprites
         potion = getRandomPotion()
         if (potion != None):
             # Put the potion in the place the enemy is before killing it
@@ -508,7 +522,9 @@ class AxeKnight(NPC):
         if  diffPos < 0:
             direction = RIGHT
             diffPos = -diffPos
+        # If closer than 400 units, move closer
         if diffPos < 400:
+            # If closer than 200 units throw axe and keep moving closer
             if diffPos < 200:
                 if self.attackTime <= 0:
                     self.attacking = True
@@ -549,6 +565,7 @@ class MeltyZombie(NPC):
         if diffPos < 0:
             direction = RIGHT
             diffPos = -diffPos
+        # If closer than 500 units get closer until edge of platform
         if diffPos < 500:
             platform = pygame.sprite.spritecollideany(self, spriteStructure.platformGroup)
             if (platform is not None) and (platform.rect.top >= self.rect.bottom - 2 ):
@@ -566,6 +583,7 @@ class MeltyZombie(NPC):
         NPC.move_cpu(self, spriteStructure)
 
     def update(self, spriteStructure, time):
+        # Spawn goo on the ground
         if self.attacking:
             self.attacking = False
             self.attackTime = self.attackDelay
@@ -607,6 +625,7 @@ class Imp(NPC):
 
     def update(self, spriteStructure, time):
         self.updateStance()
+        # The imp gets stunned if it hits the player, preventing it from following inside of him.
         if (self.stunnedTime <= 0):
             self.speed = self.direction
             if self.attackTime > 0:
@@ -641,15 +660,15 @@ class Zebesian(NPC):
 
     def move_cpu(self, spriteStructure):
         diffPos = self.position[0] - spriteStructure.player.position[0]
-        directionP = LEFT
-        directionM = RIGHT
+        directionP = LEFT   # Player direction
+        directionM = RIGHT  # Opposite direction
         jump = False
         if diffPos < 0:
             directionP = RIGHT
             directionM = LEFT
             diffPos = -diffPos
         if diffPos < 700:
-            #Move enemy towards player
+            # Move towards player, check if we are hitting a wall to jump over it
             platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
             for platform in iter(platforms):
                 if (self.rect.bottom - 5 > platform.rect.top):
@@ -659,6 +678,7 @@ class Zebesian(NPC):
                     Character.move(self, directionM + 4)
                 else:
                     Character.move(self, directionM)
+            # If at optimal distance, stand still and fire
             elif diffPos < 500:
                 if (self.attackTime <= 0) and (abs(self.position[1] - spriteStructure.player.position[1]) < 50):
                     self.attacking = True
@@ -679,11 +699,12 @@ class Zebesian(NPC):
             self.attackTime -= time
         NPC.update(self, spriteStructure, time)
 
-
+# The boss is a giant beast that spawns magic pillars, throws fireballs and charges into the player at high speed
 class Boss(NPC):
     def __init__(self):
         NPC.__init__(self, 'KingSoma.png', 'coordKingSoma.txt', [16, 1, 3],
                      BOSS_SPEED, BOSS_JUMP_SPEED, BOSS_ANIM_DELAY)
+        # WOW THAT'S A LOT OF COUNTERS
         self.stunDelay = BOSS_STUN_DELAY
         self.invulDelay = BOSS_STUN_DELAY
         self.HP = BOSS_BASE_HEALTH
@@ -700,6 +721,7 @@ class Boss(NPC):
         self.knockback = BOSS_HIT_KB
         self.damage = BOSS_HIT_DMG
 
+    # It comes with its own wall-checking function due to its size and charging speed
     def checkWall(self, direction, platforms):
         if direction == LEFT:
             for platform in iter(platforms):
@@ -714,44 +736,62 @@ class Boss(NPC):
                     return True
             return False
 
+    # This stun function prevents the boss from being juggled
+    def stun(self, speed, damage):
+        speedx, speedy = speed
+        NPC.stun(self, (speedx*0.2, speedy*0.4), damage)
+
+
     def move_cpu(self, spriteStructure):
-        platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
         diffPos = self.position[0] - spriteStructure.player.position[0]
         if diffPos < 0:
             diffPos = -diffPos
 
+        # If it is close to the player, it will try to spawn a magic pillar below them
         if (diffPos < 300) and (self.attackTime <= 0) and (abs(self.position[1] - spriteStructure.player.position[1]) < 200):
             self.attacking = True
 
+        # If it is within charging distance and can charge, it will initiate charge status, locking its direction
         if (diffPos < 600) and (self.chargeMeter > 0):
             self.charging = True
             NPC.move(self, self.lockedDirection)
+
+        # It will stop charging when it runs out of chargeMeter
         if (self.chargeMeter <= 0):
             self.charging = False
             NPC.move(self, STILL)
 
-
+        # Every so often, it will spawn fireballs on 4 directions over its head
         if (self.fireballTime <= 0):
             self.fireball = True
+
         NPC.move_cpu(self, spriteStructure)
 
     def update(self, spriteStructure, time):
+
+        # First get a facing direction
         directionM = RIGHT
         directionP = LEFT
         if (self.position[0] - spriteStructure.player.position[0]) < 0:
             directionM = LEFT
             directionP = RIGHT
 
+        # Lower attack cooldown
         if (self.attackTime > 0):
             self.attackTime -= time
+
+        # Lower charge cooldown and reset if necessary
         if (self.chargeTime > 0):
             self.chargeTime -= time
         else:
             self.lockedDirection = directionP
             self.chargeMeter = BOSS_CHARGE_METER
+
+        # Lower fireball cooldown
         if (self.fireballTime > 0):
             self.fireballTime -= time
 
+        # If player is in range, spawn a magic pillar
         if self.attacking and not self.charging:
             if self.looking == RIGHT:
                 spriteStructure.projectileGroup.add(Pillar((self.position[0] + 170, self.position[1]-1), self.looking))
@@ -760,6 +800,8 @@ class Boss(NPC):
             #print("*attacks*")
             self.attacking = False
             self.attackTime = self.attackDelay
+
+        # If charging decrease meter
         if self.charging:
             #print("*charges*")
             self.chargeMeter -= time
@@ -767,6 +809,7 @@ class Boss(NPC):
         else:
             self.looking = directionP
 
+        # If it's fireball time, make it fireball time
         if self.fireball:
             #print("*fireballs*")
             self.fireball = False
@@ -777,6 +820,3 @@ class Boss(NPC):
             spriteStructure.projectileGroup.add(Fireball((self.position[0] + 60, self.position[1] - 110), directionP, True))
         NPC.update(self, spriteStructure, time)
 
-    def stun(self, speed, damage):
-        speedx, speedy = speed
-        NPC.stun(self, (speedx*0.2, speedy*0.4), damage)

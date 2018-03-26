@@ -107,8 +107,9 @@ class Projectile(MySprite):
         return
 
 
-class swordSlash(Projectile):
     # A slash from the Player's sword
+class swordSlash(Projectile):
+
     def __init__(self, position, looking):
         Projectile.__init__(self, 'swordSlashes.png', 'coordSword.txt',
                            [9], SWORD_MOVE_SPEED, SWORD_SLASH_ANIM_DELAY, looking)
@@ -138,6 +139,7 @@ class swordSlash(Projectile):
         if self.ended:
             self.kill()
 
+# An AxeKnight's projectile is a throwing axe that describes a parabola through the air
 class axeProj(Projectile):
     def __init__(self, position, looking):
         Projectile.__init__(self, 'AxeKnight.png', 'coordAxeProj.txt',
@@ -154,13 +156,15 @@ class axeProj(Projectile):
 
 
     def update(self, spriteStructure, time):
-        # A thrown axe describes a parabola
+        # Set current scroll
         self.scroll = spriteStructure.player.scroll
+
+        # Adjust for gravity
         speedx, speedy = self.speed
-
         speedy += GRAVITY * time
-
         self.speed = (speedx, speedy)
+
+        # Check for colisions
         if self.rect.colliderect(spriteStructure.player.rect):
             self.collided = True
             if (self.looking == RIGHT):
@@ -175,6 +179,7 @@ class axeProj(Projectile):
         if self.collided:
             self.kill()
 
+# MeltyGoo is a puddle of substance MeltyZombies leave on the floor they squirm along
 class MeltyGoo(Projectile):
     def __init__(self, position, looking):
         Projectile.__init__(self, 'MeltyZombie.png', 'coordMeltyGoo.txt',
@@ -199,6 +204,7 @@ class MeltyGoo(Projectile):
         if self.ended:
             self.kill()
 
+# Zebesians fire a beam that moves in a straight line until it collides against something
 class ZebesianBeam(Projectile):
     def __init__(self, position, looking):
         Projectile.__init__(self, 'Zebesian.png', 'coordBeam.txt',
@@ -230,6 +236,7 @@ class ZebesianBeam(Projectile):
         if self.collided:
             self.kill()
 
+# Fireballs are spawned from the top of the final boss, they fall.
 class Fireball(Projectile):
     def __init__(self, position, looking, up):
         Projectile.__init__(self, 'KingSoma.png', 'coordFireball.txt',
@@ -251,9 +258,7 @@ class Fireball(Projectile):
     def update(self, spriteStructure, time):
         self.scroll = spriteStructure.player.scroll
         speedx, speedy = self.speed
-
         speedy += GRAVITY * time
-
         self.speed = (speedx, speedy)
         if self.rect.colliderect(spriteStructure.player.rect):
             self.collided = True
@@ -269,6 +274,7 @@ class Fireball(Projectile):
         if self.collided:
             self.kill()
 
+# These pillars appear in front of the boss when close, they throw the player upwards.
 class Pillar(Projectile):
     def __init__(self, position, looking):
         Projectile.__init__(self, 'KingSoma.png', 'coordPillar.txt',
