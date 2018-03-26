@@ -1,8 +1,6 @@
 
-from gestorRecursos import *
 from mysprite import MySprite
 from resourcesManager import *
-
 
 # These are here mostly for consistence
 STILL   = 0

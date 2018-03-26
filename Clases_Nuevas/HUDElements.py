@@ -2,6 +2,7 @@ import pygame
 from characters import PLAYER_BASE_HEALTH
 from resourcesManager import ResourcesManager
 import time as timeLib
+import math
 
 HEALTH_BAR_X = 78
 HEALTH_BAR_Y = 52
@@ -18,6 +19,11 @@ STAGE_TEXT_POSITION_Y = 300
 #-----------------------
 DESCRIPTION_TEXT_POSITION_X = 400
 DESCRIPTION_TEXT_POSITION_Y = 350
+#-----------------------
+ARROW_X = 320
+ARROW_Y = 80
+ARROW_WIDTH = 80
+ARROW_HEIGHT = 60
 
 # HUD elements for the level gameplay
 class HUDElement:
@@ -74,6 +80,55 @@ class HealthBarDecoration(HUDElement):
         HUDElement.__init__(self, self.image.get_rect())
         self.setScreenPosition((HEALTH_BAR_DECORATION_X, HEALTH_BAR_DECORATION_Y))
 
+class LastEnemyArrow(HUDElement):
+    def __init__(self, enemies, player):
+        self.image = ResourcesManager.loadImage("arrow.png", -1)
+        self.image = pygame.transform.scale(self.image, (ARROW_WIDTH, ARROW_HEIGHT))
+        HUDElement.__init__(self, self.image.get_rect())
+        self.setScreenPosition((ARROW_X, ARROW_Y))
+        self.enemies = enemies
+        self.player = player
+
+    def update(self):
+        if self.enemies.__len__() == 1:
+            for sprite in self.enemies.sprites():
+                enemy_pos = sprite.position
+                player_pos = self.player.position
+                # Vector between the player and the enemy
+                vector = (enemy_pos[0] - player_pos[0], enemy_pos[1] - player_pos[1])
+                # Calculates the angle over the horizontal vector (1,0)
+                angle = math.acos( vector[0] / (math.sqrt(pow(vector[0],2) + pow(vector[1], 2))) )
+                angle = angle*180/math.pi
+                # Loads the image and scales it
+                self.image = ResourcesManager.loadImage("arrow.png", -1)
+                self.image = pygame.transform.scale(self.image, (ARROW_WIDTH, ARROW_HEIGHT))
+                if vector[1]>=0:
+                    # Arrow to left
+                    if angle > 135:
+                        self.image = pygame.transform.rotate(self.image, 180)
+                    # Arrow to right
+                    elif angle < 45:
+                        return
+                    # Arrow down
+                    else:
+                        self.image = pygame.transform.rotate(self.image, -90)
+                else:
+                    # Arrow to left
+                    if angle > 135:
+                        self.image = pygame.transform.rotate(self.image, 180)
+                    # Arrow to right
+                    elif angle < 45:
+                        return
+                    # Arrow up
+                    else:
+                        self.image = pygame.transform.rotate(self.image, 90)
+                break
+
+    def draw(self, screen):
+        if self.enemies.__len__() == 1:
+            screen.blit(self.image, self.rect)
+
+
 class GUIText(HUDElement):
     def __init__(self, font, color, text, position, time):
         # Creates the text image
@@ -96,7 +151,6 @@ class GUIText(HUDElement):
             screen.blit(self.image, self.rect)
 
 
-
 class StageText(GUIText):
     def __init__(self, text):
         # Asks the resource manager for the font
@@ -111,18 +165,20 @@ class DescriptionText(GUIText):
 
 # Main class for the HUD
 class HUD():
-    def __init__(self, player, title, description):
+    def __init__(self, spriteStructure, stageInfo):
         # Creates the HUD elements
-        self.healthBar = HealthBar(player)
+        self.healthBar = HealthBar(spriteStructure.player)
         self.healthBarDecoration = HealthBarDecoration()
-        self.stageText = StageText(title)
-        self.descriptionText = DescriptionText(description)
+        self.stageText = StageText(stageInfo.title)
+        self.descriptionText = DescriptionText(stageInfo.description)
+        self.arrow = LastEnemyArrow(spriteStructure.enemyGroup, spriteStructure.player)
 
     def update(self):
         # Updates the health bar
         self.healthBar.update()
         self.stageText.update()
         self.descriptionText.update()
+        self.arrow.update()
 
     def draw(self, screen):
         # Draw in correct order the HUD
@@ -130,3 +186,4 @@ class HUD():
         self.healthBar.draw(screen)
         self.stageText.draw(screen)
         self.descriptionText.draw(screen)
+        self.arrow.draw(screen)

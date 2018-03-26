@@ -48,9 +48,6 @@ class PhaseScene(PygameScene):
         self.player = Player()
         self.playersGroup = pygame.sprite.Group(self.player)
 
-        # Creates the HUD elements
-        self.HUD = HUD(self.player, stageInfo.title, stageInfo.description)
-
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
 
@@ -129,6 +126,9 @@ class PhaseScene(PygameScene):
         self.spriteStructure = SpriteStructure(self, self.player, self.enemiesGroup, self.platformsGroup, \
                                                self.projectilesGroup, None, None, self.potionsGroup)
 
+        # Creates the HUD elements
+        self.HUD = HUD(self.spriteStructure, stageInfo)
+
     def update(self, time):
 
         if not self.alreadyPlaying:
@@ -167,7 +167,6 @@ class PhaseScene(PygameScene):
                     spawnPoint.clear()
                 self.enemiesGroup.empty()
                 for sprite in iter(self.enemiesGroup):
-                    sprite.kill()
                     self.enemiesGroup.remove(sprite)
                 # We add new enemies
                 for spawnPoint in iter(self.spawnPoints):
