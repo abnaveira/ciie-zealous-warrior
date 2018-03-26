@@ -346,7 +346,7 @@ class Character(MySprite):
         self.speed = (speedx, speedy)
         MySprite.update(self, time)
         if(self.position[1] > 3000):
-            self.kill()
+            self.onDeath(spriteStructure, time)
         return
 
     def stun(self, speed, damage):

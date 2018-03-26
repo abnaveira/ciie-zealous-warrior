@@ -55,7 +55,9 @@ class PhaseScene(PygameScene):
         self.player.setPosition((playerX, playerY))
 
         # Initialises the enemy sprites group
-        self.enemiesGroup = pygame.sprite.Group()
+        enemy1 = Boss()
+        enemy1.setPosition((700, 200))
+        self.enemiesGroup = pygame.sprite.Group(enemy1)
 
         # Initializes spawn points list
         self.spawnPoints = []
