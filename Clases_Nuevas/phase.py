@@ -117,9 +117,6 @@ class PhaseScene(PygameScene):
                 animation.play()
                 self.backAnimations.append(animation)
 
-        # Creates a group for the dinamic sprites
-        self.dinamicSpritesGroup = pygame.sprite.Group(self.player)
-
         # Creates a list for all the group sprites
         self.spritesList = [self.flagGroup, self.potionsGroup, self.playersGroup,
                             self.enemiesGroup, self.projectilesGroup, self.platformsGroup ]
@@ -131,11 +128,6 @@ class PhaseScene(PygameScene):
 
         self.spriteStructure = SpriteStructure(self, self.player, self.enemiesGroup, self.platformsGroup, \
                                                self.projectilesGroup, None, None, self.potionsGroup)
-
-    # Allows to add enemies to the phase
-    def addEnemies(self, enemySprite):
-        self.enemiesGroup.add(enemySprite)
-        self.dinamicSpritesGroup.add(enemySprite)
 
     def update(self, time):
 
@@ -174,9 +166,9 @@ class PhaseScene(PygameScene):
                 for spawnPoint in iter(self.spawnPoints):
                     spawnPoint.clear()
                 self.enemiesGroup.empty()
-                for sprite in iter(self.dinamicSpritesGroup):
-                    if sprite != self.player:
-                        self.dinamicSpritesGroup.remove(sprite)
+                for sprite in iter(self.enemiesGroup):
+                    sprite.kill()
+                    self.enemiesGroup.remove(sprite)
                 # We add new enemies
                 for spawnPoint in iter(self.spawnPoints):
                     spawnPoint.add_enemies(20)

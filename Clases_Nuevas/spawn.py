@@ -42,7 +42,6 @@ class Spawn:
     def spawn_enemy(self, phase):
         enemy = self.listEnemies[0]
         phase.enemiesGroup.add(enemy)
-        phase.dinamicSpritesGroup.add(enemy)
         self.listEnemies.remove(enemy)
 
     # Decide to spawn a new enemy or not
