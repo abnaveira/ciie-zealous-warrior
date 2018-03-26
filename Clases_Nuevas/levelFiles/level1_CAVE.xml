@@ -8,10 +8,10 @@
         <scaleX>3000</scaleX>
         <scaleY>1000</scaleY>
         <!--Size of the window-->
-        <windowWidth>800</windowWidth>
-        <windowHeight>600</windowHeight>
+        <windowWidth>960</windowWidth>
+        <windowHeight>540</windowHeight>
         <!--Minimum distance to the sides-->
-        <leftMin>300</leftMin>
+        <leftMin>400</leftMin>
         <topMin>200</topMin>
         <backgroundColor>
             <r>0</r>
@@ -315,6 +315,46 @@
         <y>854</y>
     </playerPosition>
 
-    <!--Enemies Spawn Point-->
+    <!--List of enemies of this level-->
+    <enemies>
+        <enemy>Skeleton</enemy>
+        <enemy>MeltyZombie</enemy>
+        <enemy>Imp</enemy>
+    </enemies>
 
+    <!--Enemies Spawn Point-->
+    <spawnPoints>
+        <spawnPoint>
+            <x>500</x>
+            <y>400</y>
+            <enemiesNumber>3</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <x>1300</x>
+            <y>400</y>
+            <enemiesNumber>4</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <x>2300</x>
+            <y>400</y>
+            <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+    </spawnPoints>
+
+    <!--Bosses and position if there are bosses in the scene-->
+    <bosses>
+        <boss>
+            <id>Boss</id>
+            <x>500</x>
+            <y>400</y>
+        </boss>
+    </bosses>
+
+    <stageInfo>
+        <title>Stage 1</title>
+        <description>The cave</description>
+    </stageInfo>
+
+    <!-- Music file for the level-->
+    <musicFile>bensound-extremeaction.mp3</musicFile>
 </level>

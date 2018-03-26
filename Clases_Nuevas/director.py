@@ -6,6 +6,7 @@ import sys
 from escena import *
 from pygame.locals import *
 from scene import *
+from phase import PhaseScene
 
 FPS = 60
 
@@ -120,3 +121,6 @@ class Director():
         # Put argument scene on top of the stack (over the current one)
         self.stack.append(scene)
 
+    def addPhase(self, levelFile):
+        self.stopScene()
+        self.stack.append(PhaseScene(self, levelFile))

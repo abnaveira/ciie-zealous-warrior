@@ -10,6 +10,9 @@ from director import *
 from standingSprites import *
 from potionSprites import *
 from HUDElements import *
+from spawn import *
+from menu import DeathMenu
+import time as pyTime
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
@@ -19,17 +22,24 @@ class PhaseScene(PygameScene):
     def __init__(self, director, levelFile):
         # Save the director to call the end of the phase when necessary
         self.director = director
+        self.levelFile = levelFile
 
         # It reads the file with the level paramethers
-        sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
-        platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList\
-            = loadLevelData(levelFile)
+        self.sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
+        platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
+            enemyList, bossList, stageInfo, musicFile= loadLevelData(levelFile)
 
-        PygameScene.__init__(self, director, sceneryObj.windowWidth, sceneryObj.windowHeight)
+        PygameScene.__init__(self, director, self.sceneryObj.windowWidth, self.sceneryObj.windowHeight)
+
+        # Flag for music playBack (scenes are pre-initialized, we cannot load music in each
+        # of them, as music uses a shared channel
+        self.alreadyPlaying = False
+        # Store musicFile name
+        self.musicFile = musicFile
 
         # Creates the scenary and background
-        self.scenery= Scenary(sceneryObj)
-        self.background = Background(sceneryObj)
+        self.scenery= Scenary(self.sceneryObj)
+        self.background = Background(self.sceneryObj)
 
         # Set scroll to (0,0)
         self.scroll = (0, 0)
@@ -38,16 +48,22 @@ class PhaseScene(PygameScene):
         self.player = Player()
         self.playersGroup = pygame.sprite.Group(self.player)
 
-        # Creates the HUD elements
-        self.HUD = HUD(self.player)
-
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
 
         # Initialises the enemy sprites group
-        enemy1 = Zebesian()
-        enemy1.setPosition((741, 270))
-        self.enemiesGroup = pygame.sprite.Group(enemy1)
+        self.enemiesGroup = pygame.sprite.Group()
+
+        # Puts bosses in place if there are any
+        for boss in bossList:
+            enemy = getBossFromName(boss.id)
+            enemy.setPosition((boss.x,boss.y))
+            self.enemiesGroup.add(enemy)
+
+        # Initializes spawn points list
+        self.spawnPoints = []
+        for spawnPoint in spawnPointList:
+            self.spawnPoints.append(Spawn(spawnPoint, enemyList))
 
         # Initializes the projectiles sprites group
         self.projectilesGroup = pygame.sprite.Group()
@@ -56,6 +72,7 @@ class PhaseScene(PygameScene):
         self.platformsGroup = pygame.sprite.Group()
         for platform in platformList:
             self.platformsGroup.add(platform)
+
         # ---------------------------------------------------
         # FLAG AS PLATFORM TEMPORARY
         # self.platformsGroup.add(Platform(flag))
@@ -65,30 +82,13 @@ class PhaseScene(PygameScene):
         self.bannerSpriteGroup = pygame.sprite.Group()
         self.flagGroup.add(flagArea)
         self.realFlagXPos = realFlagXPos
+
+        # To use as a timer when the flag is raised
+        self.flagSpawnEnd = 0
         # ---------------------------------------------------
 
-        # Potions group
+        # Initialize potions group
         self.potionsGroup = pygame.sprite.Group()
-        # Put a potion in the map
-        potion1 = PotionLarge()
-        potion1.setPosition((300,418))
-        self.addPotions(potion1)
-        potion2 = PotionMedium()
-        potion2.setPosition((400, 418))
-        self.addPotions(potion2)
-        potion3 = PotionSmall()
-        potion3.setPosition((500, 418))
-        self.addPotions(potion3)
-
-        #-----------
-        # TODO: implement this on enemy kill. Percentage can be changed in potionSprites constants
-        # 30% chance of random potion
-        potion = getRandomPotion()
-        print("hola")
-        if (potion != None):
-            potion.setPosition((600, 418))
-            self.addPotions(potion)
-        #--------------
 
         # Loads the animations in the front
         self.frontAnimations = []
@@ -114,31 +114,31 @@ class PhaseScene(PygameScene):
                 animation.play()
                 self.backAnimations.append(animation)
 
-        # Creates a group for the dinamic sprites
-        self.dinamicSpritesGroup = pygame.sprite.Group(self.player)
-
         # Creates a list for all the group sprites
         self.spritesList = [self.flagGroup, self.potionsGroup, self.playersGroup,
                             self.enemiesGroup, self.projectilesGroup, self.platformsGroup ]
 
         # Creates the class that will control the scroll
-        self.controlScroll = scrollControl(self.scroll, sceneryObj.leftMin, sceneryObj.windowWidth - sceneryObj.leftMin,
-                                           sceneryObj.topMin, sceneryObj.windowHeight - sceneryObj.topMin, sceneryObj.windowHeight, \
-                                           sceneryObj.windowWidth, self.scenery)
+        self.controlScroll = scrollControl(self.scroll, self.sceneryObj.leftMin, self.sceneryObj.windowWidth - self.sceneryObj.leftMin,
+                                           self.sceneryObj.topMin, self.sceneryObj.windowHeight - self.sceneryObj.topMin, self.sceneryObj.windowHeight, \
+                                           self.sceneryObj.windowWidth, self.scenery)
 
-        self.spriteStructure = SpriteStructure(self.player, self.enemiesGroup, self.platformsGroup, \
-                                               self.projectilesGroup, None, None)
+        self.spriteStructure = SpriteStructure(self, self.player, self.enemiesGroup, self.platformsGroup, \
+                                               self.projectilesGroup, None, None, self.potionsGroup)
 
-    # Allows to add enemies to the phase
-    def addEnemies(self, enemySprite):
-        self.enemiesGroup.add(enemySprite)
-        self.dinamicSpritesGroup.add(enemySprite)
-
-    # Allows to add potions to the phase
-    def addPotions(self, potionSprite):
-        self.potionsGroup.add(potionSprite)
+        # Creates the HUD elements
+        self.HUD = HUD(self.spriteStructure, stageInfo)
 
     def update(self, time):
+
+        if not self.alreadyPlaying:
+            # Load background music
+            pygame.mixer.music.load(self.musicFile)
+            # Play it indefinetely until method stop is called
+            pygame.mixer.music.play(-1)
+            # Flag is now true
+            self.alreadyPlaying = True
+
         # Executes enemy AI
         for enemy in self.enemiesGroup:
             enemy.move_cpu(self.spriteStructure)
@@ -150,18 +150,41 @@ class PhaseScene(PygameScene):
         self.potionsGroup.update(self.player, self.platformsGroup, time)
 
         # ---------------------------------------------------
-        # CODE TO TRY FLAGS
+        # Flag logic
+
+        # If the flag hasn't been raised
         if not self.flagRaised:
             self.flagRaised = PhaseScene.checkFlag(self)
+            # The FIRST time the flag is raised
             if self.flagRaised:
                 flagList = self.flagGroup.sprites()
                 flag = flagList.pop()
                 # We set the Banner in its position
                 bannerSprite = Banner((self.realFlagXPos,flag.rect.bottom))
                 self.bannerSpriteGroup.add(bannerSprite)
-                # This changes scene
-                #Director.leaveScene(self.director)
+                # We destroy enemies
+                for spawnPoint in iter(self.spawnPoints):
+                    spawnPoint.clear()
+                self.enemiesGroup.empty()
+                for sprite in iter(self.enemiesGroup):
+                    self.enemiesGroup.remove(sprite)
+                # We add new enemies
+                for spawnPoint in iter(self.spawnPoints):
+                    spawnPoint.add_enemies(20)
+                # Time a minute from now, when the spawning has ended
+                self.flagSpawnEnd = pyTime.time() + 60
 
+        # If the flag has already been raised
+        if self.flagRaised:
+            # If a minute has passed since the flag has been raised
+            if pyTime.time() > self.flagSpawnEnd:
+                # If there are no more enemies on the level
+                if (len(self.enemiesGroup.sprites()) == 0):
+                    # Abort music playback
+                    pygame.mixer.music.stop()
+                    # TODO: put a message, and press enter to change level
+                    # This changes scene
+                    self.director.leaveScene()
         # ---------------------------------------------------
 
         # Updates the banner sprite
@@ -184,6 +207,10 @@ class PhaseScene(PygameScene):
 
         # Update HUD elements
         self.HUD.update()
+
+        # Spawn enemies
+        for spawnPoint in iter(self.spawnPoints):
+            spawnPoint.spawn(self)
 
     def draw(self, screen):
         # Background
@@ -214,6 +241,11 @@ class PhaseScene(PygameScene):
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         keysPressed = pygame.key.get_pressed()
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
+
+    def openDeathScreen(self):
+        # Open the death screen passing the file of the level
+        self.director.changeScene(DeathMenu(self.director, self.levelFile,
+                                            self.sceneryObj.windowWidth, self.sceneryObj.windowHeight))
 
     # If the player is contained within the flag rectangle of influence
     # return true

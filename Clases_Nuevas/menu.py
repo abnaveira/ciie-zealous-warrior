@@ -55,6 +55,12 @@ class LeaveButton(Button):
     def action(self):
         self.screen.menu.exitProgram()
 
+class RetryButton(Button):
+    def __init__(self, screen, window_width, window_height):
+        Button.__init__(self, screen, 'RetryButton.png', (window_width/5*2, window_height/8*6))
+    def action(self):
+        self.screen.menu.executeGame()
+
 # -------------------------------------------------
 # Class GUIText and different text implementations
 
@@ -129,11 +135,15 @@ class GUIInitialScreen(GUIScreen):
         leaveButton = LeaveButton(self, menu.window_width, menu.window_height)
         self.GUIelements.append(playButton)
         self.GUIelements.append(leaveButton)
-        # Creates the texts
-        #playText = PlayText(self, menu.window_width, menu.window_height)
-        #leaveText = LeaveText(self, menu.window_width, menu.window_height)
-        #self.GUIelements.append(playText)
-        #self.GUIelements.append(leaveText)
+
+class DeathScreen(GUIScreen):
+    def __init__(self, menu):
+        GUIScreen.__init__(self, menu, 'deathMenuBackground.png')
+        # Creates the buttons
+        playButton = RetryButton(self, menu.window_width, menu.window_height)
+        leaveButton = LeaveButton(self, menu.window_width, menu.window_height)
+        self.GUIelements.append(playButton)
+        self.GUIelements.append(leaveButton)
 
 # -------------------------------------------------
 # Class for the menu scene
@@ -176,7 +186,37 @@ class Menu(PygameScene):
     def showInitialWindow(self):
         self.actualScreen = 0
 
-    # def mostrarPantallaConfiguracion(self):
-    #    self.actualScreen = ...
+# Class for the menu that appears when the player is dead
+class DeathMenu(PygameScene):
 
+    def __init__(self, director, levelFile, window_width, window_height):
+        PygameScene.__init__(self, director, window_width, window_height);
+        self.window_width = window_width
+        self.window_height = window_height
+        # Creates the list of screens
+        self.actualScreen = DeathScreen(self)
+        self.levelFile = levelFile
 
+    def update(self, *args):
+        return
+
+    def events(self, event_list):
+        for event in event_list:
+            # If the key scape is pressed
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    self.exitProgram()
+            elif event.type == pygame.QUIT:
+                self.director.leaveProgram()
+
+        self.actualScreen.events(event_list)
+
+    def draw(self, screen):
+        self.actualScreen.draw(screen)
+
+    def exitProgram(self):
+        self.director.leaveProgram()
+
+    def executeGame(self):
+        self.director.addPhase(self.levelFile)
+        return

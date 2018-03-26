@@ -4,7 +4,7 @@
 from director import Director
 from phase import PhaseScene
 from xmlLevelParser import getAllLevelFiles
-from menu import *
+from menu import Menu
 
 
 if __name__ == '__main__':
@@ -17,7 +17,10 @@ if __name__ == '__main__':
     # Reverse the order of the levels (to put in the stack)
     levelFilesList.reverse()
 
-
+    # Initialize pygame music player
+    #pygame.mixer.pre_init(44100, 16, 2, 4096)
+    #pygame.mixer.init()
+    # TODO: use this with sounds of characters and enemies, not used for music
 
     for level in levelFilesList:
         # Create the scene for the level
@@ -26,7 +29,7 @@ if __name__ == '__main__':
         director.stackScene(scene)
 
     # Loads the game menu in the director
-    menu = Menu(director, 800, 600)#960, 540)
+    menu = Menu(director, 960, 540)
     director.stackScene(menu)
 
     # Execute the game

@@ -1,5 +1,6 @@
 from standingSprites import *
-from characters import *
+#from characters import PLAYER_BASE_HEALTH
+import characters
 import random
 
 
@@ -29,7 +30,10 @@ class Potion(StandingSprites):
         (speedx, speedy) = self.speed
         if not self.onPlatform:
             for platform in iter(platforms):
-                if (platform.rect.top < self.rect.bottom) \
+                # If the potion is within the platform's width and just above it, it will stop falling
+                if (platform.rect.left < self.rect.right) \
+                        and (platform.rect.right > self.rect.left) \
+                    and (platform.rect.top < self.rect.bottom) \
                             and ((self.rect.bottom - self.rect.height/2) < platform.rect.top):
                     # Set y value to top of the platform and break fall
                     self.setPosition((self.position[0], platform.position[1]-platform.rect.height+1))
@@ -38,10 +42,11 @@ class Potion(StandingSprites):
 
             # Otherwise, keep falling accelerated by gravity
             if not self.onPlatform:
-                speedy += GRAVITY * time
+                speedy += characters.GRAVITY * time
 
             # Update speed
             self.speed = (speedx, speedy)
+
         self.updateStance()
 
         # Update the scroll
@@ -56,12 +61,12 @@ class Potion(StandingSprites):
 
     def usePotion(self, player):
         # If the player is not at max health
-        if player.HP != PLAYER_BASE_HEALTH:
+        if player.HP != characters.PLAYER_BASE_HEALTH:
             # Update player hp
-            newHP = player.HP + PLAYER_BASE_HEALTH * self.potionValue
+            newHP = player.HP + characters.PLAYER_BASE_HEALTH * self.potionValue
             # If HP exceeds player base health, we truncate it
-            if newHP > PLAYER_BASE_HEALTH:
-                newHP = PLAYER_BASE_HEALTH
+            if newHP > characters.PLAYER_BASE_HEALTH:
+                newHP = characters.PLAYER_BASE_HEALTH
             player.HP = newHP
             # Destroy the potion after use
             self.kill()

@@ -69,7 +69,7 @@ def loadLevelData(level):
     subImagePosition = calculateInitialWindow(playerX, playerY,
                                                     windowHeight, windowWidth,
                                                     scaleY, scaleX)
-    sceneryObj = sceneryClass(file, scaleX, scaleY, windowWidth, windowHeight,
+    sceneryObj = SceneryClass(file, scaleX, scaleY, windowWidth, windowHeight,
                               leftMin, topMin, red, green, blue, subImagePosition)
 
 
@@ -130,8 +130,8 @@ def loadLevelData(level):
                 # Position of the image in the scenery
                 x = int(scaleAndPlacement.find("x").text) - winImageX
                 y = int(scaleAndPlacement.find("y").text) -winImageY
-                scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
-            frontImagesList.append(frontImagesClass(file, scaleAndPlacementList))
+                scaleAndPlacementList.append(ScaleAndPlacementClass(scaleX, scaleY, x, y))
+            frontImagesList.append(FrontImagesClass(file, scaleAndPlacementList))
 
     # Animations on the front
     frontAnimations = root.find("frontAnimations")
@@ -155,8 +155,8 @@ def loadLevelData(level):
                 # Position of the animation in the scenery
                 x = int(scaleAndPlacement.find("x").text) - winImageX
                 y = int(scaleAndPlacement.find("y").text) - winImageY
-                scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
-            frontAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
+                scaleAndPlacementList.append(ScaleAndPlacementClass(scaleX, scaleY, x, y))
+            frontAnimationsList.append(AnimationClass(framesList, scaleAndPlacementList))
 
     # Animations on the back
     backAnimations = root.find("backAnimations")
@@ -180,44 +180,75 @@ def loadLevelData(level):
                 # Position of the animation in the scenery
                 x = int(scaleAndPlacement.find("x").text) - winImageX
                 y = int(scaleAndPlacement.find("y").text) - winImageY
-                scaleAndPlacementList.append(scaleAndPlacementClass(scaleX, scaleY, x, y))
-            backAnimationsList.append(animationClass(framesList, scaleAndPlacementList))
+                scaleAndPlacementList.append(ScaleAndPlacementClass(scaleX, scaleY, x, y))
+            backAnimationsList.append(AnimationClass(framesList, scaleAndPlacementList))
 
-
+    # List of enemies that can spawn in this level
+    enemies = root.find("enemies")
+    enemyList = []
+    if (enemies != None):
+        for enemy in enemies.iter("enemy"):
+            enemyList.append(enemy.text)
 
     # SpawnPoints
     spawnPoints = root.find("spawnPoints")
     spawnPointList = []
     if (spawnPoints != None):
         for spawnPoint in spawnPoints.iter("spawnPoint"):
-            id = spawnPoint.find("id").text
-            enemies = spawnPoint.find("enemies")
-            enemyList = []
-            for enemy in enemies.iter("enemy"):
-                enemyId = enemy.find("id").text
-                spawnFrecuency = enemy.find("spawnFrecuency").text
-                enemyList.append(enemyInSpawnPoint(enemyId,spawnFrecuency))
             # SpawnPoints position on the map
             x = int(spawnPoint.find("x").text) - winImageX
             y = int(spawnPoint.find("y").text) - winImageY
-            spawnPointList.append(spawnPointClass(id, enemyList, x, y))
+            # Number of enemies
+            enemiesNumber = int(spawnPoint.find("enemiesNumber").text)
+            spawnPointList.append(SpawnPointClass(x, y, enemiesNumber))
+
+    # Boss if there is any
+    bosses = root.find("bosses")
+    bossList = []
+    if (bosses != None):
+        for boss in bosses.iter("boss"):
+            id = boss.find("id").text
+            x = int(boss.find("x").text) - winImageX
+            y = int(boss.find("y").text) - winImageY
+            bossList.append(BossInfo(id, x, y))
+
+    # Stage title and description
+    stageInfoXml = root.find("stageInfo")
+    title = stageInfoXml.find("title").text
+    description = stageInfoXml.find("description").text
+    stageInfo = StageInfo(title, description)
+
+    # Music file
+    musicFile = root.find("musicFile").text
+    musicFile = os.path.join("musicAndSounds", musicFile)
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList
+           platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
+           enemyList, bossList, stageInfo, musicFile
 
-class enemyInSpawnPoint:
+class StageInfo:
+    def __init__(self, title, description):
+        self.title = title
+        self.description = description
+
+class BossInfo:
+    def __init__(self, id, x, y):
+        self.id = id
+        self.x = x
+        self.y = y
+
+class EnemyInSpawnPoint:
     def __init__(self, id, spawnFrecuency):
         self.id = id
         self.spawnFrecuency = spawnFrecuency
 
-class spawnPointClass:
-    def __init__(self, id, enemyList, x, y):
-        self.id = id
-        self.enemyList = enemyList
+class SpawnPointClass:
+    def __init__(self, x, y, enemiesNumber):
         self.x = x
         self.y = y
-        
-class sceneryClass:
+        self.enemiesNumber = enemiesNumber
+
+class SceneryClass:
     def __init__(self, file, scaleX, scaleY, windowWidth, windowHeight,
                  leftMin, topMin, red, green, blue, subImagePosition):
         self.file = file
@@ -232,17 +263,17 @@ class sceneryClass:
         self.blue = blue
         self.subImagePosition = subImagePosition
 
-class frontImagesClass:
+class FrontImagesClass:
     def __init__(self, file, scaleAndPlacementList):
         self.file = file
         self.scaleAndPlacementList = scaleAndPlacementList
 
-class animationClass:
+class AnimationClass:
     def __init__(self, frameList, scaleAndPlacementList):
         self.frameList = frameList
         self.scaleAndPlacementList = scaleAndPlacementList
 
-class scaleAndPlacementClass:
+class ScaleAndPlacementClass:
     def __init__(self, scaleX, scaleY, x, y):
         self.scaleX = scaleX
         self.scaleY = scaleY
