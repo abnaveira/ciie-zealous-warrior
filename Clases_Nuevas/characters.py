@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import random
 
 import pygame, sys, os
 import math
@@ -83,6 +84,19 @@ ZEBESIAN_STUN_DELAY   = 1500
 ZEBESIAN_BASE_HEALTH  = 25
 ZEBESIAN_HIT_DMG      = 10
 ZEBESIAN_HIT_KB       = (.15, -.25)
+
+
+BOSS_SPEED          = 0.7
+BOSS_JUMP_SPEED     = 0.5
+BOSS_ANIM_DELAY     = 12
+BOSS_ATTACK_DELAY   = 3000
+BOSS_FIREBALL_DELAY = 5000
+BOSS_CHARGE_DELAY   = 8500
+BOSS_CHARGE_METER   = 600
+BOSS_STUN_DELAY     = 600
+BOSS_BASE_HEALTH    = 150
+BOSS_HIT_DMG        = 33
+BOSS_HIT_KB         = (.3, -.2)
 
 # World constants
 GRAVITY = 0.0009    # px / ms^2
@@ -288,6 +302,8 @@ class Character(MySprite):
 
         elif (self.movement == UP) or (self.movement == UPLEFT) or (self.movement == UPRIGHT):
             # If player is jumping, decrease time to keep jumping and set vert. speed accordingly
+            if self.numStance != SPRITE_JUMP:
+                self.jumpTime = PLAYER_BASE_JUMP
             self.jumpTime -= time
             self.numStance = SPRITE_JUMP
             if self.checkCeiling(platforms):
@@ -335,9 +351,11 @@ class Character(MySprite):
 
     def stun(self, speed, damage):
         if (self.invulTime <= 0):
+            speedx = speed[0] * random.uniform(.5, 1.5)
+            speedy = speed[1] * random.uniform(.5, 1.5)
             self.stunnedTime = self.stunDelay
             self.invulTime = self.invulDelay
-            self.speed = speed
+            self.speed = (speedx, speedy)
             self.HP -= damage
             if self.HP <= 0:
                 self.dead = True
@@ -378,8 +396,7 @@ class Player(Character):
 
     # Player's update deals mainly with spawning attacks
     def update(self, spriteStructure, time):
-        #if self.HP <= 0:
-        #    self.dead = True
+
         # If player is attacking, start cooldown and spawn a projectile.
         if self.attacking:
             self.attacking = False
@@ -661,3 +678,105 @@ class Zebesian(NPC):
         elif self.attackTime > 0:
             self.attackTime -= time
         NPC.update(self, spriteStructure, time)
+
+
+class Boss(NPC):
+    def __init__(self):
+        NPC.__init__(self, 'KingSoma.png', 'coordKingSoma.txt', [16, 1, 3],
+                     BOSS_SPEED, BOSS_JUMP_SPEED, BOSS_ANIM_DELAY)
+        self.stunDelay = BOSS_STUN_DELAY
+        self.invulDelay = BOSS_STUN_DELAY
+        self.HP = BOSS_BASE_HEALTH
+        self.attackDelay = BOSS_ATTACK_DELAY
+        self.fireballDelay = BOSS_FIREBALL_DELAY
+        self.fireballTime = 0
+        self.chargeDelay = BOSS_CHARGE_DELAY
+        self.chargeTime = 0
+        self.chargeMeter = BOSS_CHARGE_METER
+        self.attacking = False
+        self.charging = False
+        self.fireball = False
+        self.lockedDirection = LEFT
+        self.knockback = BOSS_HIT_KB
+        self.damage = BOSS_HIT_DMG
+
+    def checkWall(self, direction, platforms):
+        if direction == LEFT:
+            for platform in iter(platforms):
+                if (platform.rect.top  < self.rect.bottom) and (
+                        platform.rect.right - 10 < self.rect.left):
+                    return True
+            return False
+        elif direction == RIGHT:
+            for platform in iter(platforms):
+                if (platform.rect.top  < self.rect.bottom) and (
+                        platform.rect.left + 10 > self.rect.right):
+                    return True
+            return False
+
+    def move_cpu(self, spriteStructure):
+        platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
+        diffPos = self.position[0] - spriteStructure.player.position[0]
+        if diffPos < 0:
+            diffPos = -diffPos
+
+        if (diffPos < 300) and (self.attackTime <= 0) and (abs(self.position[1] - spriteStructure.player.position[1]) < 200):
+            self.attacking = True
+
+        if (diffPos < 600) and (self.chargeMeter > 0):
+            self.charging = True
+            NPC.move(self, self.lockedDirection)
+        if (self.chargeMeter <= 0):
+            self.charging = False
+            NPC.move(self, STILL)
+
+
+        if (self.fireballTime <= 0):
+            self.fireball = True
+        NPC.move_cpu(self, spriteStructure)
+
+    def update(self, spriteStructure, time):
+        directionM = RIGHT
+        directionP = LEFT
+        if (self.position[0] - spriteStructure.player.position[0]) < 0:
+            directionM = LEFT
+            directionP = RIGHT
+
+        if (self.attackTime > 0):
+            self.attackTime -= time
+        if (self.chargeTime > 0):
+            self.chargeTime -= time
+        else:
+            self.lockedDirection = directionP
+            self.chargeMeter = BOSS_CHARGE_METER
+        if (self.fireballTime > 0):
+            self.fireballTime -= time
+
+        if self.attacking and not self.charging:
+            if self.looking == RIGHT:
+                spriteStructure.projectileGroup.add(Pillar((self.position[0] + 170, self.position[1]-1), self.looking))
+            else:
+                spriteStructure.projectileGroup.add(Pillar((self.position[0] - 50, self.position[1] -1), self.looking))
+            #print("*attacks*")
+            self.attacking = False
+            self.attackTime = self.attackDelay
+        if self.charging:
+            #print("*charges*")
+            self.chargeMeter -= time
+            self.chargeTime = self.chargeDelay
+        else:
+            self.looking = directionP
+
+        if self.fireball:
+            #print("*fireballs*")
+            self.fireball = False
+            self.fireballTime = self.fireballDelay
+            spriteStructure.projectileGroup.add(Fireball((self.position[0] + 60, self.position[1] - 110), directionM, False))
+            spriteStructure.projectileGroup.add(Fireball((self.position[0] + 60, self.position[1] - 110), directionP, False))
+            spriteStructure.projectileGroup.add(Fireball((self.position[0] + 60, self.position[1] - 110), directionM, True))
+            spriteStructure.projectileGroup.add(Fireball((self.position[0] + 60, self.position[1] - 110), directionP, True))
+        NPC.update(self, spriteStructure, time)
+
+    def stun(self, speed, damage):
+        speedx, speedy = speed
+        NPC.stun(self, (speedx*0.2, speedy*0.4), damage)
