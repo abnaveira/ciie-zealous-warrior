@@ -27,7 +27,7 @@ class PhaseScene(PygameScene):
         # It reads the file with the level paramethers
         self.sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
         platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
-            enemyList, musicFile= loadLevelData(levelFile)
+            enemyList, bossList, stageInfo, musicFile= loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, self.sceneryObj.windowWidth, self.sceneryObj.windowHeight)
 
@@ -49,15 +49,19 @@ class PhaseScene(PygameScene):
         self.playersGroup = pygame.sprite.Group(self.player)
 
         # Creates the HUD elements
-        self.HUD = HUD(self.player)
+        self.HUD = HUD(self.player, stageInfo.title, stageInfo.description)
 
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
 
         # Initialises the enemy sprites group
-        enemy1 = Boss()
-        enemy1.setPosition((700, 200))
-        self.enemiesGroup = pygame.sprite.Group(enemy1)
+        self.enemiesGroup = pygame.sprite.Group()
+
+        # Puts bosses in place if there are any
+        for boss in bossList:
+            enemy = getBossFromName(boss.id)
+            enemy.setPosition((boss.x,boss.y))
+            self.enemiesGroup.add(enemy)
 
         # Initializes spawn points list
         self.spawnPoints = []
@@ -88,9 +92,6 @@ class PhaseScene(PygameScene):
 
         # Initialize potions group
         self.potionsGroup = pygame.sprite.Group()
-        potion = PotionLarge()
-        potion.setPosition((300,300))
-        self.potionsGroup.add(potion)
 
         # Loads the animations in the front
         self.frontAnimations = []

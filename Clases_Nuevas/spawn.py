@@ -91,3 +91,10 @@ class Spawn:
             return AxeKnight()
         else:
             return None
+
+
+def getBossFromName(name):
+    if name == 'Boss':
+        return Boss()
+    else:
+        return None

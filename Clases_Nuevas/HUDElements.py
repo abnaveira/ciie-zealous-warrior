@@ -111,12 +111,12 @@ class DescriptionText(GUIText):
 
 # Main class for the HUD
 class HUD():
-    def __init__(self, player):
+    def __init__(self, player, title, description):
         # Creates the HUD elements
         self.healthBar = HealthBar(player)
         self.healthBarDecoration = HealthBarDecoration()
-        self.stageText = StageText("Stage 1")
-        self.descriptionText = DescriptionText("The cave")
+        self.stageText = StageText(title)
+        self.descriptionText = DescriptionText(description)
 
     def update(self):
         # Updates the health bar

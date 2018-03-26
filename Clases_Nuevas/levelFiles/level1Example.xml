@@ -185,6 +185,20 @@
         </spawnPoint>
     </spawnPoints> -->
 
+    <!--Bosses and position if there are bosses in the scene-->
+    <bosses>
+        <boss>
+            <id>Boss</id>
+            <x>700</x>
+            <y>200</y>
+        </boss>
+    </bosses>
+
+    <stageInfo>
+        <title>Stage 2</title>
+        <description>The Random</description>
+    </stageInfo>
+
     <musicFile>hxh-TryYourLuck.mp3</musicFile>
 
 </level>
