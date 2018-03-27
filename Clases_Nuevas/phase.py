@@ -232,14 +232,16 @@ class PhaseScene(PygameScene):
         self.HUD.draw(screen)
 
     def events(self, events_list):
-        # Miramos a ver si hay algun evento de salir del programa
+        # Look in the events
         for event in events_list:
-            # Si se quiere salir, se le indica al director
+            # If there is a quit event indicate the director to leave
             if event.type == pygame.QUIT:
                 self.director.leaveProgram()
 
-        # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         keysPressed = pygame.key.get_pressed()
+        # Updates the dialog box of the HUD if it is necessary
+        self.HUD.changeBox(keysPressed, K_RETURN)
+        # Indicates the actions to do to the player
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
 
     def openDeathScreen(self):

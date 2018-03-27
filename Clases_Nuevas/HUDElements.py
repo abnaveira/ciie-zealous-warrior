@@ -24,6 +24,9 @@ ARROW_X = 320
 ARROW_Y = 80
 ARROW_WIDTH = 80
 ARROW_HEIGHT = 60
+#-----------------------
+DIALOG_BOX_WIDTH = 80
+DIALOG_BOX_HEIGHT = 60
 
 # HUD elements for the level gameplay
 class HUDElement:
@@ -128,6 +131,12 @@ class LastEnemyArrow(HUDElement):
         if self.enemies.__len__() == 1:
             screen.blit(self.image, self.rect)
 
+class TextDialogBox(HUDElement):
+    def __init__(self, position):
+        self.image = ResourcesManager.loadImage("dialog_box.png", -1)
+        self.image = pygame.transform.scale(self.image, (DIALOG_BOX_WIDTH, DIALOG_BOX_HEIGHT))
+        HUDElement.__init__(self, self.image.get_rect())
+        self.setScreenPosition((position))
 
 class GUIText(HUDElement):
     def __init__(self, font, color, text, position, time):
@@ -172,6 +181,11 @@ class HUD():
         self.stageText = StageText(stageInfo.title)
         self.descriptionText = DescriptionText(stageInfo.description)
         self.arrow = LastEnemyArrow(spriteStructure.enemyGroup, spriteStructure.player)
+        self.boxes = [TextDialogBox((300, 400))]
+        self.boxes.append(TextDialogBox((400,500)))
+        self.actualBox = 0
+        self.stop_boxes = False
+        self.actualTime = timeLib.time()
 
     def update(self):
         # Updates the health bar
@@ -180,10 +194,27 @@ class HUD():
         self.descriptionText.update()
         self.arrow.update()
 
+    def changeBox(self, keypressed, key):
+        # Checks if there are more boxes
+        if not self.stop_boxes:
+            time = timeLib.time() - self.actualTime
+            # Only changes if the time is more than one second
+            if time > 0.7:
+                # Checks if the key is pressed
+                if keypressed[key]:
+                    self.actualBox += 1
+                    self.actualTime = timeLib.time()
+
     def draw(self, screen):
-        # Draw in correct order the HUD
+        # Draws in correct order the HUD
         self.healthBarDecoration.draw(screen)
         self.healthBar.draw(screen)
         self.stageText.draw(screen)
         self.descriptionText.draw(screen)
         self.arrow.draw(screen)
+        # Checks if there are more boxes
+        if not self.stop_boxes:
+            if self.actualBox < self.boxes.__len__():
+                self.boxes[self.actualBox].draw(screen)
+            else:
+                self.stop_boxes = True
