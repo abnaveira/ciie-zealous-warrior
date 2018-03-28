@@ -17,7 +17,7 @@ HEALTH_BAR_DECORATION_HEIGHT = 80
 STAGE_TEXT_POSITION_X = 300
 STAGE_TEXT_POSITION_Y = 300
 #-----------------------
-DESCRIPTION_TEXT_POSITION_X = 400
+DESCRIPTION_TEXT_POSITION_X = 300
 DESCRIPTION_TEXT_POSITION_Y = 350
 #-----------------------
 ARROW_X = 320
@@ -25,8 +25,8 @@ ARROW_Y = 80
 ARROW_WIDTH = 80
 ARROW_HEIGHT = 60
 #-----------------------
-DIALOG_BOX_WIDTH = 80
-DIALOG_BOX_HEIGHT = 60
+DIALOG_BOX_WIDTH = 750
+DIALOG_BOX_HEIGHT = 409
 
 # HUD elements for the level gameplay
 class HUDElement:
@@ -184,8 +184,8 @@ class HUD():
         self.stageText = StageText(stageInfo.title)
         self.descriptionText = DescriptionText(stageInfo.description)
         self.arrow = LastEnemyArrow(spriteStructure.enemyGroup, spriteStructure.player)
-        self.boxes = [TextDialogBox((300, 400))]
-        self.boxes.append(TextDialogBox((400,500)))
+        self.boxes = [TextDialogBox((150, 500))]
+        #self.boxes.append(TextDialogBox((400,500)))
         self.actualBox = 0
         self.stop_boxes = False
         self.actualTime = timeLib.time()
