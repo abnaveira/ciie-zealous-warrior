@@ -171,8 +171,6 @@ class PhaseScene(PygameScene):
                     for spawnPoint in iter(self.spawnPoints):
                         spawnPoint.clear()
                     self.enemiesGroup.empty()
-                    for sprite in iter(self.enemiesGroup):
-                        self.enemiesGroup.remove(sprite)
                     # We add new enemies
                     for spawnPoint in iter(self.spawnPoints):
                         spawnPoint.add_enemies(20)

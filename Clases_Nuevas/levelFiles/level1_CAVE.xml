@@ -370,18 +370,18 @@
     <!--Enemies Spawn Point-->
     <spawnPoints>
         <spawnPoint>
-            <x>500</x>
-            <y>400</y>
+            <x>700</x>
+            <y>850</y>
             <enemiesNumber>3</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
-            <x>1300</x>
-            <y>400</y>
+            <x>1400</x>
+            <y>750</y>
             <enemiesNumber>4</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
-            <x>2300</x>
-            <y>400</y>
+            <x>2200</x>
+            <y>900</y>
             <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
     </spawnPoints>

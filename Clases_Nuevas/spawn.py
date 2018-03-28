@@ -36,7 +36,7 @@ class Spawn:
             enemy = self.getNpcFromName(self.enemyTypes[probability])
             enemy.setPosition((self.x + move, self.y))
             self.listEnemies.append(enemy)
-            move += 50
+            #move += 50
 
     # Spawn an enemy
     def spawn_enemy(self, phase):
