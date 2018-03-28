@@ -13,7 +13,7 @@ class scrollControl:
     # minX, maxX, minY, maxY: Window edges for the scroll
     # wHeight, wWidth: height and width of the scene screen
     # scenery: Class that contains the scenary image
-    def __init__(self, scroll, minX, maxX, minY, maxY, wHeight, wWidth,scenery):
+    def __init__(self, scroll, minX, maxX, minY, maxY, wHeight, wWidth,background,foreground):
         self.scroll = scroll
         self.minX = minX
         self.maxX = maxX
@@ -21,7 +21,8 @@ class scrollControl:
         self.maxY = maxY
         self.wHeight = wHeight
         self.wWidth = wWidth
-        self.scenery =scenery
+        self.background = background
+        self.foreground = foreground
 
     # Input:
     # player: the charecter controlled by the player
@@ -49,8 +50,8 @@ class scrollControl:
             displacement = player.rect.right - self.maxX
 
             # If there is no more scenary in the right
-            if self.scroll[0] + self.wWidth >= self.scenery.rect.right:
-                self.scroll = (self.scenery.rect.right - self.wWidth, self.scroll[1])
+            if self.scroll[0] + self.wWidth >= self.background.rect.right:
+                self.scroll = (self.background.rect.right - self.wWidth, self.scroll[1])
                 return False
 
             # If it is possible to scroll right
@@ -73,8 +74,8 @@ class scrollControl:
             displacement = self.minY - player.rect.top
 
             # If there is no more scenary on the top
-            if self.scroll[1] + self.wHeight >= self.scenery.rect.bottom:
-                self.scroll = (self.scroll[0], self.scenery.rect.bottom - self.wHeight)
+            if self.scroll[1] + self.wHeight >= self.background.rect.bottom:
+                self.scroll = (self.scroll[0], self.background.rect.bottom - self.wHeight)
                 return False
 
             # If it is possible to scroll top
@@ -102,7 +103,8 @@ class scrollControl:
     # Input:
     # player: the character controled by the player
     # sprites: The group of all the sprites that have to be updated
-    def updateScroll(self, player, spritesList):
+    # animationsList: The group of all the animations that have to be updated
+    def updateScroll(self, player, spritesList, frontAnimations,backAnimations):
 
         updatedScrollX = self.updateScrollX(player)
         updatedScrollY = self.updateScrollY(player)
@@ -112,8 +114,15 @@ class scrollControl:
                 for sprite in iter(group):
                     sprite.setScreenPosition(self.scroll)
 
+            # Update the animations positions
+            for animation in frontAnimations:
+                animation.setScreenPosition(self.scroll)
+            for animation in frontAnimations:
+                animation.setScreenPosition(self.scroll)
+
             # Update the scenery to show the new position
-            self.scenery.update(self.scroll)
+            self.background.update(self.scroll)
+            self.foreground.update(self.scroll)
 
         return
 

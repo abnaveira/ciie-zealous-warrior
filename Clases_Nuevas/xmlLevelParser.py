@@ -50,8 +50,26 @@ def loadLevelData(level):
     playerY = int(playerPosition.find("y").text)
 
     # Scenery
+    backgroundLayers = []
     scenery = root.find("scenery")
-    file = scenery.find("file").text
+    #file = scenery.find("file").text
+    background = scenery.find("background")
+    for layer in background.iter("layer"):
+        file = layer.find("file").text
+        parallaxValue = float(layer.find("parallaxValue").text)
+        scaleX=int(layer.find("scaleX").text)
+        scaleY=int(layer.find("scaleY").text)
+        backgroundLayers.append((file,parallaxValue,scaleX,scaleY))
+
+    foregroundLayers=[]
+    foreground = scenery.find("foreground")
+    for layer in foreground.iter("layer"):
+        file = layer.find("file").text
+        parallaxValue = float(layer.find("parallaxValue").text)
+        scaleX=int(layer.find("scaleX").text)
+        scaleY=int(layer.find("scaleY").text)
+        foregroundLayers.append((file,parallaxValue,scaleX,scaleY))
+
     # Scale = 0 if no scaling needed
     scaleX = int(scenery.find("scaleX").text)
     scaleY = int(scenery.find("scaleY").text)
@@ -69,7 +87,7 @@ def loadLevelData(level):
     subImagePosition = calculateInitialWindow(playerX, playerY,
                                                     windowHeight, windowWidth,
                                                     scaleY, scaleX)
-    sceneryObj = SceneryClass(file, scaleX, scaleY, windowWidth, windowHeight,
+    sceneryObj = SceneryClass(backgroundLayers,foregroundLayers, scaleX, scaleY, windowWidth, windowHeight,
                               leftMin, topMin, red, green, blue, subImagePosition)
 
 
@@ -157,6 +175,7 @@ def loadLevelData(level):
                 y = int(scaleAndPlacement.find("y").text) - winImageY
                 scaleAndPlacementList.append(ScaleAndPlacementClass(scaleX, scaleY, x, y))
             frontAnimationsList.append(AnimationClass(framesList, scaleAndPlacementList))
+
 
     # Animations on the back
     backAnimations = root.find("backAnimations")
@@ -249,9 +268,10 @@ class SpawnPointClass:
         self.enemiesNumber = enemiesNumber
 
 class SceneryClass:
-    def __init__(self, file, scaleX, scaleY, windowWidth, windowHeight,
+    def __init__(self, backgroundLayers,foregroundLayers, scaleX, scaleY, windowWidth, windowHeight,
                  leftMin, topMin, red, green, blue, subImagePosition):
-        self.file = file
+        self.backgroundLayers = backgroundLayers
+        self.foregroundLayers=foregroundLayers
         self.scaleX = scaleX
         self.scaleY = scaleY
         self.windowWidth = windowWidth

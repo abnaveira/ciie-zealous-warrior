@@ -3,8 +3,53 @@
 
     <!--Scenery-->
     <scenery>
-        <file>cave.png</file>
-        <!--Scaling of the image-->
+        <!--file>cave.png</file-->
+        <background>
+            <layer>
+                <file>Level1-Cave/cave.background.1.png</file>
+                <!--ParallaxValue sets the image to move slower. if the value is 0 it moves normally-->
+                <parallaxValue>0.5</parallaxValue>
+                <!--Scaling of the specific image-->
+                <scaleX>3000</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+            <layer>
+                <file>Level1-Cave/cave.background.2.png</file>
+                <parallaxValue>0</parallaxValue>
+                <scaleX>3000</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+            <layer>
+                <file>Level1-Cave/cave.background.3.png</file>
+                <parallaxValue>0</parallaxValue>
+                <scaleX>3000</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+        </background>
+
+        <foreground>
+                      <layer>
+                <file>Level1-Cave/cave.foreground.1.png</file>
+                <parallaxValue>0</parallaxValue>
+                <scaleX>3000</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+            <layer>
+                <file>Level1-Cave/cave.foreground.2.png</file>
+                <parallaxValue>0</parallaxValue>
+                <scaleX>3000</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+            <layer>
+                <file>Level1-Cave/cave.foreground.3.png</file>
+                <parallaxValue>0</parallaxValue>
+                <scaleX>3000</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+        </foreground>
+
+
+        <!--Total size of the image-->
         <scaleX>3000</scaleX>
         <scaleY>1000</scaleY>
         <!--Size of the window-->
@@ -14,9 +59,9 @@
         <leftMin>400</leftMin>
         <topMin>200</topMin>
         <backgroundColor>
-            <r>0</r>
-            <g>0</g>
-            <b>0</b>
+            <r>255</r>
+            <g>255</g>
+            <b>255</b>
         </backgroundColor>
     </scenery>
 
@@ -357,4 +402,6 @@
 
     <!-- Music file for the level-->
     <musicFile>bensound-extremeaction.mp3</musicFile>
+
+
 </level>

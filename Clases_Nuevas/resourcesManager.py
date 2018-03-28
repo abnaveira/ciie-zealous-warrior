@@ -26,7 +26,13 @@ class ResourcesManager(object):
             except pygame.error, message:
                 print 'Cannot load image:', fullname
                 raise SystemExit, message
+            if colorkey is -2:
+                image=image.convert_alpha()
+                return image
+
             image = image.convert()
+
+
             if colorkey is not None:
                 if colorkey is -1:
                     colorkey = image.get_at((0, 0))
@@ -35,6 +41,27 @@ class ResourcesManager(object):
             cls.resources[name] = image
             # It is returned
             return image
+    @classmethod
+    def loadImageWithAlpha(cls, name):
+        # If the name of the file is amongst the already loaded resources
+        if name in cls.resources:
+            # That resource is returned
+            return cls.resources[name]
+        # If it hasn't been loaded previously
+        else:
+            # The image is loaded signaling the folder it is in
+            fullname = os.path.join('images', name)
+            try:
+                image = pygame.image.load(fullname)
+            except pygame.error, message:
+                print 'Cannot load image:', fullname
+                raise SystemExit, message
+            image=image.convert_alpha()
+            # It is stored
+            cls.resources[name] = image
+            # It is returned
+            return image
+
 
     @classmethod
     def loadFileCoordinates(cls, name):

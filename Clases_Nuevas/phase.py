@@ -36,10 +36,10 @@ class PhaseScene(PygameScene):
         self.alreadyPlaying = False
         # Store musicFile name
         self.musicFile = musicFile
-
-        # Creates the scenary and background
-        self.scenery= Scenary(self.sceneryObj)
-        self.background = Background(self.sceneryObj)
+        # Creates the background and backgroundColor
+        self.background= Background(self.sceneryObj)
+        self.foreground=Foreground(self.sceneryObj)
+        self.backgroundColor = BackgroundColor(self.sceneryObj)
 
         # Set scroll to (0,0)
         self.scroll = (0, 0)
@@ -99,6 +99,8 @@ class PhaseScene(PygameScene):
                     animation.scale((scaleAndPlacement.scaleX, scaleAndPlacement.scaleY))
                 animation.positionX = scaleAndPlacement.x
                 animation.positionY = scaleAndPlacement.y
+                animation.posX=scaleAndPlacement.x
+                animation.posY=scaleAndPlacement.y
                 animation.play()
                 self.frontAnimations.append(animation)
 
@@ -121,7 +123,7 @@ class PhaseScene(PygameScene):
         # Creates the class that will control the scroll
         self.controlScroll = scrollControl(self.scroll, self.sceneryObj.leftMin, self.sceneryObj.windowWidth - self.sceneryObj.leftMin,
                                            self.sceneryObj.topMin, self.sceneryObj.windowHeight - self.sceneryObj.topMin, self.sceneryObj.windowHeight, \
-                                           self.sceneryObj.windowWidth, self.scenery)
+                                           self.sceneryObj.windowWidth, self.background,self.foreground)
 
         self.spriteStructure = SpriteStructure(self, self.player, self.enemiesGroup, self.platformsGroup, \
                                                self.projectilesGroup, None, None, self.potionsGroup)
@@ -200,10 +202,10 @@ class PhaseScene(PygameScene):
         self.platformsGroup.update(time)
 
         # Update scroll
-        self.controlScroll.updateScroll(self.player, self.spritesList)
+        self.controlScroll.updateScroll(self.player, self.spritesList,self.frontAnimations,self.backAnimations)
 
-        # Update the background if it is necessary
-        self.background.update(time)
+        # Update the background color if it is necessary
+        self.backgroundColor.update(time)
 
         # Update HUD elements
         self.HUD.update()
@@ -213,21 +215,25 @@ class PhaseScene(PygameScene):
             spawnPoint.spawn(self)
 
     def draw(self, screen):
-        # Background
-        self.background.draw(screen)
+        # Background color
+        self.backgroundColor.draw(screen)
         # Back animations
         for animation in self.backAnimations:
             animation.draw(screen)
-        # Scenery
-        self.scenery.draw(screen)
+        # Background
+        self.background.draw(screen)
         # Flag Sprite
         self.bannerSpriteGroup.draw(screen)
         # Sprites
         for group in self.spritesList:
             group.draw(screen)
+        #Foreground
+        self.foreground.draw(screen)
+
         # Front animations
         for animation in self.frontAnimations:
             animation.draw(screen)
+
         # Update HUD elements
         self.HUD.draw(screen)
 

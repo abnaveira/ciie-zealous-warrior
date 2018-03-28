@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <levels>
     <level>level1_CAVE.xml</level>
-    <level>level1Example.xml</level>
+    <!--level>level1Example.xml</level-->
 </levels>
