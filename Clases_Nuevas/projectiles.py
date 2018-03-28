@@ -21,7 +21,7 @@ SWORD_KB        = (.1,-.3)
 AXE_ANIM_DELAY = 1
 AXE_MOVE_SPEED = 0.15
 
-BARREL_ANIM_DELAY = 3
+BARREL_ANIM_DELAY = 6
 BARREL_MOVE_SPEED = 0.22
 BARREL_DAMAGE     = 18
 BARREL_KB         = (.4, -.25)
@@ -153,7 +153,8 @@ class Barrel(Projectile):
         self.knockback = BARREL_KB
         self.ended = False
         self.collided = False
-        speedy = -0.5
+        self.falling = True
+        speedy = -0.25
         if (looking == RIGHT):
             self.speed = (BARREL_MOVE_SPEED, speedy)
         else:
@@ -163,21 +164,42 @@ class Barrel(Projectile):
     def update(self, spriteStructure, time):
         self.scroll = spriteStructure.player.scroll
         speedx, speedy = self.speed
-        speedy += GRAVITY * time
-        self.speed = (speedx, speedy)
         if self.rect.colliderect(spriteStructure.player.rect):
             self.collided = True
             if (self.looking == RIGHT):
                 spriteStructure.player.stun(self.knockback, self.damage)
             else:
                 spriteStructure.player.stun((-self.knockback[0], self.knockback[1]), self.damage)
-        collision = pygame.sprite.spritecollideany(self, spriteStructure.platformGroup)
-        if collision is not None:
-            self.collided = True
+        platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
+        if platforms:
+            speedy = 0
+            if self.checkWall(self.looking, platforms):
+                self.collided = True
+        else:
+            speedy += GRAVITY * time
+        self.speed = (speedx, speedy)
+
+
+
 
         Projectile.update(self, spriteStructure, time)
         if self.collided:
             self.kill()
+
+    def checkWall(self, direction, platforms):
+        if direction == LEFT:
+            for platform in iter(platforms):
+                if (platform.rect.top + 5 < self.rect.bottom) and (
+                        platform.rect.right - 5 < self.rect.left):
+                    return True
+            return False
+        elif direction == RIGHT:
+            for platform in iter(platforms):
+                if (platform.rect.top + 5 < self.rect.bottom) and (
+                        platform.rect.left + 5 > self.rect.right):
+                    return True
+            return False
+
 
 # An AxeKnight's projectile is a throwing axe that describes a parabola through the air
 class axeProj(Projectile):

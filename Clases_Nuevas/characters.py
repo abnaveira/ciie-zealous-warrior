@@ -576,7 +576,7 @@ class BarrelSkeleton(NPC):
             unBarreledOne = UnBarreledSkeleton()
             unBarreledOne.setPosition(self.position)
             spriteStructure.enemyGroup.add(unBarreledOne)
-            spriteStructure.projectileGroup.add(Barrel(self.position, self.looking))
+            spriteStructure.projectileGroup.add(Barrel((self.position[0], self.position[1]-20), self.looking))
             self.kill()
         else:
             NPC.update(self, spriteStructure, time)
