@@ -26,6 +26,11 @@ class Potion(StandingSprites):
 
     def update(self, player, platforms, time):
 
+        # If the potion fell into the void it will be removed
+        if  self.position[1] > 3000:
+            self.kill()
+            return
+
         # If on the air, we have to check if we are landing on a platform
         (speedx, speedy) = self.speed
         if not self.onPlatform:
