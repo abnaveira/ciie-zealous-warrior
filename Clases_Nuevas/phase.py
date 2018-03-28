@@ -128,89 +128,92 @@ class PhaseScene(PygameScene):
 
         # Creates the HUD elements
         self.HUD = HUD(self.spriteStructure, stageInfo)
+        # This variable control the update of elements to show the text dialogs
+        self.text_finished = False
 
     def update(self, time):
 
-        if not self.alreadyPlaying:
-            # Load background music
-            pygame.mixer.music.load(self.musicFile)
-            # Play it indefinetely until method stop is called
-            pygame.mixer.music.play(-1)
-            # Flag is now true
-            self.alreadyPlaying = True
+        if self.text_finished:
+            if not self.alreadyPlaying:
+                # Load background music
+                pygame.mixer.music.load(self.musicFile)
+                # Play it indefinetely until method stop is called
+                pygame.mixer.music.play(-1)
+                # Flag is now true
+                self.alreadyPlaying = True
 
-        # Executes enemy AI
-        for enemy in self.enemiesGroup:
-            enemy.move_cpu(self.spriteStructure)
+            # Executes enemy AI
+            for enemy in self.enemiesGroup:
+                enemy.move_cpu(self.spriteStructure)
 
-        # Updates the player
-        self.player.update(self.spriteStructure, time)
+            # Updates the player
+            self.player.update(self.spriteStructure, time)
 
-        # Updates the potions (destroys them if used)
-        self.potionsGroup.update(self.player, self.platformsGroup, time)
+            # Updates the potions (destroys them if used)
+            self.potionsGroup.update(self.player, self.platformsGroup, time)
 
-        # ---------------------------------------------------
-        # Flag logic
+            # ---------------------------------------------------
+            # Flag logic
 
-        # If the flag hasn't been raised
-        if not self.flagRaised:
-            self.flagRaised = PhaseScene.checkFlag(self)
-            # The FIRST time the flag is raised
+            # If the flag hasn't been raised
+            if not self.flagRaised:
+                self.flagRaised = PhaseScene.checkFlag(self)
+                # The FIRST time the flag is raised
+                if self.flagRaised:
+                    flagList = self.flagGroup.sprites()
+                    flag = flagList.pop()
+                    # We set the Banner in its position
+                    bannerSprite = Banner((self.realFlagXPos,flag.rect.bottom))
+                    self.bannerSpriteGroup.add(bannerSprite)
+                    # We destroy enemies
+                    for spawnPoint in iter(self.spawnPoints):
+                        spawnPoint.clear()
+                    self.enemiesGroup.empty()
+                    for sprite in iter(self.enemiesGroup):
+                        self.enemiesGroup.remove(sprite)
+                    # We add new enemies
+                    for spawnPoint in iter(self.spawnPoints):
+                        spawnPoint.add_enemies(20)
+                    # Time a minute from now, when the spawning has ended
+                    self.flagSpawnEnd = pyTime.time() + 60
+
+            # If the flag has already been raised
             if self.flagRaised:
-                flagList = self.flagGroup.sprites()
-                flag = flagList.pop()
-                # We set the Banner in its position
-                bannerSprite = Banner((self.realFlagXPos,flag.rect.bottom))
-                self.bannerSpriteGroup.add(bannerSprite)
-                # We destroy enemies
-                for spawnPoint in iter(self.spawnPoints):
-                    spawnPoint.clear()
-                self.enemiesGroup.empty()
-                for sprite in iter(self.enemiesGroup):
-                    self.enemiesGroup.remove(sprite)
-                # We add new enemies
-                for spawnPoint in iter(self.spawnPoints):
-                    spawnPoint.add_enemies(20)
-                # Time a minute from now, when the spawning has ended
-                self.flagSpawnEnd = pyTime.time() + 60
+                # If a minute has passed since the flag has been raised
+                if pyTime.time() > self.flagSpawnEnd:
+                    # If there are no more enemies on the level
+                    if (len(self.enemiesGroup.sprites()) == 0):
+                        # Abort music playback
+                        pygame.mixer.music.stop()
+                        # TODO: put a message, and press enter to change level
+                        # This changes scene
+                        self.director.leaveScene()
+            # ---------------------------------------------------
 
-        # If the flag has already been raised
-        if self.flagRaised:
-            # If a minute has passed since the flag has been raised
-            if pyTime.time() > self.flagSpawnEnd:
-                # If there are no more enemies on the level
-                if (len(self.enemiesGroup.sprites()) == 0):
-                    # Abort music playback
-                    pygame.mixer.music.stop()
-                    # TODO: put a message, and press enter to change level
-                    # This changes scene
-                    self.director.leaveScene()
-        # ---------------------------------------------------
+            # Updates the banner sprite
+            self.bannerSpriteGroup.update(self.player, time)
 
-        # Updates the banner sprite
-        self.bannerSpriteGroup.update(self.player, time)
+            # Updates the enemies
+            self.enemiesGroup.update(self.spriteStructure, time)
 
-        # Updates the enemies
-        self.enemiesGroup.update(self.spriteStructure, time)
+            # Updates the projectiles
+            self.projectilesGroup.update(self.spriteStructure, time)
 
-        # Updates the projectiles
-        self.projectilesGroup.update(self.spriteStructure, time)
+            # Updates the platforms
+            self.platformsGroup.update(time)
 
-        # Updates the platforms
-        self.platformsGroup.update(time)
+            # Update scroll
+            self.controlScroll.updateScroll(self.player, self.spritesList)
 
-        # Update scroll
-        self.controlScroll.updateScroll(self.player, self.spritesList)
+            # Update the background if it is necessary
+            self.background.update(time)
 
-        # Update the background if it is necessary
-        self.background.update(time)
+            # Update HUD elements
+            self.HUD.update()
 
-        # Update HUD elements
-        self.HUD.update()
-
-        # Spawn enemies
-        for spawnPoint in iter(self.spawnPoints):
-            spawnPoint.spawn(self)
+            # Spawn enemies
+            for spawnPoint in iter(self.spawnPoints):
+                spawnPoint.spawn(self)
 
     def draw(self, screen):
         # Background
@@ -239,8 +242,10 @@ class PhaseScene(PygameScene):
                 self.director.leaveProgram()
 
         keysPressed = pygame.key.get_pressed()
-        # Updates the dialog box of the HUD if it is necessary
-        self.HUD.changeBox(keysPressed, K_RETURN)
+        if not self.text_finished:
+            # Updates the dialog box of the HUD if it is necessary
+            self.text_finished = self.HUD.changeBox(keysPressed, K_RETURN)
+            return
         # Indicates the actions to do to the player
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
 
