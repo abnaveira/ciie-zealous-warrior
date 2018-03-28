@@ -24,6 +24,9 @@ ARROW_X = 320
 ARROW_Y = 80
 ARROW_WIDTH = 80
 ARROW_HEIGHT = 60
+#-----------------------
+DIALOG_BOX_WIDTH = 80
+DIALOG_BOX_HEIGHT = 60
 
 # HUD elements for the level gameplay
 class HUDElement:
@@ -90,7 +93,7 @@ class LastEnemyArrow(HUDElement):
         self.player = player
 
     def update(self):
-        if self.enemies.__len__() == 1:
+        if self.enemies.__len__() < 3 and self.enemies.__len__() > 0:
             for sprite in self.enemies.sprites():
                 enemy_pos = sprite.position
                 player_pos = self.player.position
@@ -128,6 +131,12 @@ class LastEnemyArrow(HUDElement):
         if self.enemies.__len__() == 1:
             screen.blit(self.image, self.rect)
 
+class TextDialogBox(HUDElement):
+    def __init__(self, position):
+        self.image = ResourcesManager.loadImage("dialog_box.png", -1)
+        self.image = pygame.transform.scale(self.image, (DIALOG_BOX_WIDTH, DIALOG_BOX_HEIGHT))
+        HUDElement.__init__(self, self.image.get_rect())
+        self.setScreenPosition((position))
 
 class GUIText(HUDElement):
     def __init__(self, font, color, text, position, time):
@@ -138,13 +147,16 @@ class GUIText(HUDElement):
         self.setScreenPosition(position)
         # Seconds in which the text is showed
         self.time = time
-        self.last_time = timeLib.time()
+        self.last_time = 0
 
     def update(self):
         if self.time>0:
-            now = timeLib.time()
-            self.time = self.time - (now - self.last_time)
-            self.last_time = now
+            if self.last_time == 0:
+                self.last_time = timeLib.time()
+            else:
+                now = timeLib.time()
+                self.time = self.time - (now - self.last_time)
+                self.last_time = now
 
     def draw(self, screen):
         if self.time > 0:
@@ -172,18 +184,46 @@ class HUD():
         self.stageText = StageText(stageInfo.title)
         self.descriptionText = DescriptionText(stageInfo.description)
         self.arrow = LastEnemyArrow(spriteStructure.enemyGroup, spriteStructure.player)
+        self.boxes = [TextDialogBox((300, 400))]
+        self.boxes.append(TextDialogBox((400,500)))
+        self.actualBox = 0
+        self.stop_boxes = False
+        self.actualTime = timeLib.time()
 
     def update(self):
-        # Updates the health bar
-        self.healthBar.update()
-        self.stageText.update()
-        self.descriptionText.update()
-        self.arrow.update()
+        if self.stop_boxes:
+            # Updates the health bar
+            self.healthBar.update()
+            # Updates the stage title
+            self.stageText.update()
+            # Updates the description title
+            self.descriptionText.update()
+            # Updates the enemy arrow
+            self.arrow.update()
+
+    def changeBox(self, keypressed, key):
+        # Checks if there are more boxes
+        if not self.stop_boxes:
+            time = timeLib.time() - self.actualTime
+            # Only changes if the time is more than one second
+            if time > 0.5:
+                # Checks if the key is pressed
+                if keypressed[key]:
+                    self.actualBox += 1
+                    self.actualTime = timeLib.time()
+        return self.stop_boxes
 
     def draw(self, screen):
-        # Draw in correct order the HUD
-        self.healthBarDecoration.draw(screen)
-        self.healthBar.draw(screen)
-        self.stageText.draw(screen)
-        self.descriptionText.draw(screen)
-        self.arrow.draw(screen)
+        if self.stop_boxes:
+            # Draws in correct order the HUD
+            self.healthBarDecoration.draw(screen)
+            self.healthBar.draw(screen)
+            self.stageText.draw(screen)
+            self.descriptionText.draw(screen)
+            self.arrow.draw(screen)
+        else:
+            # Checks if there are more boxes
+            if self.actualBox < self.boxes.__len__():
+                self.boxes[self.actualBox].draw(screen)
+            else:
+                self.stop_boxes = True

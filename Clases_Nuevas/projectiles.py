@@ -21,11 +21,16 @@ SWORD_KB        = (.1,-.3)
 AXE_ANIM_DELAY = 1
 AXE_MOVE_SPEED = 0.15
 
+BARREL_ANIM_DELAY = 3
+BARREL_MOVE_SPEED = 0.22
+BARREL_DAMAGE     = 18
+BARREL_KB         = (.4, -.25)
+
 MELTYGOO_ANIM_DELAY = 16
 
 ZEBESIANBEAM_ANIM_DELAY = 5
 ZEBESIANBEAM_MOVE_SPEED = 0.4
-ZEBESIANBEAM_DAMAGE     = 20
+ZEBESIANBEAM_DAMAGE     = 15
 ZEBESIANBEAM_KB         = (.3,-.35)
 
 FIREBALL_ANIM_DELAY = 2
@@ -137,6 +142,41 @@ class swordSlash(Projectile):
 
         Projectile.update(self, spriteStructure, time)
         if self.ended:
+            self.kill()
+
+class Barrel(Projectile):
+    def __init__(self, position, looking):
+        Projectile.__init__(self, 'VariousEnemies.png', 'coordBarrel.txt',
+                           [4], BARREL_MOVE_SPEED, BARREL_ANIM_DELAY, looking)
+        self.position = position
+        self.damage = BARREL_DAMAGE
+        self.knockback = BARREL_KB
+        self.ended = False
+        self.collided = False
+        speedy = -0.5
+        if (looking == RIGHT):
+            self.speed = (BARREL_MOVE_SPEED, speedy)
+        else:
+            self.speed = (-BARREL_MOVE_SPEED, speedy)
+
+
+    def update(self, spriteStructure, time):
+        self.scroll = spriteStructure.player.scroll
+        speedx, speedy = self.speed
+        speedy += GRAVITY * time
+        self.speed = (speedx, speedy)
+        if self.rect.colliderect(spriteStructure.player.rect):
+            self.collided = True
+            if (self.looking == RIGHT):
+                spriteStructure.player.stun(self.knockback, self.damage)
+            else:
+                spriteStructure.player.stun((-self.knockback[0], self.knockback[1]), self.damage)
+        collision = pygame.sprite.spritecollideany(self, spriteStructure.platformGroup)
+        if collision is not None:
+            self.collided = True
+
+        Projectile.update(self, spriteStructure, time)
+        if self.collided:
             self.kill()
 
 # An AxeKnight's projectile is a throwing axe that describes a parabola through the air

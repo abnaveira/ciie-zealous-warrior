@@ -49,6 +49,30 @@ SKELETON_BASE_HEALTH = 20
 SKELETON_HIT_DMG     = 8        # damage done by the enemy when bumping into him
 SKELETON_HIT_KB      = (.1,-.3) # knockback produced by said bump on the player
 
+ZOMBIE_SPEED        = 0.06
+ZOMBIE_JUMP_SPEED   = 0.3
+ZOMBIE_ANIM_DELAY   = 10
+ZOMBIE_STUN_DELAY   = 800
+ZOMBIE_BASE_HEALTH  = 20
+ZOMBIE_HIT_DMG      = 10
+ZOMBIE_HIT_KB       = (.1, -.3)
+
+BARRELSKELETON_SPEED       = 0.05
+BARRELSKELETON_JUMP_SPEED  = 0.0
+BARRELSKELETON_ANIM_DELAY  = 7
+BARRELSKELETON_STUN_DELAY  = 800
+BARRELSKELETON_BASE_HEALTH = 20
+BARRELSKELETON_HIT_DMG     = 8
+BARRELSKELETON_HIT_KB      = (.1,-.3)
+
+CHEETAHSKELETON_SPEED       = 0.3
+CHEETAHSKELETON_JUMP_SPEED  = 0.35
+CHEETAHSKELETON_ANIM_DELAY  = 3
+CHEETAHSKELETON_STUN_DELAY  = 1000
+CHEETAHSKELETON_BASE_HEALTH = 15
+CHEETAHSKELETON_HIT_DMG     = 10
+CHEETAHSKELETON_HIT_KB      = (.2,-.4)
+
 AXEKNIGHT_SPEED        = 0.04
 AXEKNIGHT_JUMP_SPEED   = 0.1
 AXEKNIGHT_ANIM_DELAY   = 5
@@ -472,7 +496,7 @@ class NPC(Character):
 # The skeleton walks towards the player (if on view) and tries to bump into him, jumping to match the player's jumps
 class Skeleton(NPC):
     def __init__(self):
-        NPC.__init__(self, 'Skeletons.png', 'coordSkeletons.txt', [1, 8, 2],
+        NPC.__init__(self, 'Skeletons.png', 'coordSkeletons.txt', [1, 8, 4],
                      SKELETON_SPEED, SKELETON_JUMP_SPEED, SKELETON_ANIM_DELAY)
         self.stunDelay = SKELETON_STUN_DELAY
         self.invulDelay = SKELETON_STUN_DELAY
@@ -501,8 +525,118 @@ class Skeleton(NPC):
             Character.move(self, STILL)
         NPC.move_cpu(self, spriteStructure)
 
+# Zombies just try to stumble toward the player
+class Zombie(NPC):
+    def __init__(self):
+        NPC.__init__(self, 'Zombie.png', 'coordZombie.txt', [1, 12, 1],
+                     ZOMBIE_SPEED, ZOMBIE_JUMP_SPEED, ZOMBIE_ANIM_DELAY)
+        self.stunDelay = ZOMBIE_STUN_DELAY
+        self.invulDelay = ZOMBIE_STUN_DELAY
+        self.HP = ZOMBIE_BASE_HEALTH
+        self.knockback = ZOMBIE_HIT_KB
+        self.damage = ZOMBIE_HIT_DMG
 
-#Axeknight walks slowly towards the player (if he sees him) and throws axes in a parabola if on range.
+
+    def move_cpu(self, spriteStructure):
+        if spriteStructure.player.position[0] < self.position[0]:
+            Character.move(self, LEFT)
+        else:
+            Character.move(self, RIGHT)
+        NPC.move_cpu(self, spriteStructure)
+
+# BarrelSkeleton will try to navigate the map (it's quite dumb anyway) and get close to the player
+# once he is at a correct distance, it will lob its barrel trying to hit the player.
+# It (sorta) spawns the unbarreled skeleton once he has thrown once.
+class BarrelSkeleton(NPC):
+    def __init__(self):
+        NPC.__init__(self, 'VariousEnemies.png', 'coordBarrelSkeleton.txt', [1, 11, 1],
+                     BARRELSKELETON_SPEED, BARRELSKELETON_JUMP_SPEED, BARRELSKELETON_ANIM_DELAY)
+        self.stunDelay = BARRELSKELETON_STUN_DELAY
+        self.invulDelay = BARRELSKELETON_STUN_DELAY
+        self.HP = BARRELSKELETON_BASE_HEALTH
+        self.knockback = BARRELSKELETON_HIT_KB
+        self.damage = BARRELSKELETON_HIT_DMG
+
+
+    def move_cpu(self, spriteStructure):
+        diffPos = self.position[0] - spriteStructure.player.position[0]
+        direction = LEFT
+        if (diffPos < 0):
+            direction = RIGHT
+            diffPos = -diffPos
+        if (self.position[1] - spriteStructure.player.position[1]) > 300:
+            direction = RIGHT
+        Character.move(self, direction)
+        if (diffPos < 400) and (abs(self.position[1] - spriteStructure.player.position[1]) < 100):
+            self.attacking = True
+        NPC.move_cpu(self, spriteStructure)
+
+    def update(self, spriteStructure, time):
+        if self.attacking:
+            unBarreledOne = UnBarreledSkeleton()
+            unBarreledOne.setPosition(self.position)
+            spriteStructure.enemyGroup.add(unBarreledOne)
+            spriteStructure.projectileGroup.add(Barrel(self.position, self.looking))
+            self.kill()
+        else:
+            NPC.update(self, spriteStructure, time)
+
+# The UnBarreledSkeleton just tries to walk toward the player, this spawns after a barrel skeleton throws his barrel.
+class UnBarreledSkeleton(NPC):
+    def __init__(self):
+        NPC.__init__(self, 'VariousEnemies.png', 'coordUnbarreled.txt', [1, 11, 1],
+                     BARRELSKELETON_SPEED, BARRELSKELETON_JUMP_SPEED, BARRELSKELETON_ANIM_DELAY)
+        self.stunDelay = BARRELSKELETON_STUN_DELAY
+        self.invulDelay = BARRELSKELETON_STUN_DELAY
+        self.HP = BARRELSKELETON_BASE_HEALTH
+        self.knockback = BARRELSKELETON_HIT_KB
+        self.damage = BARRELSKELETON_HIT_DMG
+
+    def move_cpu(self, spriteStructure):
+        if spriteStructure.player.position[0] < self.position[0]:
+            Character.move(self, LEFT)
+        else:
+            Character.move(self, RIGHT)
+        NPC.move_cpu(self, spriteStructure)
+
+# The cheetah skeleton will run towards the player, jumping any walls inbetween
+class CheetahSkeleton(NPC):
+    def __init__(self):
+        NPC.__init__(self, 'VariousEnemies.png', 'coordCheetahSkeleton.txt', [1, 7, 1],
+                     CHEETAHSKELETON_SPEED, CHEETAHSKELETON_JUMP_SPEED, CHEETAHSKELETON_ANIM_DELAY)
+        self.stunDelay = CHEETAHSKELETON_STUN_DELAY
+        self.invulDelay = CHEETAHSKELETON_STUN_DELAY
+        self.HP = CHEETAHSKELETON_BASE_HEALTH
+        self.knockback = CHEETAHSKELETON_HIT_KB
+        self.damage = CHEETAHSKELETON_HIT_DMG
+
+    def move_cpu(self, spriteStructure):
+        directionP = LEFT   # Player direction
+        jump = False
+        if self.position[0] - spriteStructure.player.position[0] < 0:
+            directionP = RIGHT
+        if self.position[1] - spriteStructure.player.position[1] > 300:
+            directionP = RIGHT
+        # Move towards player, check if we are hitting a wall to jump over it
+        platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
+        for platform in iter(platforms):
+            if (self.rect.bottom - 5 > platform.rect.top):
+                jump = True
+        if jump:
+            Character.move(self, directionP + 4)
+        else:
+            Character.move(self, directionP)
+        NPC.move_cpu(self, spriteStructure)
+
+    # This prevents the enemy from running beneath the player
+    def update(self, spriteStructure, time):
+        hit = self.hitPlayer
+        NPC.update(self, spriteStructure, time)
+        if hit:
+            self.numStance = STUNNED
+            self.stunnedTime = 700
+
+# Axeknight walks slowly towards the player (if he sees him) and throws axes in a parabola if on range.
 class AxeKnight(NPC):
     def __init__(self):
         NPC.__init__(self, 'AxeKnight.png', 'coordAxeKnight.txt', [13, 16, 1],
@@ -702,7 +836,7 @@ class Zebesian(NPC):
 # The boss is a giant beast that spawns magic pillars, throws fireballs and charges into the player at high speed
 class Boss(NPC):
     def __init__(self):
-        NPC.__init__(self, 'KingSoma.png', 'coordKingSoma.txt', [16, 1, 3],
+        NPC.__init__(self, 'KingSoma.png', 'coordKingSoma.txt', [16, 1, 2],
                      BOSS_SPEED, BOSS_JUMP_SPEED, BOSS_ANIM_DELAY)
         # WOW THAT'S A LOT OF COUNTERS
         self.stunDelay = BOSS_STUN_DELAY
