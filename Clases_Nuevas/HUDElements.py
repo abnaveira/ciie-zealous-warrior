@@ -162,7 +162,6 @@ class GUIText(HUDElement):
         if self.time > 0:
             screen.blit(self.image, self.rect)
 
-
 class StageText(GUIText):
     def __init__(self, text):
         # Asks the resource manager for the font
@@ -184,14 +183,21 @@ class HUD():
         self.stageText = StageText(stageInfo.title)
         self.descriptionText = DescriptionText(stageInfo.description)
         self.arrow = LastEnemyArrow(spriteStructure.enemyGroup, spriteStructure.player)
-        self.boxes = [TextDialogBox((150, 500))]
-        #self.boxes.append(TextDialogBox((400,500)))
-        self.actualBox = 0
-        self.stop_boxes = False
+        # Initial text boxes
+        self.initialBoxes = []
+        self.initialBoxes.append(TextDialogBox((150, 500)))
+        self.initialBoxes.append(TextDialogBox((400,500)))
+        self.actualInitialBox = 0
+        self.stop_initial_boxes = False
         self.actualTime = timeLib.time()
+        # Final text boxes
+        self.finalBoxes = []
+        self.finalBoxes.append(TextDialogBox((150, 500)))
+        self.actualFinalBox = 0
+        self.stop_final_boxes = False
 
     def update(self):
-        if self.stop_boxes:
+        if self.stop_initial_boxes:
             # Updates the health bar
             self.healthBar.update()
             # Updates the stage title
@@ -201,29 +207,56 @@ class HUD():
             # Updates the enemy arrow
             self.arrow.update()
 
-    def changeBox(self, keypressed, key):
+    def changeBox(self, keypressed, key, scapeKey):
+        if keypressed[scapeKey]:
+            self.stop_initial_boxes = True
         # Checks if there are more boxes
-        if not self.stop_boxes:
+        if not self.stop_initial_boxes:
             time = timeLib.time() - self.actualTime
             # Only changes if the time is more than one second
             if time > 0.5:
                 # Checks if the key is pressed
                 if keypressed[key]:
-                    self.actualBox += 1
+                    self.actualInitialBox += 1
                     self.actualTime = timeLib.time()
-        return self.stop_boxes
+        return self.stop_initial_boxes
 
-    def draw(self, screen):
-        if self.stop_boxes:
-            # Draws in correct order the HUD
-            self.healthBarDecoration.draw(screen)
-            self.healthBar.draw(screen)
-            self.stageText.draw(screen)
-            self.descriptionText.draw(screen)
-            self.arrow.draw(screen)
+    def changeFinalBox(self, keypressed, key, scapeKey):
+        if keypressed[scapeKey]:
+            self.stop_final_boxes = True
+        # Checks if there are more boxes
+        if not self.stop_final_boxes:
+            time = timeLib.time() - self.actualTime
+            # Only changes if the time is more than one second
+            if time > 0.5:
+                # Checks if the key is pressed
+                if keypressed[key]:
+                    self.actualFinalBox += 1
+                    self.actualTime = timeLib.time()
+        return self.stop_final_boxes
+
+    def draw(self, final, screen):
+        # Checks if the initial boxes ended
+        if self.stop_initial_boxes:
+            # Checks if the phase is in the final
+            if final:
+                # Checks if the final boxes ended
+                if not self.stop_final_boxes:
+                    # Checks if there are more boxes
+                    if self.actualFinalBox < self.finalBoxes.__len__():
+                        self.finalBoxes[self.actualFinalBox].draw(screen)
+                    else:
+                        self.stop_final_boxes = True
+            else:
+                # Draws in correct order the HUD
+                self.healthBarDecoration.draw(screen)
+                self.healthBar.draw(screen)
+                self.stageText.draw(screen)
+                self.descriptionText.draw(screen)
+                self.arrow.draw(screen)
         else:
             # Checks if there are more boxes
-            if self.actualBox < self.boxes.__len__():
-                self.boxes[self.actualBox].draw(screen)
+            if self.actualInitialBox < self.initialBoxes.__len__():
+                self.initialBoxes[self.actualInitialBox].draw(screen)
             else:
-                self.stop_boxes = True
+                self.stop_initial_boxes = True

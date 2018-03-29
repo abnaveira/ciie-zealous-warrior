@@ -13,7 +13,7 @@ class scrollControl:
     # minX, maxX, minY, maxY: Window edges for the scroll
     # wHeight, wWidth: height and width of the scene screen
     # scenery: Class that contains the scenary image
-    def __init__(self, scroll, minX, maxX, minY, maxY, wHeight, wWidth,background,foreground):
+    def __init__(self, scroll, minX, maxX, minY, maxY, wHeight, wWidth, background, foreground):
         self.scroll = scroll
         self.minX = minX
         self.maxX = maxX
@@ -104,7 +104,7 @@ class scrollControl:
     # player: the character controled by the player
     # sprites: The group of all the sprites that have to be updated
     # animationsList: The group of all the animations that have to be updated
-    def updateScroll(self, player, spritesList, frontAnimations,backAnimations):
+    def updateScroll(self, player, spritesList, frontAnimations, backAnimations):
 
         updatedScrollX = self.updateScrollX(player)
         updatedScrollY = self.updateScrollY(player)

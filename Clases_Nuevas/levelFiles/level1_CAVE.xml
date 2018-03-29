@@ -381,7 +381,7 @@
         </spawnPoint>
         <spawnPoint>
             <x>2200</x>
-            <y>900</y>
+            <y>800</y>
             <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
     </spawnPoints>
