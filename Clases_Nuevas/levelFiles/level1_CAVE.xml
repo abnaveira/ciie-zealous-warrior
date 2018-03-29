@@ -28,7 +28,7 @@
         </background>
 
         <foreground>
-                      <layer>
+            <layer>
                 <file>Level1-Cave/cave.foreground.1.png</file>
                 <parallaxValue>0</parallaxValue>
                 <scaleX>3000</scaleX>
@@ -75,8 +75,7 @@
             <id>SueloTierra1</id>
             <left>0</left>
             <top>854</top>
-            <!-- OJO, width era 197, puse 1200 para poder ver el nivel-->
-            <width>1200</width>
+            <width>1100</width>
             <height>50</height>
         </platform>
         <platform>
@@ -101,7 +100,69 @@
             <height>50</height>
         </platform>
 
-        <!--TODO: Escalera 1 falta-->
+        <platform>
+            <id>Escalera1.1</id>
+            <left>1964</left>
+            <top>790</top>
+            <width>23</width>
+            <height>4</height>
+        </platform>
+        <platform>
+            <id>Escalera1.2</id>
+            <left>1986</left>
+            <top>807</top>
+            <width>18</width>
+            <height>4</height>
+        </platform>
+        <platform>
+            <id>Escalera1.3</id>
+            <left>2002</left>
+            <top>823</top>
+            <width>18</width>
+            <height>4</height>
+        </platform>
+        <platform>
+            <id>Escalera1.4</id>
+            <left>2018</left>
+            <top>839</top>
+            <width>18</width>
+            <height>4</height>
+        </platform>
+        <platform>
+            <id>Escalera1.5</id>
+            <left>2034</left>
+            <top>856</top>
+            <width>13</width>
+            <height>4</height>
+        </platform>
+        <platform>
+            <id>Escalera1.6</id>
+            <left>2045</left>
+            <top>872</top>
+            <width>17</width>
+            <height>4</height>
+        </platform>
+        <platform>
+            <id>Escalera1.7</id>
+            <left>2060</left>
+            <top>888</top>
+            <width>18</width>
+            <height>4</height>
+        </platform>
+        <platform>
+            <id>Escalera1.8</id>
+            <left>2076</left>
+            <top>905</top>
+            <width>18</width>
+            <height>4</height>
+        </platform>
+        <platform>
+            <id>Escalera1.9</id>
+            <left>2093</left>
+            <top>920</top>
+            <width>13</width>
+            <height>4</height>
+        </platform>
 
         <platform>
             <id>SueloPiedra1</id>
@@ -326,16 +387,6 @@
             <width>45</width>
             <height>12</height>
         </platform>
-        <!--Mas mierda -->
-
-        <!-- Plataforma puesta solo para probar -->
-        <platform>
-            <id>Barrier1</id>
-            <left>200</left>
-            <top>700</top>
-            <width>50</width>
-            <height>170</height>
-        </platform>
 
         <platform>
             <id>Techo</id>
@@ -343,6 +394,21 @@
             <top>0</top>
             <width>3000</width>
             <height>100</height>
+        </platform>
+
+        <platform>
+            <id>BarreraDercha</id>
+            <left>0</left>
+            <top>0</top>
+            <width>10</width>
+            <height>1000</height>
+        </platform>
+        <platform>
+            <id>BarreraIzda</id>
+            <left>2990</left>
+            <top>0</top>
+            <width>10</width>
+            <height>1000</height>
         </platform>
     </platforms>
 

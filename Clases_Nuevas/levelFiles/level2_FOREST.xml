@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<level>
+
+    <!--Scenery-->
+    <scenery>
+        <!--file>cave.png</file-->
+        <background>
+            <layer>
+                <file>Level2-Forest/level2Forest.png</file>
+                <!--ParallaxValue sets the image to move slower. if the value is 0 it moves normally-->
+                <parallaxValue>0</parallaxValue>
+                <!--Scaling of the specific image-->
+                <scaleX>4500</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+        </background>
+
+        <!--Total size of the image-->
+        <scaleX>4500</scaleX>
+        <scaleY>1000</scaleY>
+        <!--Size of the window-->
+        <windowWidth>960</windowWidth>
+        <windowHeight>540</windowHeight>
+        <!--Minimum distance to the sides-->
+        <leftMin>400</leftMin>
+        <topMin>200</topMin>
+        <backgroundColor>
+            <r>255</r>
+            <g>255</g>
+            <b>255</b>
+        </backgroundColor>
+    </scenery>
+
+    <!--Images that go in front of the player-->
+    <!--Animations that go in front of sprites-->
+    <!--Animations that go in the back of the player-->
+
+    <!--Platforms and their five parameters: id and four position points-->
+    <platforms>
+        <platform>
+            <id>SueloTierra1</id>
+            <left>0</left>
+            <top>953</top>
+            <width>4500</width>
+            <height>50</height>
+        </platform>
+
+        <platform>
+            <id>Rama1.1</id>
+            <left>140</left>
+            <top>646</top>
+            <width>126</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama1.2</id>
+            <left>438</left>
+            <top>738</top>
+            <width>140</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama1.3</id>
+            <left>436</left>
+            <top>397</top>
+            <width>400</width>
+            <height>16</height>
+        </platform>
+        <!--TODO: hacer todas las plataformas-->
+
+        <platform>
+            <id>Techo</id>
+            <left>0</left>
+            <top>0</top>
+            <width>4500</width>
+            <height>100</height>
+        </platform>
+
+        <platform>
+            <id>BarreraDercha</id>
+            <left>0</left>
+            <top>0</top>
+            <width>10</width>
+            <height>1000</height>
+        </platform>
+        <platform>
+            <id>BarreraIzda</id>
+            <left>4490</left>
+            <top>0</top>
+            <width>10</width>
+            <height>1000</height>
+        </platform>
+    </platforms>
+
+    <!--Rectangle to put the flag, to change level-->
+    <!--TODO: put flag in good place-->
+    <flag>
+       <left>2350</left>
+        <top>850</top>
+        <width>100</width>
+        <height>90</height>
+    </flag>
+
+    <!--Player's starting position in the map-->
+    <playerPosition>
+        <x>50</x>
+        <y>953</y>
+    </playerPosition>
+
+    <!--List of enemies of this level-->
+    <enemies>
+        <enemy>Skeleton</enemy>
+        <enemy>Zombie</enemy>
+        <enemy>BarrelSkeleton</enemy>
+        <enemy>CheetahSkeleton</enemy>
+        <enemy>Zebesian</enemy>
+        <enemy>MeltyZombie</enemy>
+        <enemy>Imp</enemy>
+        <enemy>AxeKnight</enemy>
+    </enemies>
+
+    <!--Enemies Spawn Point-->
+    <!-- OJOOOOOOOOOOO, missing
+    TODO: spawnpoints-->
+
+    <stageInfo>
+        <title>Stage 2</title>
+        <description>The Forest</description>
+    </stageInfo>
+
+    <musicFile>hxh-TryYourLuck.mp3</musicFile>
+
+</level>

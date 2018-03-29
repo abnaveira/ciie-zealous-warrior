@@ -81,6 +81,12 @@ class Spawn:
     def getNpcFromName(self, name):
         if name == 'Skeleton':
             return Skeleton()
+        elif name == 'Zombie':
+            return Zombie()
+        elif name == 'BarrelSkeleton':
+            return BarrelSkeleton()
+        elif name == 'CheetahSkeleton':
+            return CheetahSkeleton
         elif name == 'Zebesian':
             return Zebesian()
         elif name == 'MeltyZombie':

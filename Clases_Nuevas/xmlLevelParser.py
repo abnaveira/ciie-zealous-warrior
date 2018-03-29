@@ -54,21 +54,23 @@ def loadLevelData(level):
     scenery = root.find("scenery")
     #file = scenery.find("file").text
     background = scenery.find("background")
-    for layer in background.iter("layer"):
-        file = layer.find("file").text
-        parallaxValue = float(layer.find("parallaxValue").text)
-        scaleX=int(layer.find("scaleX").text)
-        scaleY=int(layer.find("scaleY").text)
-        backgroundLayers.append((file,parallaxValue,scaleX,scaleY))
+    if (background != None):
+        for layer in background.iter("layer"):
+            file = layer.find("file").text
+            parallaxValue = float(layer.find("parallaxValue").text)
+            scaleX=int(layer.find("scaleX").text)
+            scaleY=int(layer.find("scaleY").text)
+            backgroundLayers.append((file,parallaxValue,scaleX,scaleY))
 
     foregroundLayers=[]
     foreground = scenery.find("foreground")
-    for layer in foreground.iter("layer"):
-        file = layer.find("file").text
-        parallaxValue = float(layer.find("parallaxValue").text)
-        scaleX=int(layer.find("scaleX").text)
-        scaleY=int(layer.find("scaleY").text)
-        foregroundLayers.append((file,parallaxValue,scaleX,scaleY))
+    if (foreground != None):
+        for layer in foreground.iter("layer"):
+            file = layer.find("file").text
+            parallaxValue = float(layer.find("parallaxValue").text)
+            scaleX=int(layer.find("scaleX").text)
+            scaleY=int(layer.find("scaleY").text)
+            foregroundLayers.append((file,parallaxValue,scaleX,scaleY))
 
     # Scale = 0 if no scaling needed
     scaleX = int(scenery.find("scaleX").text)
