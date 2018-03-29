@@ -39,37 +39,38 @@ class Spawn:
             #move += 50
 
     # Spawn an enemy
-    def spawn_enemy(self, phase):
+    def spawn_enemy(self, phase, player):
         enemy = self.listEnemies[0]
+        enemy.setScreenPosition(player.scroll)
         phase.enemiesGroup.add(enemy)
         self.listEnemies.remove(enemy)
 
     # Decide to spawn a new enemy or not
-    def spawn(self, phase):
+    def spawn(self, phase, player):
         millis = int(round(time.time() * 1000))
         timePassed = millis - self.lastSpawn
         # If list of enemies not empty
         if self.listEnemies:
             if phase.flagRaised:
                 if timePassed >= 3000:
-                    self.spawn_enemy(phase)
+                    self.spawn_enemy(phase, player)
                     self.lastSpawn = millis
             else:
                 # Always one spawned enemy (at least)
                 if self.lastSpawn == 0:
                      # First enemy
-                    self.spawn_enemy(phase)
+                    self.spawn_enemy(phase, player)
                 else:
                     if timePassed < 2000:
                         return
                     elif timePassed < 5000:
                         f = random.randint(0, 1000)
                         if f >= self.frequency:
-                            self.spawn_enemy(phase)
+                            self.spawn_enemy(phase, player)
                         else:
                             return
                     else:
-                        self.spawn_enemy(phase)
+                        self.spawn_enemy(phase, player)
                 self.lastSpawn = millis
 
     # Remove the enemies that have not been spawned yet

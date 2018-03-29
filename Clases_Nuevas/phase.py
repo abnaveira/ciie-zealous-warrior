@@ -213,7 +213,7 @@ class PhaseScene(PygameScene):
 
             # Spawn enemies
             for spawnPoint in iter(self.spawnPoints):
-                spawnPoint.spawn(self)
+                spawnPoint.spawn(self, self.player)
 
     def draw(self, screen):
         # Background color
