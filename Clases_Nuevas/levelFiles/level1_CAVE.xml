@@ -466,6 +466,40 @@
         <description>Ruinas antiguas</description>
     </stageInfo>
 
+    <stageIntroStory>
+        <story>
+            <file>Intro1</file>
+            <left>140</left>
+            <top>646</top>
+            <width>126</width>
+            <height>16</height>
+        </story>
+        <story>
+            <file>Intro2</file>
+            <left>140</left>
+            <top>646</top>
+            <width>126</width>
+            <height>16</height>
+        </story>
+    </stageIntroStory>
+
+    <stageOutroStory>
+        <story>
+            <file>Outro1</file>
+            <left>140</left>
+            <top>646</top>
+            <width>126</width>
+            <height>16</height>
+        </story>
+        <story>
+            <file>Outro2</file>
+            <left>140</left>
+            <top>646</top>
+            <width>126</width>
+            <height>16</height>
+        </story>
+    </stageOutroStory>
+
     <!-- Music file for the level-->
     <musicFile>bensound-extremeaction.mp3</musicFile>
 

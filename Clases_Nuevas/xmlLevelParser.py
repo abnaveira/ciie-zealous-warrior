@@ -239,13 +239,38 @@ def loadLevelData(level):
     description = stageInfoXml.find("description").text
     stageInfo = StageInfo(title, description)
 
+    # Stage intro stories
+    stageIntroStory = root.find("stageIntroStory")
+    stageIntroStoryList = []
+    if (stageIntroStory != None):
+        for story in stageIntroStory.iter("story"):
+            file = story.find("file").text
+            left = int(story.find("left").text) - winImageX
+            top = int(story.find("top").text) - winImageY
+            width = int(story.find("width").text)
+            height = int(story.find("height").text)
+            stageIntroStoryList.append(IntroAndOutroStory(file, left, top, width, height))
+
+    # Stage intro stories
+    stageOutroStory = root.find("stageOutroStory")
+    stageOutroStoryList = []
+    if (stageOutroStory != None):
+        for story in stageOutroStory.iter("story"):
+            file = story.find("file").text
+            left = int(story.find("left").text) - winImageX
+            top = int(story.find("top").text) - winImageY
+            width = int(story.find("width").text)
+            height = int(story.find("height").text)
+            stageOutroStoryList.append(IntroAndOutroStory(file, left, top, width, height))
+
     # Music file
     musicFile = root.find("musicFile").text
     musicFile = os.path.join("musicAndSounds", musicFile)
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
            platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
-           enemyList, bossList, stageInfo, musicFile
+           enemyList, bossList, stageInfo, stageIntroStoryList, \
+           stageOutroStoryList, musicFile
 
 class StageInfo:
     def __init__(self, title, description):
@@ -301,6 +326,14 @@ class ScaleAndPlacementClass:
         self.scaleY = scaleY
         self.x = x
         self.y = y
+
+class IntroAndOutroStory:
+    def __init__(self, file, left, top, width, height):
+        self.file = file
+        self.left = left
+        self.top = top
+        self.width = width
+        self.height = height
 
 def calculateInitialWindow(posx, posy, winHeight, winWidth, imHeight, imWidth):
     # Left distance

@@ -27,7 +27,8 @@ class PhaseScene(PygameScene):
         # It reads the file with the level paramethers
         self.sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
         platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
-            enemyList, bossList, stageInfo, musicFile= loadLevelData(levelFile)
+            enemyList, bossList, stageInfo,stageIntroStoryList, \
+            stageOutroStoryList, musicFile= loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, self.sceneryObj.windowWidth, self.sceneryObj.windowHeight)
 
