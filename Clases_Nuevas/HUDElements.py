@@ -27,6 +27,9 @@ ARROW_HEIGHT = 60
 #-----------------------
 DIALOG_BOX_WIDTH = 750
 DIALOG_BOX_HEIGHT = 409
+#-----------------------
+QUIT_TEXT_POSITION_X = 700
+QUIT_TEXT_POSITION_Y = 500
 
 # HUD elements for the level gameplay
 class HUDElement:
@@ -162,6 +165,12 @@ class GUIText(HUDElement):
         if self.time > 0:
             screen.blit(self.image, self.rect)
 
+class QuitText(GUIText):
+    def __init__(self):
+        # Asks the resource manager for the font
+        font = ResourcesManager.loadFont('arial', 17)
+        GUIText.__init__(self, font, (255, 255, 255), "Presiona \"q\" para saltar", (QUIT_TEXT_POSITION_X, QUIT_TEXT_POSITION_Y), 5)
+
 class StageText(GUIText):
     def __init__(self, text):
         # Asks the resource manager for the font
@@ -183,6 +192,7 @@ class HUD():
         self.stageText = StageText(stageInfo.title)
         self.descriptionText = DescriptionText(stageInfo.description)
         self.arrow = LastEnemyArrow(spriteStructure.enemyGroup, spriteStructure.player)
+        self.quitText = QuitText()
         # Initial text boxes
         self.initialBoxes = []
         self.initialBoxes.append(TextDialogBox((150, 500)))
@@ -245,6 +255,7 @@ class HUD():
                     # Checks if there are more boxes
                     if self.actualFinalBox < self.finalBoxes.__len__():
                         self.finalBoxes[self.actualFinalBox].draw(screen)
+                        self.quitText.draw(screen)
                     else:
                         self.stop_final_boxes = True
             else:
@@ -258,5 +269,6 @@ class HUD():
             # Checks if there are more boxes
             if self.actualInitialBox < self.initialBoxes.__len__():
                 self.initialBoxes[self.actualInitialBox].draw(screen)
+                self.quitText.draw(screen)
             else:
                 self.stop_initial_boxes = True
