@@ -473,6 +473,7 @@ class NPC(Character):
 
     # This parent function damages a player that has bumped into an enemy.
     def update(self, spriteStructure, time):
+        self.scroll = spriteStructure.player.scroll
         if self.hitPlayer is not None:
             if self.stunnedTime <= 0:
                 if (self.hitPlayer.looking == RIGHT):
@@ -760,6 +761,7 @@ class Imp(NPC):
     def update(self, spriteStructure, time):
         self.updateStance()
         # The imp gets stunned if it hits the player, preventing it from following inside of him.
+        self.scroll = spriteStructure.player.scroll
         if (self.stunnedTime <= 0):
             self.speed = self.direction
             if self.attackTime > 0:
