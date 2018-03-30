@@ -32,13 +32,12 @@ class PhaseScene(PygameScene):
 
         PygameScene.__init__(self, director, self.sceneryObj.windowWidth, self.sceneryObj.windowHeight)
 
-        # Flag for music playBack (scenes are pre-initialized, we cannot load music in each
-        # of them, as music uses a shared channel)
-        self.firstTimeMusicPlaying = False
-        # Flag for music play and stop with key m
-        self.musicPlaying = False
+        # Flag for music load and playback (scenes are pre-initialized, we cannot
+        #  load music in each of them, as music uses a shared channel)
+        self.musicLoaded = False
         # Store musicFile name
         self.musicFile = musicFile
+
         # Creates the background and backgroundColor
         self.background= Background(self.sceneryObj)
         self.foreground=Foreground(self.sceneryObj)
@@ -143,15 +142,15 @@ class PhaseScene(PygameScene):
     def update(self, time):
         if not self.final:
             if self.text_finished:
-                if not self.firstTimeMusicPlaying:
+                if not self.musicLoaded:
                     # Load background music
                     pygame.mixer.music.load(self.musicFile)
-                    # Play it indefinetely until method stop is called
-                    pygame.mixer.music.play(-1)
+                    # If the music is not muted
+                    if not self.director.musicMuted:
+                        # Play it indefinetely until method stop is called
+                        pygame.mixer.music.play(-1)
                     # Flag is now true
-                    self.firstTimeMusicPlaying = True
-                    # Music is playing
-                    self.musicPlaying = True
+                    self.musicLoaded = True
 
                 # Executes enemy AI
                 for enemy in self.enemiesGroup:
@@ -266,16 +265,19 @@ class PhaseScene(PygameScene):
                 self.director.leaveScene()
         # If m key is pressed, mute/unmute
         if keysPressed[K_m]:
-            if self.musicPlaying:
+            #TODO: time retardation on m key press
+            # If it is not muted, mute it
+            if not self.director.musicMuted:
                 # Stop music
                 pygame.mixer.music.stop()
                 # Reverse the flag
-                self.musicPlaying = False
+                self.director.musicMuted = True
+            # If it was muted, unmute it
             else:
                 # Play music indefinetely until method stop is called
                 pygame.mixer.music.play(-1)
                 # Reverse the flag
-                self.musicPlaying = True
+                self.director.musicMuted = False
 
         # Indicates the actions to do to the player
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
