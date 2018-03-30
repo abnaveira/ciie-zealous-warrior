@@ -473,15 +473,6 @@
         </spawnPoint>
     </spawnPoints>
 
-    <!--Bosses and position if there are bosses in the scene-->
-    <bosses>
-        <boss>
-            <id>Boss</id>
-            <x>500</x>
-            <y>400</y>
-        </boss>
-    </bosses>
-
     <stageInfo>
         <title>Nivel 1</title>
         <description>Ruinas antiguas</description>
@@ -534,7 +525,7 @@
     </stageOutroStory>
 
     <!-- Music file for the level-->
-    <musicFile>hxh-BoysBeCorageous.mp3</musicFile>
+    <musicFile>FairyTail-Salamander.mp3</musicFile>
 
 
 </level>

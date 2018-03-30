@@ -54,7 +54,7 @@ def loadLevelData(level):
     scenery = root.find("scenery")
     #file = scenery.find("file").text
     background = scenery.find("background")
-    if (background != None):
+    if background is not None:
         for layer in background.iter("layer"):
             file = layer.find("file").text
             parallaxValue = float(layer.find("parallaxValue").text)
@@ -64,7 +64,7 @@ def loadLevelData(level):
 
     foregroundLayers=[]
     foreground = scenery.find("foreground")
-    if (foreground != None):
+    if foreground is not None:
         for layer in foreground.iter("layer"):
             file = layer.find("file").text
             parallaxValue = float(layer.find("parallaxValue").text)
@@ -122,21 +122,23 @@ def loadLevelData(level):
 
     # Flag area of influence
     flagArea = root.find("flag")
-    left = int(flagArea.find("left").text) - winImageX
-    top = int(flagArea.find("top").text) - winImageY
-    width = int(flagArea.find("width").text)
-    height = int(flagArea.find("height").text)
+    realFlagXPos = 0
+    if flagArea is not None:
+        left = int(flagArea.find("left").text) - winImageX
+        top = int(flagArea.find("top").text) - winImageY
+        width = int(flagArea.find("width").text)
+        height = int(flagArea.find("height").text)
 
-    # Position where the Banner will spawn within the flag area of influence
-    realFlagXPos = (int(flagArea.find("left").text) - BANNER_WIDTH / 2 + int(flagArea.find("width").text) / 2)
+        # Position where the Banner will spawn within the flag area of influence
+        realFlagXPos = (int(flagArea.find("left").text) - BANNER_WIDTH / 2 + int(flagArea.find("width").text) / 2)
 
-    flagArea = FlagArea(pygame.Rect(left, top, width, height))
+        flagArea = FlagArea(pygame.Rect(left, top, width, height))
 
 
     # Images on the front
     frontImages = root.find("frontImages")
     frontImagesList = []
-    if (frontImages != None):
+    if frontImages is not None:
         for frontImage in frontImages.iter("frontImage"):
             file = frontImage.find("file").text
             # Scales and placements in the case we want to use the image
@@ -156,7 +158,7 @@ def loadLevelData(level):
     # Animations on the front
     frontAnimations = root.find("frontAnimations")
     frontAnimationsList = []
-    if (frontAnimations != None):
+    if frontAnimations is not None:
         for frontAnimation in frontAnimations.iter("frontAnimation"):
             framesList = []
             frames = frontAnimation.find("frames")
@@ -182,7 +184,7 @@ def loadLevelData(level):
     # Animations on the back
     backAnimations = root.find("backAnimations")
     backAnimationsList = []
-    if (backAnimations != None):
+    if backAnimations is not None:
         for backAnimation in backAnimations.iter("backAnimation"):
             framesList = []
             frames = backAnimation.find("frames")
@@ -207,14 +209,14 @@ def loadLevelData(level):
     # List of enemies that can spawn in this level
     enemies = root.find("enemies")
     enemyList = []
-    if (enemies != None):
+    if enemies is not None:
         for enemy in enemies.iter("enemy"):
             enemyList.append(enemy.text)
 
     # SpawnPoints
     spawnPoints = root.find("spawnPoints")
     spawnPointList = []
-    if (spawnPoints != None):
+    if spawnPoints is not None:
         for spawnPoint in spawnPoints.iter("spawnPoint"):
             # SpawnPoints position on the map
             x = int(spawnPoint.find("x").text) - winImageX
@@ -226,7 +228,7 @@ def loadLevelData(level):
     # Boss if there is any
     bosses = root.find("bosses")
     bossList = []
-    if (bosses != None):
+    if bosses is not None:
         for boss in bosses.iter("boss"):
             id = boss.find("id").text
             x = int(boss.find("x").text) - winImageX
@@ -242,7 +244,7 @@ def loadLevelData(level):
     # Stage intro stories
     stageIntroStory = root.find("stageIntroStory")
     stageIntroStoryList = []
-    if (stageIntroStory != None):
+    if stageIntroStory is not None:
         for story in stageIntroStory.iter("story"):
             directory = story.find("directory").text
             file = story.find("file").text
@@ -255,7 +257,7 @@ def loadLevelData(level):
     # Stage intro stories
     stageOutroStory = root.find("stageOutroStory")
     stageOutroStoryList = []
-    if (stageOutroStory != None):
+    if stageOutroStory is not None:
         for story in stageOutroStory.iter("story"):
             directory = story.find("directory").text
             file = story.find("file").text

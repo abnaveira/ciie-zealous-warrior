@@ -56,11 +56,18 @@ class PhaseScene(PygameScene):
         # Initialises the enemy sprites group
         self.enemiesGroup = pygame.sprite.Group()
 
+        # Initialises the bosses sprites group
+        # Only used to test if the game is over (if you kill all the bosses)
+        self.bossesGroup = pygame.sprite.Group()
+
         # Puts bosses in place if there are any
+        # If there are bosses, this value is true
+        self.thereAreBosses = len(bossList) > 0
         for boss in bossList:
             enemy = getBossFromName(boss.id)
             enemy.setPosition((boss.x,boss.y))
             self.enemiesGroup.add(enemy)
+            self.bossesGroup.add(enemy)
 
         # Initializes spawn points list
         self.spawnPoints = []
@@ -76,17 +83,23 @@ class PhaseScene(PygameScene):
             self.platformsGroup.add(platform)
 
         # ---------------------------------------------------
-        # FLAG AS PLATFORM TEMPORARY
-        # self.platformsGroup.add(Platform(flag))
         # TODO: implement this well
+        # If there is no flag (this level has a boss)
+        if flagArea is not None:
+            self.thereIsFlag = True
+        else:
+            self.thereIsFlag = False
+
         self.flagRaised = False
         self.flagGroup = pygame.sprite.Group()
         self.bannerSpriteGroup = pygame.sprite.Group()
-        self.flagGroup.add(flagArea)
         self.realFlagXPos = realFlagXPos
-
         # To use as a timer when the flag is raised
         self.flagSpawnEnd = 0
+        # If there is no Flag, none will be added
+        if self.thereIsFlag:
+            self.flagGroup.add(flagArea)
+
         # ---------------------------------------------------
 
         # Initialize potions group
@@ -168,35 +181,42 @@ class PhaseScene(PygameScene):
                 # ---------------------------------------------------
                 # Flag logic
 
-                # If the flag hasn't been raised
-                if not self.flagRaised:
-                    self.flagRaised = PhaseScene.checkFlag(self)
-                    # The FIRST time the flag is raised
-                    if self.flagRaised:
-                        flagList = self.flagGroup.sprites()
-                        flag = flagList.pop()
-                        # We set the Banner in its position
-                        bannerSprite = Banner((self.realFlagXPos,flag.rect.bottom))
-                        self.bannerSpriteGroup.add(bannerSprite)
-                        # We destroy enemies
-                        for spawnPoint in iter(self.spawnPoints):
-                            spawnPoint.clear()
-                        self.enemiesGroup.empty()
-                        # We add new enemies
-                        for spawnPoint in iter(self.spawnPoints):
-                            spawnPoint.add_enemies(0)
-                        # Time a minute from now, when the spawning has ended
-                        self.flagSpawnEnd = 0#pyTime.time() + 60
+                # If there is flag
+                if self.thereIsFlag:
+                    # If the flag hasn't been raised
+                    if not self.flagRaised:
+                        self.flagRaised = PhaseScene.checkFlag(self)
+                        # The FIRST time the flag is raised
+                        if self.flagRaised:
+                            flagList = self.flagGroup.sprites()
+                            flag = flagList.pop()
+                            # We set the Banner in its position
+                            bannerSprite = Banner((self.realFlagXPos,flag.rect.bottom))
+                            self.bannerSpriteGroup.add(bannerSprite)
+                            # We destroy enemies
+                            for spawnPoint in iter(self.spawnPoints):
+                                spawnPoint.clear()
+                            self.enemiesGroup.empty()
+                            # We add new enemies
+                            for spawnPoint in iter(self.spawnPoints):
+                                spawnPoint.add_enemies(20)
+                            # Time a minute from now, when the spawning has ended
+                            self.flagSpawnEnd = pyTime.time() + 60
 
-                # If the flag has already been raised
-                if self.flagRaised:
-                    # If a minute has passed since the flag has been raised
-                    if pyTime.time() > self.flagSpawnEnd:
-                        # If there are no more enemies on the level
-                        if (len(self.enemiesGroup.sprites()) == 0):
-                            # This changes scene
-                            self.final = True
-                # ---------------------------------------------------
+                    # If the flag has already been raised
+                    if self.flagRaised:
+                        # If a minute has passed since the flag has been raised
+                        if pyTime.time() > self.flagSpawnEnd:
+                            # If there are no more enemies on the level
+                            if len(self.enemiesGroup.sprites()) == 0:
+                                # This changes scene
+                                self.final = True
+                # --------------------------------------------------
+
+                # If there are bosses and they are dead, you win
+                if self.thereAreBosses:
+                    if len(self.bossesGroup.sprites()) == 0:
+                        self.final = True
 
                 # Updates the banner sprite
                 self.bannerSpriteGroup.update(self.player, time)
@@ -293,7 +313,7 @@ class PhaseScene(PygameScene):
             if volume > 0:
                 pygame.mixer.music.set_volume(volume - 0.01)
 
-                # Indicates the actions to do to the player
+        # Indicates the actions to do to the player
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
 
     def openDeathScreen(self):
