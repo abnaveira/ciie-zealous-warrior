@@ -42,7 +42,7 @@
             <left>0</left>
             <top>953</top>
             <width>4500</width>
-            <height>50</height>
+            <height>400</height>
         </platform>
 
         <platform>
@@ -200,16 +200,16 @@
 
         <platform>
             <id>BarreraDercha</id>
-            <left>0</left>
+            <left>-190</left>
             <top>0</top>
-            <width>10</width>
+            <width>200</width>
             <height>1000</height>
         </platform>
         <platform>
             <id>BarreraIzda</id>
             <left>4490</left>
             <top>0</top>
-            <width>10</width>
+            <width>200</width>
             <height>1000</height>
         </platform>
     </platforms>
