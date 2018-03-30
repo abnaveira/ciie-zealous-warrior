@@ -389,6 +389,28 @@
         </platform>
 
         <platform>
+            <id>ArcoDePiedra1</id>
+            <left>1735</left>
+            <top>630</top>
+            <width>155</width>
+            <height>12</height>
+        </platform>
+        <platform>
+            <id>ArcoDePiedra2</id>
+            <left>2140</left>
+            <top>780</top>
+            <width>155</width>
+            <height>12</height>
+        </platform>
+        <platform>
+            <id>ArcoDePiedra2+3</id>
+            <left>2687</left>
+            <top>644</top>
+            <width>310</width>
+            <height>12</height>
+        </platform>
+
+        <platform>
             <id>Techo</id>
             <left>0</left>
             <top>0</top>

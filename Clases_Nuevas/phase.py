@@ -33,8 +33,10 @@ class PhaseScene(PygameScene):
         PygameScene.__init__(self, director, self.sceneryObj.windowWidth, self.sceneryObj.windowHeight)
 
         # Flag for music playBack (scenes are pre-initialized, we cannot load music in each
-        # of them, as music uses a shared channel
-        self.alreadyPlaying = False
+        # of them, as music uses a shared channel)
+        self.firstTimeMusicPlaying = False
+        # Flag for music play and stop with key m
+        self.musicPlaying = False
         # Store musicFile name
         self.musicFile = musicFile
         # Creates the background and backgroundColor
@@ -141,13 +143,15 @@ class PhaseScene(PygameScene):
     def update(self, time):
         if not self.final:
             if self.text_finished:
-                if not self.alreadyPlaying:
+                if not self.firstTimeMusicPlaying:
                     # Load background music
                     pygame.mixer.music.load(self.musicFile)
                     # Play it indefinetely until method stop is called
                     pygame.mixer.music.play(-1)
                     # Flag is now true
-                    self.alreadyPlaying = True
+                    self.firstTimeMusicPlaying = True
+                    # Music is playing
+                    self.musicPlaying = True
 
                 # Executes enemy AI
                 for enemy in self.enemiesGroup:
@@ -260,7 +264,20 @@ class PhaseScene(PygameScene):
                 # Abort music playback
                 pygame.mixer.music.stop()
                 self.director.leaveScene()
-            # Indicates the actions to do to the player
+        # If m key is pressed, mute/unmute
+        if keysPressed[K_m]:
+            if self.musicPlaying:
+                # Stop music
+                pygame.mixer.music.stop()
+                # Reverse the flag
+                self.musicPlaying = False
+            else:
+                # Play music indefinetely until method stop is called
+                pygame.mixer.music.play(-1)
+                # Reverse the flag
+                self.musicPlaying = True
+
+        # Indicates the actions to do to the player
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
 
     def openDeathScreen(self):
