@@ -10,7 +10,7 @@ import time
 class Spawn:
 
     def __init__(self, spawnPoint, enemyList):
-
+        self.id = spawnPoint.id
         # Coordinates of the spawn point
         self.x = spawnPoint.x
         self.y = spawnPoint.y
@@ -30,13 +30,11 @@ class Spawn:
 
     # Add enemies to be spawned
     def add_enemies(self, number):
-        move = 0
         for i in range(0, number):
             probability = random.randint(0, len(self.enemyTypes) - 1)
             enemy = self.getNpcFromName(self.enemyTypes[probability])
-            enemy.setPosition((self.x + move, self.y))
+            enemy.setPosition((self.x, self.y))
             self.listEnemies.append(enemy)
-            #move += 50
 
     # Spawn an enemy
     def spawn_enemy(self, phase, player):
@@ -45,33 +43,32 @@ class Spawn:
         phase.enemiesGroup.add(enemy)
         self.listEnemies.remove(enemy)
 
-    # Decide to spawn a new enemy or not
-    def spawn(self, phase, player):
+    def spawnBeforeFlag(self, phase, player):
         millis = int(round(time.time() * 1000))
         timePassed = millis - self.lastSpawn
         # If list of enemies not empty
         if self.listEnemies:
-            if phase.flagRaised:
-                if timePassed >= 3000:
-                    self.spawn_enemy(phase, player)
-                    self.lastSpawn = millis
+            # Always one spawned enemy (at least)
+            if self.lastSpawn == 0:
+                # First enemy
+                self.spawn_enemy(phase, player)
             else:
-                # Always one spawned enemy (at least)
-                if self.lastSpawn == 0:
-                     # First enemy
-                    self.spawn_enemy(phase, player)
-                else:
-                    if timePassed < 2000:
-                        return
-                    elif timePassed < 5000:
-                        f = random.randint(0, 1000)
-                        if f >= self.frequency:
-                            self.spawn_enemy(phase, player)
-                        else:
-                            return
-                    else:
+                if timePassed < 2000:
+                    return
+                elif timePassed < 5000:
+                    f = random.randint(0, 1000)
+                    if f >= self.frequency:
                         self.spawn_enemy(phase, player)
-                self.lastSpawn = millis
+                    else:
+                        return
+                else:
+                    self.spawn_enemy(phase, player)
+            self.lastSpawn = millis
+
+    def spawnAfterFlag(self, phase, player, point):
+        if point == self.id:
+            self.add_enemies(1)
+            self.spawn_enemy(phase, player)
 
     # Remove the enemies that have not been spawned yet
     def clear(self):
@@ -86,7 +83,7 @@ class Spawn:
         elif name == 'BarrelSkeleton':
             return BarrelSkeleton()
         elif name == 'CheetahSkeleton':
-            return CheetahSkeleton
+            return CheetahSkeleton()
         elif name == 'Zebesian':
             return Zebesian()
         elif name == 'MeltyZombie':

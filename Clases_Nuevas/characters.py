@@ -72,6 +72,7 @@ CHEETAHSKELETON_STUN_DELAY  = 1000
 CHEETAHSKELETON_BASE_HEALTH = 15
 CHEETAHSKELETON_HIT_DMG     = 10
 CHEETAHSKELETON_HIT_KB      = (.2,-.4)
+CHEETAHSKELETON_SKID_DELAY  = 750
 
 AXEKNIGHT_SPEED        = 0.04
 AXEKNIGHT_JUMP_SPEED   = 0.1
@@ -508,22 +509,17 @@ class Skeleton(NPC):
 
     def move_cpu(self, spriteStructure):
         # TODO make some real AI BS
-        # Currently this enemy doesn't move if outside the screen
-        if (self.rect.left > 0) and (self.rect.right < ANCHO_PANTALLA) \
-                and (self.rect.bottom > 0) and (self.rect.top < ALTO_PANTALLA):
-            if spriteStructure.player.position[0] < self.position[0]:
-                if spriteStructure.player.position[1] < self.position[1]:
-                    Character.move(self, UPLEFT)
-                else:
-                    Character.move(self, LEFT)
+        # Currently this enemy doesn't move if outside the scree
+        if spriteStructure.player.position[0] < self.position[0]:
+            if spriteStructure.player.position[1] < self.position[1]:
+                Character.move(self, UPLEFT)
             else:
-                if spriteStructure.player.position[1] < self.position[1]:
-                    Character.move(self, UPRIGHT)
-                else:
-                    Character.move(self, RIGHT)
-
+                Character.move(self, LEFT)
         else:
-            Character.move(self, STILL)
+            if spriteStructure.player.position[1] < self.position[1]:
+                Character.move(self, UPRIGHT)
+            else:
+                Character.move(self, RIGHT)
         NPC.move_cpu(self, spriteStructure)
 
 # Zombies just try to stumble toward the player
@@ -610,14 +606,26 @@ class CheetahSkeleton(NPC):
         self.HP = CHEETAHSKELETON_BASE_HEALTH
         self.knockback = CHEETAHSKELETON_HIT_KB
         self.damage = CHEETAHSKELETON_HIT_DMG
+        self.skidDelay = CHEETAHSKELETON_SKID_DELAY
+        self.skidTime = 0
+        self.skidding = False
+        self.lockedDirection = 0
 
     def move_cpu(self, spriteStructure):
         directionP = LEFT   # Player direction
         jump = False
-        if self.position[0] - spriteStructure.player.position[0] < 0:
+        diffPosition = self.position[0] - spriteStructure.player.position[0]
+        if diffPosition < 0:
             directionP = RIGHT
-        if self.position[1] - spriteStructure.player.position[1] > 300:
+            diffPosition = -diffPosition
+        if not self.skidding and diffPosition < 10:
+            self.skidding = True
+            self.lockedDirection = self.looking
+            self.skidTime = 0
+        if self.position[1] - spriteStructure.player.position[1] > 500:
             directionP = RIGHT
+        elif self.skidding:
+            directionP = self.lockedDirection
         # Move towards player, check if we are hitting a wall to jump over it
         platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
         for platform in iter(platforms):
@@ -631,11 +639,11 @@ class CheetahSkeleton(NPC):
 
     # This prevents the enemy from running beneath the player
     def update(self, spriteStructure, time):
-        hit = self.hitPlayer
+        if self.skidding:
+            self.skidTime += time
+            if self.skidTime > self.skidDelay:
+                self.skidding = False
         NPC.update(self, spriteStructure, time)
-        if hit:
-            self.numStance = STUNNED
-            self.stunnedTime = 700
 
 # Axeknight walks slowly towards the player (if he sees him) and throws axes in a parabola if on range.
 class AxeKnight(NPC):

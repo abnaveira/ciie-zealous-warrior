@@ -76,28 +76,28 @@
             <left>0</left>
             <top>854</top>
             <width>1100</width>
-            <height>50</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>SueloTierra2</id>
             <left>1052</left>
             <top>797</top>
             <width>129</width>
-            <height>50</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>SueloTierra3</id>
             <left>1182</left>
             <top>755</top>
             <width>129</width>
-            <height>50</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>SueloTierra4</id>
             <left>1312</left>
             <top>789</top>
             <width>676</width>
-            <height>50</height>
+            <height>400</height>
         </platform>
 
         <platform>
@@ -105,63 +105,63 @@
             <left>1964</left>
             <top>790</top>
             <width>23</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>Escalera1.2</id>
             <left>1986</left>
             <top>807</top>
             <width>18</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>Escalera1.3</id>
             <left>2002</left>
             <top>823</top>
             <width>18</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>Escalera1.4</id>
             <left>2018</left>
             <top>839</top>
             <width>18</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>Escalera1.5</id>
             <left>2034</left>
             <top>856</top>
             <width>13</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>Escalera1.6</id>
             <left>2045</left>
             <top>872</top>
             <width>17</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>Escalera1.7</id>
             <left>2060</left>
             <top>888</top>
             <width>18</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>Escalera1.8</id>
             <left>2076</left>
             <top>905</top>
             <width>18</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>Escalera1.9</id>
             <left>2093</left>
             <top>920</top>
             <width>13</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
 
         <platform>
@@ -169,7 +169,7 @@
             <left>2105</left>
             <top>935</top>
             <width>478</width>
-            <height>50</height>
+            <height>400</height>
         </platform>
 
         <platform>
@@ -177,21 +177,21 @@
             <left>2580</left>
             <top>922</top>
             <width>20</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>Escalera2.2</id>
             <left>2596</left>
             <top>906</top>
             <width>20</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
         <platform>
             <id>Escalera2.3</id>
             <left>2612</left>
             <top>890</top>
             <width>26</width>
-            <height>4</height>
+            <height>400</height>
         </platform>
 
         <platform>
@@ -199,7 +199,7 @@
             <left>2636</left>
             <top>874</top>
             <width>361</width>
-            <height>50</height>
+            <height>400</height>
         </platform>
 
         <platform>
@@ -389,6 +389,28 @@
         </platform>
 
         <platform>
+            <id>ArcoDePiedra1</id>
+            <left>1735</left>
+            <top>630</top>
+            <width>155</width>
+            <height>12</height>
+        </platform>
+        <platform>
+            <id>ArcoDePiedra2</id>
+            <left>2140</left>
+            <top>780</top>
+            <width>155</width>
+            <height>12</height>
+        </platform>
+        <platform>
+            <id>ArcoDePiedra2+3</id>
+            <left>2687</left>
+            <top>644</top>
+            <width>310</width>
+            <height>12</height>
+        </platform>
+
+        <platform>
             <id>Techo</id>
             <left>0</left>
             <top>0</top>
@@ -398,16 +420,16 @@
 
         <platform>
             <id>BarreraDercha</id>
-            <left>0</left>
+            <left>-190</left>
             <top>0</top>
-            <width>10</width>
+            <width>200</width>
             <height>1000</height>
         </platform>
         <platform>
             <id>BarreraIzda</id>
             <left>2990</left>
             <top>0</top>
-            <width>10</width>
+            <width>200</width>
             <height>1000</height>
         </platform>
     </platforms>
@@ -428,38 +450,32 @@
 
     <!--List of enemies of this level-->
     <enemies>
+        <enemy>BarrelSkeleton</enemy>
         <enemy>Skeleton</enemy>
-        <enemy>MeltyZombie</enemy>
         <enemy>Imp</enemy>
     </enemies>
 
     <!--Enemies Spawn Point-->
     <spawnPoints>
         <spawnPoint>
+            <id>1</id>
             <x>700</x>
             <y>850</y>
             <enemiesNumber>3</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
+            <id>2</id>
             <x>1400</x>
             <y>750</y>
             <enemiesNumber>4</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
+            <id>3</id>
             <x>2200</x>
             <y>800</y>
             <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
     </spawnPoints>
-
-    <!--Bosses and position if there are bosses in the scene-->
-    <bosses>
-        <boss>
-            <id>Boss</id>
-            <x>500</x>
-            <y>400</y>
-        </boss>
-    </bosses>
 
     <stageInfo>
         <title>Nivel 1</title>
@@ -468,35 +484,47 @@
 
     <stageIntroStory>
         <story>
-            <file>Intro1</file>
-            <left>140</left>
-            <top>646</top>
-            <width>126</width>
-            <height>16</height>
+            <directory>Level1-Cave</directory>
+            <file>intro1.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
         </story>
         <story>
-            <file>Intro2</file>
-            <left>140</left>
-            <top>646</top>
-            <width>126</width>
-            <height>16</height>
+            <directory>Level1-Cave</directory>
+            <file>intro2.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+        <story>
+            <directory>Level1-Cave</directory>
+            <file>intro3.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+        <story>
+            <directory>Level1-Cave</directory>
+            <file>intro4.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
         </story>
     </stageIntroStory>
 
     <stageOutroStory>
         <story>
-            <file>Outro1</file>
-            <left>140</left>
-            <top>646</top>
-            <width>126</width>
-            <height>16</height>
-        </story>
-        <story>
-            <file>Outro2</file>
-            <left>140</left>
-            <top>646</top>
-            <width>126</width>
-            <height>16</height>
+            <directory> </directory>
+            <file>marco.png</file>
+            <left>100</left>
+            <top>500</top>
+            <width>700</width>
+            <height>409</height>
         </story>
     </stageOutroStory>
 

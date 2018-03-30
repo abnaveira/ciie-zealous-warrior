@@ -17,6 +17,8 @@ class Director():
         self.stack = []
         # Flag that indicates when to leave pygame scene
         self.leave_scene_pygame = False
+        # Flag for music play and stop, here to ensure it stays across levels
+        self.musicMuted = False
 
     def loopPygame(self, scene):
 

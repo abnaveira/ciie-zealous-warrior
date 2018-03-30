@@ -38,35 +38,157 @@
     <!--Platforms and their five parameters: id and four position points-->
     <platforms>
         <platform>
-            <id>SueloTierra1</id>
+            <id>Suelo</id>
             <left>0</left>
             <top>953</top>
             <width>4500</width>
-            <height>50</height>
+            <height>400</height>
         </platform>
 
         <platform>
             <id>Rama1.1</id>
-            <left>140</left>
-            <top>646</top>
-            <width>126</width>
+            <left>96</left>
+            <top>700</top>
+            <width>180</width>
             <height>16</height>
         </platform>
         <platform>
             <id>Rama1.2</id>
-            <left>438</left>
-            <top>738</top>
-            <width>140</width>
+            <left>436</left>
+            <top>801</top>
+            <width>180</width>
             <height>16</height>
         </platform>
         <platform>
             <id>Rama1.3</id>
-            <left>436</left>
-            <top>397</top>
-            <width>400</width>
+            <left>418</left>
+            <top>624</top>
+            <width>180</width>
             <height>16</height>
         </platform>
-        <!--TODO: hacer todas las plataformas-->
+        <platform>
+            <id>Rama1.4</id>
+            <left>430</left>
+            <top>470</top>
+            <width>405</width>
+            <height>16</height>
+        </platform>
+
+        <platform>
+            <id>Rama2.1</id>
+            <left>910</left>
+            <top>708</top>
+            <width>180</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama2.2</id>
+            <left>910</left>
+            <top>580</top>
+            <width>180</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama2.3</id>
+            <left>1232</left>
+            <top>794</top>
+            <width>180</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama2.4</id>
+            <left>1240</left>
+            <top>517</top>
+            <width>180</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama2.5+3.3</id>
+            <left>1233</left>
+            <top>380</top>
+            <width>644</width>
+            <height>16</height>
+        </platform>
+
+        <platform>
+            <id>Rama3.1</id>
+            <left>1713</left>
+            <top>817</top>
+            <width>180</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama3.2</id>
+            <left>1485</left>
+            <top>564</top>
+            <width>405</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama3.4</id>
+            <left>2047</left>
+            <top>755</top>
+            <width>180</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama3.5</id>
+            <left>2035</left>
+            <top>624</top>
+            <width>180</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama3.6+4.1</id>
+            <left>2045</left>
+            <top>518</top>
+            <width>810</width>
+            <height>16</height>
+        </platform>
+
+        <platform>
+            <id>Rama4.2</id>
+            <left>3020</left>
+            <top>816</top>
+            <width>180</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama4.3</id>
+            <left>3020</left>
+            <top>704</top>
+            <width>180</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama4.4</id>
+            <left>3020</left>
+            <top>596</top>
+            <width>180</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama4.3</id>
+            <left>3023</left>
+            <top>375</top>
+            <width>405</width>
+            <height>16</height>
+        </platform>
+
+        <platform>
+            <id>Rama5.1</id>
+            <left>3490</left>
+            <top>581</top>
+            <width>320</width>
+            <height>16</height>
+        </platform>
+        <platform>
+            <id>Rama5.2</id>
+            <left>3970</left>
+            <top>471</top>
+            <width>405</width>
+            <height>16</height>
+        </platform>
 
         <platform>
             <id>Techo</id>
@@ -78,16 +200,16 @@
 
         <platform>
             <id>BarreraDercha</id>
-            <left>0</left>
+            <left>-190</left>
             <top>0</top>
-            <width>10</width>
+            <width>200</width>
             <height>1000</height>
         </platform>
         <platform>
             <id>BarreraIzda</id>
             <left>4490</left>
             <top>0</top>
-            <width>10</width>
+            <width>200</width>
             <height>1000</height>
         </platform>
     </platforms>
@@ -96,7 +218,7 @@
     <!--TODO: put flag in good place-->
     <flag>
        <left>2350</left>
-        <top>850</top>
+        <top>863</top>
         <width>100</width>
         <height>90</height>
     </flag>
@@ -109,17 +231,64 @@
 
     <!--List of enemies of this level-->
     <enemies>
-        <enemy>Skeleton</enemy>
-        <enemy>Zombie</enemy>
+        <!--<enemy>Zombie</enemy>-->
         <enemy>BarrelSkeleton</enemy>
         <enemy>CheetahSkeleton</enemy>
         <enemy>Zebesian</enemy>
         <enemy>MeltyZombie</enemy>
-        <enemy>Imp</enemy>
-        <enemy>AxeKnight</enemy>
     </enemies>
 
     <!--Enemies Spawn Point-->
+    <spawnPoints>
+        <spawnPoint>
+            <id>1</id>
+            <x>750</x>
+            <y>940</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>2</id>
+            <x>1800</x>
+            <y>940</y>
+            <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>3</id>
+            <x>3000</x>
+            <y>940</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>4</id>
+            <x>4000</x>
+            <y>940</y>
+            <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>5</id>
+            <x>425</x>
+            <y>600</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>6</id>
+            <x>1500</x>
+            <y>550</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>7</id>
+            <x>3030</x>
+            <y>690</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>8</id>
+            <x>3500</x>
+            <y>570</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+    </spawnPoints>
     <!-- OJOOOOOOOOOOO, missing
     TODO: spawnpoints-->
 
@@ -127,6 +296,36 @@
         <title>Stage 2</title>
         <description>The Forest</description>
     </stageInfo>
+
+        <stageIntroStory>
+        <story>
+            <directory>Level2-Forest</directory>
+            <file>intro1.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+        <story>
+            <directory>Level2-Forest</directory>
+            <file>intro2.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+    </stageIntroStory>
+
+    <stageOutroStory>
+        <story>
+            <directory> </directory>
+            <file>marco.png</file>
+            <left>100</left>
+            <top>500</top>
+            <width>700</width>
+            <height>409</height>
+        </story>
+    </stageOutroStory>
 
     <musicFile>hxh-TryYourLuck.mp3</musicFile>
 
