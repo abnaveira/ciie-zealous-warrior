@@ -138,6 +138,8 @@ class PhaseScene(PygameScene):
         self.final = False
         # This variable controls the update of elements to show the final text dialogs
         self.text_final_finished = False
+        # Used for the music muting
+        self.lastTimeMuted = pyTime.time()
 
     def update(self, time):
         if not self.final:
@@ -149,6 +151,7 @@ class PhaseScene(PygameScene):
                     if not self.director.musicMuted:
                         # Play it indefinetely until method stop is called
                         pygame.mixer.music.play(-1)
+                        pygame.mixer.music.set_volume(0.25)
                     # Flag is now true
                     self.musicLoaded = True
 
@@ -181,9 +184,9 @@ class PhaseScene(PygameScene):
                         self.enemiesGroup.empty()
                         # We add new enemies
                         for spawnPoint in iter(self.spawnPoints):
-                            spawnPoint.add_enemies(20)
+                            spawnPoint.add_enemies(0)
                         # Time a minute from now, when the spawning has ended
-                        self.flagSpawnEnd = pyTime.time() + 60
+                        self.flagSpawnEnd = 0#pyTime.time() + 60
 
                 # If the flag has already been raised
                 if self.flagRaised:
@@ -265,21 +268,32 @@ class PhaseScene(PygameScene):
                 self.director.leaveScene()
         # If m key is pressed, mute/unmute
         if keysPressed[K_m]:
-            #TODO: time retardation on m key press
             # If it is not muted, mute it
-            if not self.director.musicMuted:
-                # Stop music
-                pygame.mixer.music.stop()
-                # Reverse the flag
-                self.director.musicMuted = True
-            # If it was muted, unmute it
-            else:
-                # Play music indefinetely until method stop is called
-                pygame.mixer.music.play(-1)
-                # Reverse the flag
-                self.director.musicMuted = False
+            if pyTime.time() - self.lastTimeMuted > 0.5:
+                if not self.director.musicMuted:
+                    # Stop music
+                    pygame.mixer.music.stop()
+                    # Reverse the flag
+                    self.director.musicMuted = True
+                    self.lastTimeMuted = pyTime.time()
+                    # If it was muted, unmute it
+                else:
+                    # Play music indefinetely until method stop is called
+                    pygame.mixer.music.play(-1)
+                    # Reverse the flag
+                    self.director.musicMuted = False
+                    self.lastTimeMuted = pyTime.time()
+        if keysPressed[K_PLUS]:
+            volume = pygame.mixer.music.get_volume()
+            if volume < 1:
+                pygame.mixer.music.set_volume(volume + 0.01)
 
-        # Indicates the actions to do to the player
+        if keysPressed[K_MINUS]:
+            volume = pygame.mixer.music.get_volume()
+            if volume > 0:
+                pygame.mixer.music.set_volume(volume - 0.01)
+
+                # Indicates the actions to do to the player
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
 
     def openDeathScreen(self):

@@ -289,6 +289,36 @@
         <description>The Forest</description>
     </stageInfo>
 
+        <stageIntroStory>
+        <story>
+            <directory>Level2-Forest</directory>
+            <file>intro1.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+        <story>
+            <directory>Level2-Forest</directory>
+            <file>intro2.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+    </stageIntroStory>
+
+    <stageOutroStory>
+        <story>
+            <directory> </directory>
+            <file>marco.png</file>
+            <left>100</left>
+            <top>500</top>
+            <width>700</width>
+            <height>409</height>
+        </story>
+    </stageOutroStory>
+
     <musicFile>hxh-TryYourLuck.mp3</musicFile>
 
 </level>
