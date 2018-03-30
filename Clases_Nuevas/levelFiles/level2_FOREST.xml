@@ -231,8 +231,8 @@
 
     <!--List of enemies of this level-->
     <enemies>
-        <!--<enemy>Zombie</enemy>
-        <enemy>BarrelSkeleton</enemy>-->
+        <!--<enemy>Zombie</enemy>-->
+        <enemy>BarrelSkeleton</enemy>
         <enemy>CheetahSkeleton</enemy>
         <enemy>Zebesian</enemy>
         <enemy>MeltyZombie</enemy>
@@ -241,41 +241,49 @@
     <!--Enemies Spawn Point-->
     <spawnPoints>
         <spawnPoint>
+            <id>1</id>
             <x>750</x>
             <y>940</y>
-            <enemiesNumber>5</enemiesNumber>
+            <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
+            <id>2</id>
             <x>1800</x>
             <y>940</y>
-            <enemiesNumber>3</enemiesNumber>
+            <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
+            <id>3</id>
             <x>3000</x>
             <y>940</y>
-            <enemiesNumber>6</enemiesNumber>
+            <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
+            <id>4</id>
             <x>4000</x>
             <y>940</y>
             <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
+            <id>5</id>
             <x>425</x>
             <y>600</y>
-            <enemiesNumber>2</enemiesNumber>
+            <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
+            <id>6</id>
             <x>1500</x>
             <y>550</y>
             <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
+            <id>7</id>
             <x>3030</x>
             <y>690</y>
             <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
+            <id>8</id>
             <x>3500</x>
             <y>570</y>
             <enemiesNumber>1</enemiesNumber>

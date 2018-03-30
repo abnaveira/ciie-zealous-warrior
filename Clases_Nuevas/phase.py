@@ -74,6 +74,8 @@ class PhaseScene(PygameScene):
         for spawnPoint in spawnPointList:
             self.spawnPoints.append(Spawn(spawnPoint, enemyList))
 
+        self.lastSpawn = 0
+
         # Initializes the projectiles sprites group
         self.projectilesGroup = pygame.sprite.Group()
 
@@ -197,9 +199,6 @@ class PhaseScene(PygameScene):
                             for spawnPoint in iter(self.spawnPoints):
                                 spawnPoint.clear()
                             self.enemiesGroup.empty()
-                            # We add new enemies
-                            for spawnPoint in iter(self.spawnPoints):
-                                spawnPoint.add_enemies(20)
                             # Time a minute from now, when the spawning has ended
                             self.flagSpawnEnd = pyTime.time() + 60
 
@@ -211,6 +210,18 @@ class PhaseScene(PygameScene):
                             if len(self.enemiesGroup.sprites()) == 0:
                                 # This changes scene
                                 self.final = True
+                        else:
+                            millis = int(round(pyTime.time() * 1000))
+                            timePassed = millis - self.lastSpawn
+                            if timePassed >= 3000:
+                                point = random.randint(1, len(self.spawnPoints))
+                                for spawnPoint in iter(self.spawnPoints):
+                                    spawnPoint.spawnAfterFlag(self, self.player, point)
+                                self.lastSpawn = millis
+                    else:
+                        for spawnPoint in iter(self.spawnPoints):
+                            spawnPoint.spawnBeforeFlag(self, self.player)
+
                 # --------------------------------------------------
 
                 # If there are bosses and they are dead, you win
@@ -239,9 +250,6 @@ class PhaseScene(PygameScene):
                 # Update HUD elements
                 self.HUD.update()
 
-                # Spawn enemies
-                for spawnPoint in iter(self.spawnPoints):
-                    spawnPoint.spawn(self, self.player)
 
     def draw(self, screen):
         # Background color

@@ -218,12 +218,13 @@ def loadLevelData(level):
     spawnPointList = []
     if spawnPoints is not None:
         for spawnPoint in spawnPoints.iter("spawnPoint"):
+            id = int(spawnPoint.find("id").text)
             # SpawnPoints position on the map
             x = int(spawnPoint.find("x").text) - winImageX
             y = int(spawnPoint.find("y").text) - winImageY
             # Number of enemies
             enemiesNumber = int(spawnPoint.find("enemiesNumber").text)
-            spawnPointList.append(SpawnPointClass(x, y, enemiesNumber))
+            spawnPointList.append(SpawnPointClass(id, x, y, enemiesNumber))
 
     # Boss if there is any
     bosses = root.find("bosses")
@@ -293,7 +294,8 @@ class EnemyInSpawnPoint:
         self.spawnFrecuency = spawnFrecuency
 
 class SpawnPointClass:
-    def __init__(self, x, y, enemiesNumber):
+    def __init__(self, id, x, y, enemiesNumber):
+        self.id = id
         self.x = x
         self.y = y
         self.enemiesNumber = enemiesNumber
