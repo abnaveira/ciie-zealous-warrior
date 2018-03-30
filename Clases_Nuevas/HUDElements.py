@@ -135,11 +135,11 @@ class LastEnemyArrow(HUDElement):
             screen.blit(self.image, self.rect)
 
 class TextDialogBox(HUDElement):
-    def __init__(self, position):
-        self.image = ResourcesManager.loadImage("dialog_box.png", -1)
-        self.image = pygame.transform.scale(self.image, (DIALOG_BOX_WIDTH, DIALOG_BOX_HEIGHT))
+    def __init__(self, image, position, width, height):
+        self.image = ResourcesManager.loadImageWithAlpha(image)
+        self.image = pygame.transform.scale(self.image, (width, height))
         HUDElement.__init__(self, self.image.get_rect())
-        self.setScreenPosition((position))
+        self.setScreenPosition(position)
 
 class GUIText(HUDElement):
     def __init__(self, font, color, text, position, time):
@@ -185,7 +185,7 @@ class DescriptionText(GUIText):
 
 # Main class for the HUD
 class HUD():
-    def __init__(self, spriteStructure, stageInfo):
+    def __init__(self, spriteStructure, stageInfo, stageIntroStoryList, stageOutroStoryList):
         # Creates the HUD elements
         self.healthBar = HealthBar(spriteStructure.player)
         self.healthBarDecoration = HealthBarDecoration()
@@ -195,14 +195,15 @@ class HUD():
         self.quitText = QuitText()
         # Initial text boxes
         self.initialBoxes = []
-        self.initialBoxes.append(TextDialogBox((150, 500)))
-        self.initialBoxes.append(TextDialogBox((400,500)))
+        for box in stageIntroStoryList:
+            self.initialBoxes.append(TextDialogBox(box.file,(box.left, box.top), box.width, box.height))
         self.actualInitialBox = 0
         self.stop_initial_boxes = False
         self.actualTime = timeLib.time()
         # Final text boxes
         self.finalBoxes = []
-        self.finalBoxes.append(TextDialogBox((150, 500)))
+        for box in stageOutroStoryList:
+            self.finalBoxes.append(TextDialogBox(box.file,(box.left, box.top), box.width, box.height))
         self.actualFinalBox = 0
         self.stop_final_boxes = False
 

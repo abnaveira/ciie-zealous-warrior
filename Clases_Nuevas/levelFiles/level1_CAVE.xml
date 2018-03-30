@@ -489,35 +489,47 @@
 
     <stageIntroStory>
         <story>
-            <file>Intro1</file>
-            <left>140</left>
-            <top>646</top>
-            <width>126</width>
-            <height>16</height>
+            <directory>Level1-Cave</directory>
+            <file>intro1.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
         </story>
         <story>
-            <file>Intro2</file>
-            <left>140</left>
-            <top>646</top>
-            <width>126</width>
-            <height>16</height>
+            <directory>Level1-Cave</directory>
+            <file>intro2.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+        <story>
+            <directory>Level1-Cave</directory>
+            <file>intro3.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+        <story>
+            <directory>Level1-Cave</directory>
+            <file>intro4.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
         </story>
     </stageIntroStory>
 
     <stageOutroStory>
         <story>
-            <file>Outro1</file>
-            <left>140</left>
-            <top>646</top>
-            <width>126</width>
-            <height>16</height>
-        </story>
-        <story>
-            <file>Outro2</file>
-            <left>140</left>
-            <top>646</top>
-            <width>126</width>
-            <height>16</height>
+            <directory> </directory>
+            <file>marco.png</file>
+            <left>100</left>
+            <top>500</top>
+            <width>700</width>
+            <height>409</height>
         </story>
     </stageOutroStory>
 
