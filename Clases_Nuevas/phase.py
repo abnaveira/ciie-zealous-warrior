@@ -131,7 +131,7 @@ class PhaseScene(PygameScene):
                                                self.projectilesGroup, None, None, self.potionsGroup)
 
         # Creates the HUD elements
-        self.HUD = HUD(self.spriteStructure, stageInfo)
+        self.HUD = HUD(self.spriteStructure, stageInfo, stageIntroStoryList, stageOutroStoryList)
         # This variable controls the update of elements to show the text dialogs
         self.text_finished = False
         # This variable controls the draw of the final text

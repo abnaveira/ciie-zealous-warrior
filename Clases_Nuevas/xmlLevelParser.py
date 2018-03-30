@@ -244,24 +244,26 @@ def loadLevelData(level):
     stageIntroStoryList = []
     if (stageIntroStory != None):
         for story in stageIntroStory.iter("story"):
+            directory = story.find("directory").text
             file = story.find("file").text
-            left = int(story.find("left").text) - winImageX
-            top = int(story.find("top").text) - winImageY
+            left = int(story.find("left").text)
+            top = int(story.find("top").text)
             width = int(story.find("width").text)
             height = int(story.find("height").text)
-            stageIntroStoryList.append(IntroAndOutroStory(file, left, top, width, height))
+            stageIntroStoryList.append(IntroAndOutroStory(directory, file, left, top, width, height))
 
     # Stage intro stories
     stageOutroStory = root.find("stageOutroStory")
     stageOutroStoryList = []
     if (stageOutroStory != None):
         for story in stageOutroStory.iter("story"):
+            directory = story.find("directory").text
             file = story.find("file").text
-            left = int(story.find("left").text) - winImageX
-            top = int(story.find("top").text) - winImageY
+            left = int(story.find("left").text)
+            top = int(story.find("top").text)
             width = int(story.find("width").text)
             height = int(story.find("height").text)
-            stageOutroStoryList.append(IntroAndOutroStory(file, left, top, width, height))
+            stageOutroStoryList.append(IntroAndOutroStory(directory, file, left, top, width, height))
 
     # Music file
     musicFile = root.find("musicFile").text
@@ -328,8 +330,11 @@ class ScaleAndPlacementClass:
         self.y = y
 
 class IntroAndOutroStory:
-    def __init__(self, file, left, top, width, height):
-        self.file = file
+    def __init__(self, directory, file, left, top, width, height):
+        if directory == " ":
+            self.file = file
+        else:
+            self.file = os.path.join(directory, file)
         self.left = left
         self.top = top
         self.width = width
