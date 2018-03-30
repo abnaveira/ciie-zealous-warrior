@@ -86,7 +86,7 @@ class Spawn:
         elif name == 'BarrelSkeleton':
             return BarrelSkeleton()
         elif name == 'CheetahSkeleton':
-            return CheetahSkeleton
+            return CheetahSkeleton()
         elif name == 'Zebesian':
             return Zebesian()
         elif name == 'MeltyZombie':

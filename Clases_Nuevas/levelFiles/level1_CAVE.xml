@@ -451,7 +451,6 @@
     <!--List of enemies of this level-->
     <enemies>
         <enemy>Skeleton</enemy>
-        <enemy>MeltyZombie</enemy>
         <enemy>Imp</enemy>
     </enemies>
 
