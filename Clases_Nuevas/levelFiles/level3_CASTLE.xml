@@ -309,7 +309,7 @@
     <enemies>
         <!--<enemy>Zombie</enemy>-->
         <enemy>BarrelSkeleton</enemy>
-        <enemy>CheetahSkeleton</enemy>
+        <enemy>AxeKnight</enemy>
         <enemy>Zebesian</enemy>
         <enemy>MeltyZombie</enemy>
     </enemies>
