@@ -12,13 +12,15 @@ FPS = 60
 
 class Director():
 
-    def __init__(self):
+    def __init__(self, soundEffects):
         # Scene stack
         self.stack = []
         # Flag that indicates when to leave pygame scene
         self.leave_scene_pygame = False
         # Flag for music play and stop, here to ensure it stays across levels
         self.musicMuted = False
+        # Sound effects class
+        self.soundEffects = soundEffects
 
     def loopPygame(self, scene):
 
@@ -125,4 +127,4 @@ class Director():
 
     def addPhase(self, levelFile):
         self.stopScene()
-        self.stack.append(PhaseScene(self, levelFile))
+        self.stack.append(PhaseScene(self, levelFile, self.soundEffects))

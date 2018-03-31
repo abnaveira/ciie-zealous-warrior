@@ -303,6 +303,8 @@ class PhaseScene(PygameScene):
                 if not self.director.musicMuted:
                     # Stop music
                     pygame.mixer.music.stop()
+                    # Stop sound effects
+                    pygame.mixer.pause()
                     # Reverse the flag
                     self.director.musicMuted = True
                     self.lastTimeMuted = pyTime.time()
@@ -310,6 +312,8 @@ class PhaseScene(PygameScene):
                 else:
                     # Play music indefinetely until method stop is called
                     pygame.mixer.music.play(-1)
+                    # Resume sound effects
+                    pygame.mixer.unpause()
                     # Reverse the flag
                     self.director.musicMuted = False
                     self.lastTimeMuted = pyTime.time()
