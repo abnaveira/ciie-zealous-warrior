@@ -117,7 +117,7 @@ BOSS_ATTACK_DELAY   = 3000
 BOSS_FIREBALL_DELAY = 5000
 BOSS_CHARGE_DELAY   = 8500
 BOSS_CHARGE_METER   = 600
-BOSS_STUN_DELAY     = 600
+BOSS_STUN_DELAY     = 200
 BOSS_BASE_HEALTH    = 150
 BOSS_HIT_DMG        = 33
 BOSS_HIT_KB         = (.3, -.2)
@@ -730,7 +730,7 @@ class MeltyZombie(NPC):
         if self.attacking:
             self.attacking = False
             self.attackTime = self.attackDelay
-            spriteStructure.projectileGroup.add(MeltyGoo((self.position[0],self.position[1] + 22), self.looking))
+            spriteStructure.projectileGroup.add(MeltyGoo((self.position[0],self.position[1]), self.looking))
         elif self.attackTime > 0:
             self.attackTime -= time
         NPC.update(self, spriteStructure, time)
@@ -760,6 +760,9 @@ class Imp(NPC):
             facAngle = 1
             if distx > 0:
                 facAngle = -1
+                self.looking = LEFT
+            else:
+                self.looking = RIGHT
             self.direction = (facAngle * self.runSpeed*math.cos(angle), facAngle * self.runSpeed*math.sin(angle))
         else:
             self.direction = (0,0)
@@ -846,7 +849,7 @@ class Zebesian(NPC):
 # The boss is a giant beast that spawns magic pillars, throws fireballs and charges into the player at high speed
 class Boss(NPC):
     def __init__(self):
-        NPC.__init__(self, 'KingSoma.png', 'coordKingSoma.txt', [16, 1, 2],
+        NPC.__init__(self, 'KingSoma2.png', 'coordKingSoma.txt', [16, 1, 2],
                      BOSS_SPEED, BOSS_JUMP_SPEED, BOSS_ANIM_DELAY)
         # WOW THAT'S A LOT OF COUNTERS
         self.stunDelay = BOSS_STUN_DELAY
@@ -883,7 +886,7 @@ class Boss(NPC):
     # This stun function prevents the boss from being juggled
     def stun(self, speed, damage):
         speedx, speedy = speed
-        NPC.stun(self, (speedx*0.2, speedy*0.4), damage)
+        NPC.stun(self, (speedx*0.2, speedy*0.2), damage)
 
 
     def move_cpu(self, spriteStructure):
@@ -949,6 +952,7 @@ class Boss(NPC):
         if self.charging:
             #print("*charges*")
             self.chargeMeter -= time
+            self.invulTime = self.chargeMeter
             self.chargeTime = self.chargeDelay
         else:
             self.looking = directionP
