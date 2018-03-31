@@ -216,7 +216,8 @@ class PhaseScene(PygameScene):
                             flag = flagList.pop()
                             # We set the Banner in its position
                             xPosition = (flag.rect.left+flag.rect.right)/2
-                            bannerSprite = Banner((xPosition,flag.rect.bottom))
+                            bannerSprite = Banner()
+                            bannerSprite.setPosition((xPosition,flag.rect.bottom))
                             self.bannerSpriteGroup.add(bannerSprite)
                             # We destroy enemies
                             for spawnPoint in iter(self.spawnPoints):
