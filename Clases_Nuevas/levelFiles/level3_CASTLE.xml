@@ -412,6 +412,15 @@
         </story>
     </stageOutroStory>
 
-    <musicFile>hxh-TryYourLuck.mp3</musicFile>
+    <!--Bosses and position if there are bosses in the scene-->
+    <bosses>
+        <boss>
+            <id>Boss</id>
+            <x>1155</x>
+            <y>2106</y>
+        </boss>
+    </bosses>
+
+    <musicFile>HeroAca-YouSayRun.mp3</musicFile>
 
 </level>

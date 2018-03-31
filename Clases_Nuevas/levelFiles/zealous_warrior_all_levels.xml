@@ -2,5 +2,5 @@
 <levels>
     <level>level1_CAVE.xml</level>
     <level>level2_FOREST.xml</level>
-    <!--level>level1Example.xml</level-->
+    <level>level3_CASTLE.xml</level>
 </levels>
