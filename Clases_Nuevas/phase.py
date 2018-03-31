@@ -36,7 +36,7 @@ class PhaseScene(PygameScene):
         self.sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
         platformList, flagArea, realFlagPos,realPlayerPosition, playerX, playerY, spawnPointList, \
             enemyList, bossList, stageInfo,stageIntroStoryList, \
-            stageOutroStoryList, musicFile = loadLevelData(levelFile)
+            stageOutroStoryList, stageDeathStoryList, musicFile = loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, self.sceneryObj.windowWidth, self.sceneryObj.windowHeight)
 
@@ -150,18 +150,20 @@ class PhaseScene(PygameScene):
                                                self.projectilesGroup, None, None, self.potionsGroup, self.soundEffects)
 
         # Creates the HUD elements
-        self.HUD = HUD(self.spriteStructure, stageInfo, stageIntroStoryList, stageOutroStoryList)
+        self.HUD = HUD(self.spriteStructure, stageInfo, stageIntroStoryList, stageOutroStoryList, stageDeathStoryList)
         # This variable controls the update of elements to show the text dialogs
         self.text_finished = False
         # This variable controls the draw of the final text
         self.final = False
         # This variable controls the update of elements to show the final text dialogs
         self.text_final_finished = False
+        # This variable controls the update of elements to show the death text dialogs
+        self.text_death_finished = False
         # Used for the music muting
         self.lastTimeMuted = pyTime.time()
 
     def update(self, time):
-        if not self.final:
+        if not self.final or (not self.player.dead):
             if self.text_finished:
                 if not self.musicLoaded:
                     # Load background music
@@ -273,7 +275,11 @@ class PhaseScene(PygameScene):
         for animation in self.frontAnimations:
             animation.draw(screen)
         # HUD
-        self.HUD.draw(self.final, screen)
+        # If the player is dead draw the boxes for death text
+        if (self.player.dead):
+            self.HUD.drawDeathBoxes(screen)
+        else:
+            self.HUD.draw(self.final, self.flagRaised, screen)
 
     def events(self, events_list):
         # Look in the events
@@ -296,6 +302,13 @@ class PhaseScene(PygameScene):
                 # Abort music playback
                 pygame.mixer.music.stop()
                 self.director.leaveScene()
+
+        if (self.player.dead == True):
+            if not self.text_death_finished:
+                # Updates the dialog box of the HUD if it is necessary
+                self.text_death_finished = self.HUD.changeDeathBox(keysPressed, K_RETURN, K_q)
+                return
+
         # If m key is pressed, mute/unmute
         if keysPressed[K_m]:
             # If it is not muted, mute it

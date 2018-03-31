@@ -371,8 +371,8 @@
     TODO: spawnpoints-->
 
     <stageInfo>
-        <title>Stage 2</title>
-        <description>The Forest</description>
+        <title>Nivel 3</title>
+        <description>El castillo</description>
     </stageInfo>
 
         <stageIntroStory>
@@ -412,6 +412,25 @@
             <height>409</height>
         </story>
     </stageOutroStory>
+
+    <stageDeathStory>
+        <story>
+            <directory>Level3-Castle</directory>
+            <file>outro_lose.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+        <story>
+            <directory>Level3-Castle</directory>
+            <file>outro_lose2.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+    </stageDeathStory>
 
     <!--Bosses and position if there are bosses in the scene-->
     <bosses>
