@@ -314,6 +314,7 @@
         <enemy>AxeKnight</enemy>
         <enemy>Zebesian</enemy>
         <enemy>MeltyZombie</enemy>
+        <enemy>Imp</enemy>
     </enemies>
 
     <!--Enemies Spawn Point-->

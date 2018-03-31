@@ -456,6 +456,7 @@
 
     <!--List of enemies of this level-->
     <enemies>
+        <enemy>Zombie</enemy>
         <enemy>BarrelSkeleton</enemy>
         <enemy>Skeleton</enemy>
         <enemy>Imp</enemy>
