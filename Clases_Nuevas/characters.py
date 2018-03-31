@@ -10,6 +10,7 @@ from mysprite import MySprite
 from projectiles import *
 from resourcesManager import *
 from potionSprites import *
+import pygame
 
 #---------------------------
 #---------Constants---------

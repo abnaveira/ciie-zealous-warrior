@@ -6,7 +6,7 @@ GLOBAL_VOLUME = 0.25
 class SoundEffects:
     def __init__(self):
         # Initialize pygame music player
-        pygame.mixer.pre_init(44100, 16, 8, 4096)
+        pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=4096)
         pygame.mixer.init()
 
         # List with sounds, to adjust volume of each one
@@ -15,7 +15,7 @@ class SoundEffects:
         # Directory containing the sounds
         musicDirectory = "musicAndSounds"
 
-        directory = os.path.join(musicDirectory, "sword_slash.mp3")
+        directory = os.path.join(musicDirectory, "sword_slash.ogg")
         self.swordSlashSound = pygame.mixer.Sound(directory)
         self.soundList.append(self.swordSlashSound)
 
