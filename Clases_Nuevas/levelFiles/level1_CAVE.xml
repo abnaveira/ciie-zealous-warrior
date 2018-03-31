@@ -8,20 +8,23 @@
             <layer>
                 <file>Level1-Cave/cave.background.1.png</file>
                 <!--ParallaxValue sets the image to move slower. if the value is 0 it moves normally-->
-                <parallaxValue>0.5</parallaxValue>
+                <parallaxValueX>0.5</parallaxValueX>
+                <parallaxValueY>0.5</parallaxValueY>
                 <!--Scaling of the specific image-->
                 <scaleX>3000</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
             <layer>
                 <file>Level1-Cave/cave.background.2.png</file>
-                <parallaxValue>0</parallaxValue>
+                <parallaxValueX>0</parallaxValueX>
+                <parallaxValueY>0</parallaxValueY>
                 <scaleX>3000</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
             <layer>
                 <file>Level1-Cave/cave.background.3.png</file>
-                <parallaxValue>0</parallaxValue>
+                <parallaxValueX>0</parallaxValueX>
+                <parallaxValueY>0</parallaxValueY>
                 <scaleX>3000</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
@@ -30,19 +33,22 @@
         <foreground>
             <layer>
                 <file>Level1-Cave/cave.foreground.1.png</file>
-                <parallaxValue>0</parallaxValue>
+                <parallaxValueX>0</parallaxValueX>
+                <parallaxValueY>0</parallaxValueY>
                 <scaleX>3000</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
             <layer>
                 <file>Level1-Cave/cave.foreground.2.png</file>
-                <parallaxValue>0</parallaxValue>
+                <parallaxValueX>0</parallaxValueX>
+                <parallaxValueY>0</parallaxValueY>
                 <scaleX>3000</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
             <layer>
                 <file>Level1-Cave/cave.foreground.3.png</file>
-                <parallaxValue>0</parallaxValue>
+                <parallaxValueX>0</parallaxValueX>
+                <parallaxValueY>0</parallaxValueY>
                 <scaleX>3000</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
@@ -444,7 +450,7 @@
 
     <!--Player's starting position in the map-->
     <playerPosition>
-        <x>50</x>
+        <x>800</x>
         <y>854</y>
     </playerPosition>
 

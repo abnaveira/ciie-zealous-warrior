@@ -12,9 +12,9 @@ class Platform(MySprite):
         # The position will be set as the size of the platform
         self.setPosition((self.rect.left, self.rect.bottom))
         # The platforms are invisible
-        #self.image = pygame.Surface((0, 0))
-        self.image = pygame.Surface((rectangle.width, rectangle.height))
-        self.image.fill((255,0,0))
+        self.image = pygame.Surface((0, 0))
+        #self.image = pygame.Surface((rectangle.width, rectangle.height))
+        #self.image.fill((255,0,0))
 
 # -------------------------------------------------
 # Class created for the flag
@@ -54,7 +54,7 @@ class Background:
         self.layers=[]
         self.left = sceneryObj.subImagePosition[0]
         self.bottom = sceneryObj.subImagePosition[1] + sceneryObj.windowHeight
-        for (file,parallaxValue,scaleX,scaleY) in sceneryObj.backgroundLayers:
+        for (file,parallaxValueX,parallaxValueY,scaleX,scaleY) in sceneryObj.backgroundLayers:
             image = ResourcesManager.loadImageWithAlpha(file)
             if not (scaleX == 0 or scaleY == 0):
                 image = pygame.transform.scale(image, (scaleX,scaleY))
@@ -62,18 +62,18 @@ class Background:
             rectSubimage = pygame.Rect(0,0,sceneryObj.windowWidth,sceneryObj.windowHeight)
             rectSubimage.left = self.left
             rectSubimage.bottom = self.bottom
-            self.layers.append((image,parallaxValue,rect,rectSubimage))
+            self.layers.append((image,parallaxValueX,parallaxValueY,rect,rectSubimage))
 
         self.rect = pygame.Rect((0,0),(sceneryObj.scaleX,sceneryObj.scaleY))
 
     def update(self, scroll):
-        for (_,parallaxValue,_,rectSubimage) in self.layers:
+        for (_,parallaxValueX,parallaxValueY,_,rectSubimage) in self.layers:
 
-            rectSubimage.left = self.left + scroll[0]-(scroll[0]*parallaxValue)
-            rectSubimage.bottom = self.bottom - (scroll[1]-(scroll[1]*parallaxValue))
+            rectSubimage.left = self.left + scroll[0]-(scroll[0]*parallaxValueX)
+            rectSubimage.bottom = self.bottom - (scroll[1]-(scroll[1]*parallaxValueY))
 
     def draw(self, screen):
-        for(image,_,rect,rectSubimage) in self.layers:
+        for(image,_,_,rect,rectSubimage) in self.layers:
             screen.blit(image, rect, rectSubimage)
 
 class Foreground:
@@ -81,7 +81,7 @@ class Foreground:
         self.layers=[]
         self.left = sceneryObj.subImagePosition[0]
         self.bottom = sceneryObj.subImagePosition[1] + sceneryObj.windowHeight
-        for (file,parallaxValue,scaleX,scaleY) in sceneryObj.foregroundLayers:
+        for (file,parallaxValueX,parallaxValueY,scaleX,scaleY) in sceneryObj.foregroundLayers:
             image = ResourcesManager.loadImageWithAlpha(file)
             if not (scaleX == 0 or scaleY == 0):
                 image = pygame.transform.scale(image, (scaleX,scaleY))
@@ -89,17 +89,17 @@ class Foreground:
             rectSubimage = pygame.Rect(0,0,sceneryObj.windowWidth,sceneryObj.windowHeight)
             rectSubimage.left = self.left
             rectSubimage.bottom = self.bottom
-            self.layers.append((image,parallaxValue,rect,rectSubimage))
+            self.layers.append((image,parallaxValueX,parallaxValueY,rect,rectSubimage))
 
         self.rect = pygame.Rect((0,0),(sceneryObj.scaleX,sceneryObj.scaleY))
 
     def update(self, scroll):
-        for (_,parallaxValue,_,rectSubimage) in self.layers:
-            rectSubimage.left = self.left + scroll[0] - (scroll[0] * parallaxValue)
-            rectSubimage.bottom = self.bottom - (scroll[1] - (scroll[1] * parallaxValue))
+        for (_,parallaxValueX,parallaxValueY,_,rectSubimage) in self.layers:
+            rectSubimage.left = self.left + scroll[0] - (scroll[0] * parallaxValueX)
+            rectSubimage.bottom = self.bottom - (scroll[1] - (scroll[1] * parallaxValueY))
 
     def draw(self, screen):
-        for(image,_,rect,rectSubimage) in self.layers:
+        for(image,_,_,rect,rectSubimage) in self.layers:
             screen.blit(image, rect, rectSubimage)
 
 

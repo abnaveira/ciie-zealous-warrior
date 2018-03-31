@@ -6,14 +6,52 @@
         <!--file>cave.png</file-->
         <background>
             <layer>
-                <file>Level2-Forest/level2Forest.png</file>
+                <file>Level2-Forest/forest.background.1.png</file>
                 <!--ParallaxValue sets the image to move slower. if the value is 0 it moves normally-->
-                <parallaxValue>0</parallaxValue>
+                <parallaxValueX>0.5</parallaxValueX>
+                <parallaxValueY>0.5</parallaxValueY>
+                <!--Scaling of the specific image-->
+                <scaleX>4500</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+            <layer>
+                <file>Level2-Forest/forest.background.2.png</file>
+                <!--ParallaxValue sets the image to move slower. if the value is 0 it moves normally-->
+                <parallaxValueX>0</parallaxValueX>
+                <parallaxValueY>0</parallaxValueY>
+                <!--Scaling of the specific image-->
+                <scaleX>4500</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+            <layer>
+                <file>Level2-Forest/forest.background.3.png</file>
+                <!--ParallaxValue sets the image to move slower. if the value is 0 it moves normally-->
+                <parallaxValueX>0</parallaxValueX>
+                <parallaxValueY>0</parallaxValueY>
                 <!--Scaling of the specific image-->
                 <scaleX>4500</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
         </background>
+
+        <foreground>
+            <layer>
+                <file>Level2-Forest/forest.foreground.1.png</file>
+                <parallaxValueX>0</parallaxValueX>
+                <parallaxValueY>0</parallaxValueY>
+                <scaleX>3000</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+            <layer>
+                <file>Level2-Forest/forest.foreground.2.png</file>
+                <parallaxValueX>0</parallaxValueX>
+                <parallaxValueY>0</parallaxValueY>
+                <scaleX>3000</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
+
+        </foreground>
+
 
         <!--Total size of the image-->
         <scaleX>4500</scaleX>
@@ -225,7 +263,7 @@
 
     <!--Player's starting position in the map-->
     <playerPosition>
-        <x>50</x>
+        <x>4000</x>
         <y>953</y>
     </playerPosition>
 
