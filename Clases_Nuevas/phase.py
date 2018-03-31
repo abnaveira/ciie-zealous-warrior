@@ -52,7 +52,7 @@ class PhaseScene(PygameScene):
         self.backgroundColor = BackgroundColor(self.sceneryObj)
 
         # Creates the player and adds it to the group of players
-        self.player = Player(self.soundEffects)
+        self.player = Player()
         self.playersGroup = pygame.sprite.Group(self.player)
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
@@ -147,7 +147,7 @@ class PhaseScene(PygameScene):
                                            self.sceneryObj.windowWidth, self.background,self.foreground)
 
         self.spriteStructure = SpriteStructure(self, self.player, self.enemiesGroup, self.platformsGroup, \
-                                               self.projectilesGroup, None, None, self.potionsGroup)
+                                               self.projectilesGroup, None, None, self.potionsGroup, self.soundEffects)
 
         # Creates the HUD elements
         self.HUD = HUD(self.spriteStructure, stageInfo, stageIntroStoryList, stageOutroStoryList)

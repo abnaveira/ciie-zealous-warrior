@@ -401,14 +401,12 @@ class Character(MySprite):
 #********************
 
 class Player(Character):
-    def __init__(self, soundEffects):
+    def __init__(self):
         Character.__init__(self, 'Arthur.png', 'coordArthur.txt',
                     [1, 7, 4], PLAYER_SPEED, PLAYER_JUMP_SPEED, PLAYER_ANIM_DELAY)
         self.stunDelay = PLAYER_STUN_DELAY
         self.invulDelay = PLAYER_INVUL_DELAY
         self.HP = PLAYER_BASE_HEALTH
-        # Class with the sound effects
-        self.soundEffects = soundEffects
 
     # Defines movement intention
     # Whatever the player presses on their keyboard will set an intention that will
@@ -438,7 +436,7 @@ class Player(Character):
         if self.attacking:
             self.attacking = False
             # Play the sword slash sound
-            self.soundEffects.swordSlashSound.play()
+            spriteStructure.soundEffects.swordSlashSound.play()
 
             self.attackTime = PLAYER_ATTACK_DELAY
             # Otherwise character attacks from its back
