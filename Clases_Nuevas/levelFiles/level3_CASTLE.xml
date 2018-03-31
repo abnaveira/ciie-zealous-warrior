@@ -299,15 +299,6 @@
         </platform>
     </platforms>
 
-    <!--Rectangle to put the flag, to change level-->
-    <!--TODO: put flag in good place-->
-    <flag>
-       <left>2350</left>
-        <top>863</top>
-        <width>100</width>
-        <height>90</height>
-    </flag>
-
     <!--Player's starting position in the map-->
     <playerPosition>
         <x>2800</x>
