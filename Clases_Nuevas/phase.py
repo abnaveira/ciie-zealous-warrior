@@ -183,6 +183,32 @@ class PhaseScene(PygameScene):
                 # ---------------------------------------------------
                 # Flag logic
 
+                # If the flag has already been raised
+                if self.flagRaised:
+                    # If a minute has passed since the flag has been raised
+                    if pyTime.time() > self.flagSpawnEnd:
+                        # If there are no more enemies on the level
+                        if len(self.enemiesGroup.sprites()) == 0:
+                            # This changes scene
+                            self.final = True
+                    else:
+                        millis = int(round(pyTime.time() * 1000))
+                        timePassed = millis - self.lastSpawn
+                        if timePassed >= 3000:
+                            numPoints = []
+                            for spawnPoint in iter(self.spawnPoints):
+                                distx = spawnPoint.x - self.player.position[0]
+                                disty = spawnPoint.y - self.player.position[1]
+                                if (distx * distx + disty * disty) > 250000:
+                                    numPoints.append(spawnPoint.id)
+                            point = random.randint(0, len(numPoints) - 1)
+                            for spawnPoint in iter(self.spawnPoints):
+                                spawnPoint.spawnAfterFlag(self, self.player, numPoints[point])
+                            self.lastSpawn = millis
+                else:
+                    for spawnPoint in iter(self.spawnPoints):
+                        spawnPoint.spawnBeforeFlag(self, self.player)
+
                 # If there is flag
                 if self.thereIsFlag:
                     # If the flag hasn't been raised
@@ -201,32 +227,6 @@ class PhaseScene(PygameScene):
                             self.enemiesGroup.empty()
                             # Time a minute from now, when the spawning has ended
                             self.flagSpawnEnd = pyTime.time() + 60
-
-                    # If the flag has already been raised
-                    if self.flagRaised:
-                        # If a minute has passed since the flag has been raised
-                        if pyTime.time() > self.flagSpawnEnd:
-                            # If there are no more enemies on the level
-                            if len(self.enemiesGroup.sprites()) == 0:
-                                # This changes scene
-                                self.final = True
-                        else:
-                            millis = int(round(pyTime.time() * 1000))
-                            timePassed = millis - self.lastSpawn
-                            if timePassed >= 3000:
-                                numPoints = []
-                                for spawnPoint in iter(self.spawnPoints):
-                                    distx = spawnPoint.x - self.player.position[0]
-                                    disty = spawnPoint.y - self.player.position[1]
-                                    if (distx * distx + disty * disty) > 250000:
-                                        numPoints.append(spawnPoint.id)
-                                point = random.randint(0, len(numPoints) - 1)
-                                for spawnPoint in iter(self.spawnPoints):
-                                    spawnPoint.spawnAfterFlag(self, self.player, numPoints[point])
-                                self.lastSpawn = millis
-                    else:
-                        for spawnPoint in iter(self.spawnPoints):
-                            spawnPoint.spawnBeforeFlag(self, self.player)
 
                 # --------------------------------------------------
 
@@ -338,7 +338,6 @@ class PhaseScene(PygameScene):
     # If the player is contained within the flag rectangle of influence
     # return true
     def checkFlag (self):
-        (speedx, speedy) = self.player.speed
         flagList = self.flagGroup.sprites()
         flag = flagList.pop()
         return flag.rect.colliderect(self.player.rect)
