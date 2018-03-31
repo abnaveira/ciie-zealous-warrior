@@ -104,6 +104,7 @@ def loadLevelData(level):
     (winImageX, winImageY) = subImagePosition
 
     # Player position -> recalculated
+    realPlayerPosition = (playerX,playerY)
     playerX = playerX - winImageX
     playerY = playerY - winImageY
 
@@ -273,7 +274,7 @@ def loadLevelData(level):
     musicFile = os.path.join("musicAndSounds", musicFile)
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
+           platformList, flagArea, realFlagXPos, realPlayerPosition, playerX, playerY, spawnPointList, \
            enemyList, bossList, stageInfo, stageIntroStoryList, \
            stageOutroStoryList, musicFile
 
@@ -344,6 +345,7 @@ class IntroAndOutroStory:
         self.width = width
         self.height = height
 
+# Calculates initial window screen using the player position
 def calculateInitialWindow(posx, posy, winHeight, winWidth, imHeight, imWidth):
     # Left distance
     distanceX1 = posx

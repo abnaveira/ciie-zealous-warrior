@@ -9,12 +9,17 @@ from projectiles import *
 class scrollControl:
 
     # Input:
-    # scroll: Value of the initial scroll, both "x" and "y" will be positive
+    # subImagePosition: Position of the window screen in the background
     # minX, maxX, minY, maxY: Window edges for the scroll
     # wHeight, wWidth: height and width of the scene screen
-    # scenery: Class that contains the scenary image
-    def __init__(self, scroll, minX, maxX, minY, maxY, wHeight, wWidth, background, foreground):
-        self.scroll = scroll
+    # background, foreground: Classes that contain the scenery of the image
+    def __init__(self, subImagePosition, minX, maxX, minY, maxY, wHeight, wWidth, background, foreground):
+        # Position of the initial window screen
+        (posX, posY) = subImagePosition
+        # Calculates left and top limits for the scroll with the window screen and background size
+        self.limits = (posX * -1, (background.rect.bottom - (posY + wHeight) ) * -1)
+        self.scroll = (0,0)
+
         self.minX = minX
         self.maxX = maxX
         self.minY = minY
@@ -36,8 +41,8 @@ class scrollControl:
             displacement = self.minX - player.rect.left
 
             # If there is no more scenary in the left
-            if self.scroll[0] <= 0:
-                self.scroll = (0, self.scroll[1])
+            if self.scroll[0] <= self.limits[0]:
+                self.scroll = (self.limits[0], self.scroll[1])
                 return False
 
             # If it is possible to scroll left
@@ -50,8 +55,8 @@ class scrollControl:
             displacement = player.rect.right - self.maxX
 
             # If there is no more scenary in the right
-            if self.scroll[0] + self.wWidth >= self.background.rect.right:
-                self.scroll = (self.background.rect.right - self.wWidth, self.scroll[1])
+            if self.scroll[0] + self.wWidth - self.limits[0] >= self.background.rect.right:
+                self.scroll = (self.background.rect.right - self.wWidth + self.limits[0], self.scroll[1])
                 return False
 
             # If it is possible to scroll right
@@ -74,8 +79,8 @@ class scrollControl:
             displacement = self.minY - player.rect.top
 
             # If there is no more scenary on the top
-            if self.scroll[1] + self.wHeight >= self.background.rect.bottom:
-                self.scroll = (self.scroll[0], self.background.rect.bottom - self.wHeight)
+            if self.scroll[1] + self.wHeight - self.limits[1] >= self.background.rect.bottom:
+                self.scroll = (self.scroll[0], self.background.rect.bottom - self.wHeight + self.limits[1])
                 return False
 
             # If it is possible to scroll top
@@ -88,8 +93,8 @@ class scrollControl:
             displacement = player.rect.bottom - self.maxY
 
             # If there is no more scenary on the bottom
-            if self.scroll[1] <= 0:
-                self.scroll = (self.scroll[0], 0)
+            if self.scroll[1] <= self.limits[1]:
+                self.scroll = (self.scroll[0], self.limits[1])
                 return False
 
             # If it is possible to scroll bottom
@@ -105,7 +110,6 @@ class scrollControl:
     # sprites: The group of all the sprites that have to be updated
     # animationsList: The group of all the animations that have to be updated
     def updateScroll(self, player, spritesList, frontAnimations, backAnimations):
-
         updatedScrollX = self.updateScrollX(player)
         updatedScrollY = self.updateScrollY(player)
         if updatedScrollX or updatedScrollY:

@@ -52,22 +52,25 @@ class BackgroundColor:
 class Background:
     def __init__(self, sceneryObj):
         self.layers=[]
+        self.left = sceneryObj.subImagePosition[0]
+        self.bottom = sceneryObj.subImagePosition[1] + sceneryObj.windowHeight
         for (file,parallaxValue,scaleX,scaleY) in sceneryObj.backgroundLayers:
             image = ResourcesManager.loadImageWithAlpha(file)
-            if scaleX == 0 or scaleY == 0:
+            if not (scaleX == 0 or scaleY == 0):
                 image = pygame.transform.scale(image, (scaleX,scaleY))
             rect = image.get_rect()
             rectSubimage = pygame.Rect(0,0,sceneryObj.windowWidth,sceneryObj.windowHeight)
-            rectSubimage.left = sceneryObj.subImagePosition[0]
-            rectSubimage.bottom = sceneryObj.subImagePosition[1]+sceneryObj.windowHeight
+            rectSubimage.left = self.left
+            rectSubimage.bottom = self.bottom
             self.layers.append((image,parallaxValue,rect,rectSubimage))
 
         self.rect = pygame.Rect((0,0),(sceneryObj.scaleX,sceneryObj.scaleY))
 
     def update(self, scroll):
         for (_,parallaxValue,_,rectSubimage) in self.layers:
-            rectSubimage.left = scroll[0]-(scroll[0]*parallaxValue)
-            rectSubimage.bottom = self.rect.bottom - (scroll[1]-(scroll[1]*parallaxValue))
+
+            rectSubimage.left = self.left + scroll[0]-(scroll[0]*parallaxValue)
+            rectSubimage.bottom = self.bottom - (scroll[1]-(scroll[1]*parallaxValue))
 
     def draw(self, screen):
         for(image,_,rect,rectSubimage) in self.layers:
@@ -76,22 +79,24 @@ class Background:
 class Foreground:
     def __init__(self, sceneryObj):
         self.layers=[]
+        self.left = sceneryObj.subImagePosition[0]
+        self.bottom = sceneryObj.subImagePosition[1] + sceneryObj.windowHeight
         for (file,parallaxValue,scaleX,scaleY) in sceneryObj.foregroundLayers:
             image = ResourcesManager.loadImageWithAlpha(file)
-            if scaleX == 0 or scaleY == 0:
+            if not (scaleX == 0 or scaleY == 0):
                 image = pygame.transform.scale(image, (scaleX,scaleY))
             rect = image.get_rect()
             rectSubimage = pygame.Rect(0,0,sceneryObj.windowWidth,sceneryObj.windowHeight)
-            rectSubimage.left = sceneryObj.subImagePosition[0]
-            rectSubimage.bottom = sceneryObj.subImagePosition[1]+sceneryObj.windowHeight
+            rectSubimage.left = self.left
+            rectSubimage.bottom = self.bottom
             self.layers.append((image,parallaxValue,rect,rectSubimage))
 
         self.rect = pygame.Rect((0,0),(sceneryObj.scaleX,sceneryObj.scaleY))
 
     def update(self, scroll):
         for (_,parallaxValue,_,rectSubimage) in self.layers:
-            rectSubimage.left = scroll[0]-(scroll[0]*parallaxValue)
-            rectSubimage.bottom = self.rect.bottom - (scroll[1]-(scroll[1]*parallaxValue))
+            rectSubimage.left = self.left + scroll[0] - (scroll[0] * parallaxValue)
+            rectSubimage.bottom = self.bottom - (scroll[1] - (scroll[1] * parallaxValue))
 
     def draw(self, screen):
         for(image,_,rect,rectSubimage) in self.layers:

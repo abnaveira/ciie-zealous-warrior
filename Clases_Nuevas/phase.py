@@ -26,7 +26,7 @@ class PhaseScene(PygameScene):
 
         # It reads the file with the level paramethers
         self.sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
-        platformList, flagArea, realFlagXPos, playerX, playerY, spawnPointList, \
+        platformList, flagArea, realFlagXPos, realPlayerPosition, playerX, playerY, spawnPointList, \
             enemyList, bossList, stageInfo,stageIntroStoryList, \
             stageOutroStoryList, musicFile= loadLevelData(levelFile)
 
@@ -43,13 +43,9 @@ class PhaseScene(PygameScene):
         self.foreground=Foreground(self.sceneryObj)
         self.backgroundColor = BackgroundColor(self.sceneryObj)
 
-        # Set scroll to (0,0)
-        self.scroll = (0, 0)
-
         # Creates the player and adds it to the group of players
         self.player = Player()
         self.playersGroup = pygame.sprite.Group(self.player)
-
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
 
@@ -138,7 +134,7 @@ class PhaseScene(PygameScene):
                             self.enemiesGroup, self.projectilesGroup, self.platformsGroup ]
 
         # Creates the class that will control the scroll
-        self.controlScroll = scrollControl(self.scroll, self.sceneryObj.leftMin, self.sceneryObj.windowWidth - self.sceneryObj.leftMin,
+        self.controlScroll = scrollControl(self.sceneryObj.subImagePosition, self.sceneryObj.leftMin, self.sceneryObj.windowWidth - self.sceneryObj.leftMin,
                                            self.sceneryObj.topMin, self.sceneryObj.windowHeight - self.sceneryObj.topMin, self.sceneryObj.windowHeight, \
                                            self.sceneryObj.windowWidth, self.background,self.foreground)
 
