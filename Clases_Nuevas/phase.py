@@ -13,16 +13,18 @@ from HUDElements import *
 from spawn import *
 from menu import DeathMenu
 import time as pyTime
+import soundEffects
 
 # -------------------------------------------------
 # Class for pygame scenes with one player
 
 class PhaseScene(PygameScene):
 
-    def __init__(self, director, levelFile):
+    def __init__(self, director, levelFile, soundEffects):
         # Save the director to call the end of the phase when necessary
         self.director = director
         self.levelFile = levelFile
+        self.soundEffects = soundEffects
 
         # It reads the file with the level paramethers
         self.sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
@@ -44,7 +46,7 @@ class PhaseScene(PygameScene):
         self.backgroundColor = BackgroundColor(self.sceneryObj)
 
         # Creates the player and adds it to the group of players
-        self.player = Player()
+        self.player = Player(self.soundEffects)
         self.playersGroup = pygame.sprite.Group(self.player)
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
@@ -162,7 +164,7 @@ class PhaseScene(PygameScene):
                     if not self.director.musicMuted:
                         # Play it indefinetely until method stop is called
                         pygame.mixer.music.play(-1)
-                        pygame.mixer.music.set_volume(0.25)
+                        pygame.mixer.music.set_volume(soundEffects.GLOBAL_VOLUME)
                     # Flag is now true
                     self.musicLoaded = True
 
