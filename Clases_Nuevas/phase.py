@@ -26,9 +26,9 @@ class PhaseScene(PygameScene):
 
         # It reads the file with the level paramethers
         self.sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
-        platformList, flagArea, realFlagXPos, realPlayerPosition, playerX, playerY, spawnPointList, \
+        platformList, flagArea,realPlayerPosition, playerX, playerY, spawnPointList, \
             enemyList, bossList, stageInfo,stageIntroStoryList, \
-            stageOutroStoryList, musicFile= loadLevelData(levelFile)
+            stageOutroStoryList, musicFile = loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, self.sceneryObj.windowWidth, self.sceneryObj.windowHeight)
 
@@ -91,7 +91,6 @@ class PhaseScene(PygameScene):
         self.flagRaised = False
         self.flagGroup = pygame.sprite.Group()
         self.bannerSpriteGroup = pygame.sprite.Group()
-        self.realFlagXPos = realFlagXPos
         # To use as a timer when the flag is raised
         self.flagSpawnEnd = 0
         # If there is no Flag, none will be added
@@ -216,7 +215,8 @@ class PhaseScene(PygameScene):
                             flagList = self.flagGroup.sprites()
                             flag = flagList.pop()
                             # We set the Banner in its position
-                            bannerSprite = Banner((self.realFlagXPos,flag.rect.bottom))
+                            xPosition = (flag.rect.left+flag.rect.right)/2
+                            bannerSprite = Banner((xPosition,flag.rect.bottom))
                             self.bannerSpriteGroup.add(bannerSprite)
                             # We destroy enemies
                             for spawnPoint in iter(self.spawnPoints):
