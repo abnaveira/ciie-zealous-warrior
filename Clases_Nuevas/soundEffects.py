@@ -37,6 +37,15 @@ class SoundEffects:
         self.thumpSound = pygame.mixer.Sound(directory)
         self.soundList.append(self.thumpSound)
 
+        directory = os.path.join(musicDirectory, "wilhelm_scream.ogg")
+        self.wilhelmScreamSound = pygame.mixer.Sound(directory)
+        self.soundList.append(self.wilhelmScreamSound)
+
+        directory = os.path.join(musicDirectory, "banner_stump.ogg")
+        self.bannerStumpSound = pygame.mixer.Sound(directory)
+        self.soundList.append(self.bannerStumpSound)
+
+
         # Set default volume for every sound in the list
         for sound in self.soundList:
             sound.set_volume(self.globalVolume)
