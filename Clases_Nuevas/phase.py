@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from Clases_Nuevas.SpriteStructure import SpriteStructure
+from Clases_Nuevas.spawn2 import Spawn2
 from scene import PygameScene
 from xmlLevelParser import *
 from characters import *
@@ -17,12 +18,17 @@ import time as pyTime
 # -------------------------------------------------
 # Class for pygame scenes with one player
 
+TIME_SPAWN_NOFLAG = 5000
+TIME_SPAWN_FLAG   = 3000
+ENEMY_MAXIMUM     = 60
+
 class PhaseScene(PygameScene):
 
     def __init__(self, director, levelFile):
         # Save the director to call the end of the phase when necessary
         self.director = director
         self.levelFile = levelFile
+        self.spawnTimer = 0
 
         # It reads the file with the level paramethers
         self.sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
@@ -68,7 +74,7 @@ class PhaseScene(PygameScene):
         # Initializes spawn points list
         self.spawnPoints = []
         for spawnPoint in spawnPointList:
-            self.spawnPoints.append(Spawn(spawnPoint, enemyList))
+            self.spawnPoints.append(Spawn2(spawnPoint, enemyList))
 
         self.lastSpawn = 0
 
@@ -177,11 +183,10 @@ class PhaseScene(PygameScene):
                 self.potionsGroup.update(self.player, self.platformsGroup, time)
 
                 # ---------------------------------------------------
-                # Flag logic
-
+                # Flag and spawn logic
+                self.spawnTimer += time
                 # If there is flag
                 if self.thereIsFlag:
-
                     # If the flag has already been raised
                     if self.flagRaised:
                         # If a minute has passed since the flag has been raised
@@ -190,26 +195,13 @@ class PhaseScene(PygameScene):
                             if len(self.enemiesGroup.sprites()) == 0:
                                 # This changes scene
                                 self.final = True
-                        else:
-                            millis = int(round(pyTime.time() * 1000))
-                            timePassed = millis - self.lastSpawn
-                            if timePassed >= 3000:
-                                numPoints = []
-                                for spawnPoint in iter(self.spawnPoints):
-                                    distx = spawnPoint.x - self.player.position[0]
-                                    disty = spawnPoint.y - self.player.position[1]
-                                    if (distx * distx + disty * disty) > 250000:
-                                        numPoints.append(spawnPoint.id)
-                                point = random.randint(0, len(numPoints) - 1)
-                                for spawnPoint in iter(self.spawnPoints):
-                                    spawnPoint.spawnAfterFlag(self, self.player, numPoints[point])
-                                self.lastSpawn = millis
+                        elif self.spawnTimer >= TIME_SPAWN_FLAG:
+                            self.spawnTimer = 0
+                            self.spawnEnemyValidated()
                     else:
-                        for spawnPoint in iter(self.spawnPoints):
-                            spawnPoint.spawnBeforeFlag(self, self.player)
-
-                    # If the flag hasn't been raised
-                    if not self.flagRaised:
+                        if self.spawnTimer >= TIME_SPAWN_NOFLAG:
+                            self.spawnTimer = 0
+                            self.spawnEnemyValidated()
                         self.flagRaised = PhaseScene.checkFlag(self)
                         # The FIRST time the flag is raised
                         if self.flagRaised:
@@ -222,15 +214,13 @@ class PhaseScene(PygameScene):
                             bannerSprite.setScreenPosition(self.player.scroll)
                             self.bannerSpriteGroup.add(bannerSprite)
                             # We destroy enemies
-                            for spawnPoint in iter(self.spawnPoints):
-                                spawnPoint.clear()
                             self.enemiesGroup.empty()
                             # Time a minute from now, when the spawning has ended
                             self.flagSpawnEnd = pyTime.time() + 60
 
-                else:
-                    for spawnPoint in iter(self.spawnPoints):
-                        spawnPoint.spawnBeforeFlag(self, self.player)
+                elif self.spawnTimer > TIME_SPAWN_NOFLAG:
+                    self.spawnTimer = 0
+                    self.spawnEnemyValidated()
 
                 # --------------------------------------------------
 
@@ -345,3 +335,15 @@ class PhaseScene(PygameScene):
         flagList = self.flagGroup.sprites()
         flag = flagList.pop()
         return flag.rect.colliderect(self.player.rect)
+
+
+    def spawnEnemyValidated(self):
+        if len(self.enemiesGroup.sprites()) < ENEMY_MAXIMUM:
+            notFound = True
+            point = None
+            while (notFound):
+                index = random.randint(0, len(self.spawnPoints) - 1)
+                point = self.spawnPoints[index]
+                if point.isValid(self.spriteStructure):
+                    notFound = False
+            point.spawnEnemy(self.spriteStructure)

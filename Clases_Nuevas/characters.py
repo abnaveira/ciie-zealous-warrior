@@ -103,7 +103,7 @@ IMP_HIT_KB       = (.15, -.25)
 
 ZEBESIAN_SPEED        = 0.12
 ZEBESIAN_JUMP_SPEED   = 0.3
-ZEBESIAN_ANIM_DELAY   = 9
+ZEBESIAN_ANIM_DELAY   = 7
 ZEBESIAN_ATTACK_DELAY = 2000
 ZEBESIAN_STUN_DELAY   = 1500
 ZEBESIAN_BASE_HEALTH  = 25
@@ -754,7 +754,7 @@ class Imp(NPC):
         distx = self.position[0] - spriteStructure.player.position[0]
         disty = self.position[1] - spriteStructure.player.position[1]
         #If total distance from player is less than 500
-        if(distx*distx + disty*disty) < 250000:
+        if(distx*distx + disty*disty) < 810000:
             #Set direction towards player
             angle = math.atan(disty/distx)
             facAngle = 1
