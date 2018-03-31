@@ -6,7 +6,7 @@
         <!--file>cave.png</file-->
         <background>
             <layer>
-                <file>Level3-Castle/castle.background.1.mirror.png</file>
+                <file>Level3-Castle/castle.background.1.png</file>
                 <!--ParallaxValue sets the image to move slower. if the value is 0 it moves normally-->
                 <parallaxValueX>1</parallaxValueX>
                 <parallaxValueY>0.05</parallaxValueY>
@@ -63,7 +63,7 @@
         </platform>
         <platform>
             <id>SueloP2</id>
-            <left>2040</left>
+            <left>2045</left>
             <top>2402</top>
             <width>940</width>
             <height>29</height>
@@ -77,7 +77,7 @@
         </platform>
         <platform>
             <id>SueloP4</id>
-            <left>2040</left>
+            <left>2045</left>
             <top>1831</top>
             <width>940</width>
             <height>29</height>
@@ -91,7 +91,7 @@
         </platform>
         <platform>
             <id>SueloP6</id>
-            <left>2040</left>
+            <left>2045</left>
             <top>1261</top>
             <width>940</width>
             <height>29</height>
