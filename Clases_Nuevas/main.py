@@ -10,16 +10,16 @@ from soundEffects import *
 
 if __name__ == '__main__':
 
+    # Class for soundEffects control
+    soundEffects = SoundEffects()
+
     # Create the director
-    director = Director()
+    director = Director(soundEffects)
 
     # Get level files from an xml
     levelFilesList = getAllLevelFiles("zealous_warrior_all_levels.xml")
     # Reverse the order of the levels (to put in the stack)
     levelFilesList.reverse()
-
-    #
-    soundEffects = SoundEffects()
 
     for level in levelFilesList:
         # Create the scene for the level

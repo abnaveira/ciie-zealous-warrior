@@ -19,9 +19,11 @@ class SoundEffects:
         self.swordSlashSound = pygame.mixer.Sound(directory)
         self.soundList.append(self.swordSlashSound)
 
+        # Set default volume for every sound in the list
         for sound in self.soundList:
             sound.set_volume(GLOBAL_VOLUME)
 
+    # Set volume for every sound on the list
     def setEffectsVolume(self, newVolume):
         for sound in self.soundList:
             sound.set_volume(newVolume)
