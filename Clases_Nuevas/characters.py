@@ -576,6 +576,9 @@ class BarrelSkeleton(NPC):
 
     def update(self, spriteStructure, time):
         if self.attacking:
+            # Play the whoosh sound
+            spriteStructure.soundEffects.whooshSound.play()
+
             unBarreledOne = UnBarreledSkeleton()
             unBarreledOne.setPosition(self.position)
             spriteStructure.enemyGroup.add(unBarreledOne)
@@ -688,6 +691,9 @@ class AxeKnight(NPC):
     def update(self, spriteStructure, time):
         if self.attacking:
             self.attacking = False
+            # Play the metal clash sound
+            spriteStructure.soundEffects.metalClashSound.play()
+
             self.attackTime = self.attackDelay
             spriteStructure.projectileGroup.add(axeProj(self.position, self.looking))
         elif self.attackTime > 0:
@@ -846,6 +852,9 @@ class Zebesian(NPC):
     def update(self, spriteStructure, time):
         if self.attacking:
             self.attacking = False
+            # Play the laser sound
+            spriteStructure.soundEffects.laserSound.play()
+
             self.attackTime = self.attackDelay
             spriteStructure.projectileGroup.add(ZebesianBeam((self.position[0], self.position[1] - 25), self.looking))
         elif self.attackTime > 0:

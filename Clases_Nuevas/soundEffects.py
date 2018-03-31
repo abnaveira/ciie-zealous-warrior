@@ -21,6 +21,18 @@ class SoundEffects:
         self.swordSlashSound = pygame.mixer.Sound(directory)
         self.soundList.append(self.swordSlashSound)
 
+        directory = os.path.join(musicDirectory, "laser.ogg")
+        self.laserSound = pygame.mixer.Sound(directory)
+        self.soundList.append(self.laserSound)
+
+        directory = os.path.join(musicDirectory, "metal_clash.ogg")
+        self.metalClashSound = pygame.mixer.Sound(directory)
+        self.soundList.append(self.metalClashSound)
+
+        directory = os.path.join(musicDirectory, "whoosh.ogg")
+        self.whooshSound = pygame.mixer.Sound(directory)
+        self.soundList.append(self.whooshSound)
+
         # Set default volume for every sound in the list
         for sound in self.soundList:
             sound.set_volume(self.globalVolume)
