@@ -226,6 +226,10 @@ class PhaseScene(PygameScene):
                             # Time a minute from now, when the spawning has ended
                             self.flagSpawnEnd = pyTime.time() + 60
 
+                else:
+                    for spawnPoint in iter(self.spawnPoints):
+                        spawnPoint.spawnBeforeFlag(self, self.player)
+
                 # --------------------------------------------------
 
                 # If there are bosses and they are dead, you win
