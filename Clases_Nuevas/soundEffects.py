@@ -1,11 +1,13 @@
 import pygame
 import os
 
-GLOBAL_VOLUME = 0.25
-
 class SoundEffects:
     def __init__(self):
-        # Initialize pygame music player
+
+        # Initialize Volume
+        self.globalVolume = 0.25
+
+        # Initialize pygame effects player
         pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=4096)
         pygame.mixer.init()
 
@@ -21,7 +23,7 @@ class SoundEffects:
 
         # Set default volume for every sound in the list
         for sound in self.soundList:
-            sound.set_volume(GLOBAL_VOLUME)
+            sound.set_volume(self.globalVolume)
 
     # Set volume for every sound on the list
     def setEffectsVolume(self, newVolume):

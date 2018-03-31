@@ -166,11 +166,11 @@ class PhaseScene(PygameScene):
                 if not self.musicLoaded:
                     # Load background music
                     pygame.mixer.music.load(self.musicFile)
-                    # If the music is not muted
+                    # If the music is not muted+
                     if not self.director.musicMuted:
                         # Play it indefinetely until method stop is called
                         pygame.mixer.music.play(-1)
-                        pygame.mixer.music.set_volume(soundEffects.GLOBAL_VOLUME)
+                        pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
                     # Flag is now true
                     self.musicLoaded = True
 
@@ -304,7 +304,7 @@ class PhaseScene(PygameScene):
                     # Stop music
                     pygame.mixer.music.stop()
                     # Stop sound effects
-                    pygame.mixer.pause()
+                    self.soundEffects.setEffectsVolume(0)
                     # Reverse the flag
                     self.director.musicMuted = True
                     self.lastTimeMuted = pyTime.time()
@@ -313,19 +313,23 @@ class PhaseScene(PygameScene):
                     # Play music indefinetely until method stop is called
                     pygame.mixer.music.play(-1)
                     # Resume sound effects
-                    pygame.mixer.unpause()
+                    self.soundEffects.setEffectsVolume(self.soundEffects.globalVolume)
                     # Reverse the flag
                     self.director.musicMuted = False
                     self.lastTimeMuted = pyTime.time()
         if keysPressed[K_PLUS]:
-            volume = pygame.mixer.music.get_volume()
+            volume = self.soundEffects.globalVolume
             if volume < 1:
-                pygame.mixer.music.set_volume(volume + 0.01)
+                self.soundEffects.globalVolume = volume + 0.01
+                self.soundEffects.setEffectsVolume(self.soundEffects.globalVolume)
+                pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
 
         if keysPressed[K_MINUS]:
-            volume = pygame.mixer.music.get_volume()
+            volume = self.soundEffects.globalVolume
             if volume > 0:
-                pygame.mixer.music.set_volume(volume - 0.01)
+                self.soundEffects.globalVolume = volume - 0.01
+                self.soundEffects.setEffectsVolume(self.soundEffects.globalVolume)
+                pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
 
         # Indicates the actions to do to the player
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
