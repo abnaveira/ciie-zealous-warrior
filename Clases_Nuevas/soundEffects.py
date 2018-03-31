@@ -33,6 +33,10 @@ class SoundEffects:
         self.whooshSound = pygame.mixer.Sound(directory)
         self.soundList.append(self.whooshSound)
 
+        directory = os.path.join(musicDirectory, "thump.ogg")
+        self.thumpSound = pygame.mixer.Sound(directory)
+        self.soundList.append(self.thumpSound)
+
         # Set default volume for every sound in the list
         for sound in self.soundList:
             sound.set_volume(self.globalVolume)
