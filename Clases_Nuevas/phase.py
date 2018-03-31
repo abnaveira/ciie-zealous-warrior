@@ -214,9 +214,15 @@ class PhaseScene(PygameScene):
                             millis = int(round(pyTime.time() * 1000))
                             timePassed = millis - self.lastSpawn
                             if timePassed >= 3000:
-                                point = random.randint(1, len(self.spawnPoints))
+                                numPoints = []
                                 for spawnPoint in iter(self.spawnPoints):
-                                    spawnPoint.spawnAfterFlag(self, self.player, point)
+                                    distx = spawnPoint.x - self.player.position[0]
+                                    disty = spawnPoint.y - self.player.position[1]
+                                    if (distx * distx + disty * disty) > 250000:
+                                        numPoints.append(spawnPoint.id)
+                                point = random.randint(0, len(numPoints) - 1)
+                                for spawnPoint in iter(self.spawnPoints):
+                                    spawnPoint.spawnAfterFlag(self, self.player, numPoints[point])
                                 self.lastSpawn = millis
                     else:
                         for spawnPoint in iter(self.spawnPoints):
