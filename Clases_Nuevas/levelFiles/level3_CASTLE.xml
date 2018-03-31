@@ -377,7 +377,7 @@
 
         <stageIntroStory>
         <story>
-            <directory>Level2-Forest</directory>
+            <directory>Level3-Castle</directory>
             <file>intro1.png</file>
             <left>130</left>
             <top>500</top>
@@ -385,7 +385,7 @@
             <height>439</height>
         </story>
         <story>
-            <directory>Level2-Forest</directory>
+            <directory>Level3-Castle</directory>
             <file>intro2.png</file>
             <left>130</left>
             <top>500</top>
@@ -395,6 +395,14 @@
     </stageIntroStory>
 
     <stageOutroStory>
+        <story>
+            <directory>Level3-Castle</directory>
+            <file>outro_win.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
         <story>
             <directory> </directory>
             <file>marco.png</file>
