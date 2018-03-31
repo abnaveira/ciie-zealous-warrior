@@ -125,11 +125,13 @@ def loadLevelData(level):
 
     # Flag area of influence
     flagArea = root.find("flag")
+    realFlagPos = (0,0)
     if flagArea is not None:
         left = int(flagArea.find("left").text) - winImageX
         top = int(flagArea.find("top").text) - winImageY
         width = int(flagArea.find("width").text)
         height = int(flagArea.find("height").text)
+        realFlagPos = (left,top+height)
 
         flagArea = FlagArea(pygame.Rect(left, top, width, height))
 
@@ -272,7 +274,7 @@ def loadLevelData(level):
     musicFile = os.path.join("musicAndSounds", musicFile)
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
-           platformList, flagArea, realPlayerPosition, playerX, playerY, spawnPointList, \
+           platformList, flagArea, realFlagPos, realPlayerPosition, playerX, playerY, spawnPointList, \
            enemyList, bossList, stageInfo, stageIntroStoryList, \
            stageOutroStoryList, musicFile
 
