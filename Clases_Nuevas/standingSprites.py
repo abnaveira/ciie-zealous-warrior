@@ -84,10 +84,9 @@ class StandingSprites(MySprite):
 
 class Banner(StandingSprites):
     # The banner sprite
-    def __init__(self, position):
+    def __init__(self):
         StandingSprites.__init__(self, 'banner.png', 'coordBanner.txt',
                     [10], FLAG_ANIM_DELAY, LEFT)
-        self.position = position
 
     def update(self, player, time):
         self.scroll = player.scroll
