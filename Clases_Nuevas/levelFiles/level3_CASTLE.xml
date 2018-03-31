@@ -1,0 +1,417 @@
+<?xml version="1.0"?>
+<level>
+
+    <!--Scenery-->
+    <scenery>
+        <!--file>cave.png</file-->
+        <background>
+            <layer>
+                <file>Level3-Castle/castle.background.1.png</file>
+                <!--ParallaxValue sets the image to move slower. if the value is 0 it moves normally-->
+                <parallaxValue>0.5</parallaxValue>
+                <!--Scaling of the specific image-->
+                <scaleX>3000</scaleX>
+                <scaleY>3000</scaleY>
+            </layer>
+            <layer>
+                <file>Level3-Castle/castle.background.2.png</file>
+                <!--ParallaxValue sets the image to move slower. if the value is 0 it moves normally-->
+                <parallaxValue>0</parallaxValue>
+                <!--Scaling of the specific image-->
+                <scaleX>3000</scaleX>
+                <scaleY>3000</scaleY>
+            </layer>
+        </background>
+
+        <!--Total size of the image-->
+        <scaleX>3000</scaleX>
+        <scaleY>3000</scaleY>
+        <!--Size of the window-->
+        <windowWidth>960</windowWidth>
+        <windowHeight>540</windowHeight>
+        <!--Minimum distance to the sides-->
+        <leftMin>400</leftMin>
+        <topMin>200</topMin>
+        <backgroundColor>
+            <r>255</r>
+            <g>255</g>
+            <b>255</b>
+        </backgroundColor>
+    </scenery>
+
+    <!--Images that go in front of the player-->
+    <!--Animations that go in front of sprites-->
+    <!--Animations that go in the back of the player-->
+
+    <!--Platforms and their five parameters: id and four position points-->
+    <platforms>
+        <platform>
+            <id>SueloP0</id>
+            <left>2014</left>
+            <top>2971</top>
+            <width>970</width>
+            <height>29</height>
+        </platform>
+        <platform>
+            <id>SueloP1</id>
+            <left>2014</left>
+            <top>2685</top>
+            <width>940</width>
+            <height>29</height>
+        </platform>
+        <platform>
+            <id>SueloP2</id>
+            <left>2040</left>
+            <top>2402</top>
+            <width>940</width>
+            <height>29</height>
+        </platform>
+        <platform>
+            <id>SueloP3</id>
+            <left>2014</left>
+            <top>2115</top>
+            <width>940</width>
+            <height>29</height>
+        </platform>
+        <platform>
+            <id>SueloP4</id>
+            <left>2040</left>
+            <top>1831</top>
+            <width>940</width>
+            <height>29</height>
+        </platform>
+        <platform>
+            <id>SueloP5</id>
+            <left>2014</left>
+            <top>1546</top>
+            <width>940</width>
+            <height>29</height>
+        </platform>
+        <platform>
+            <id>SueloP6</id>
+            <left>2040</left>
+            <top>1261</top>
+            <width>940</width>
+            <height>29</height>
+        </platform>
+        <platform>
+            <id>SueloP7</id>
+            <left>2014</left>
+            <top>974</top>
+            <width>940</width>
+            <height>29</height>
+        </platform>
+        <platform>
+            <id>SueloP8</id>
+            <left>2000</left>
+            <top>683</top>
+            <width>955</width>
+            <height>29</height>
+        </platform>
+
+        <platform>
+            <id>plat1P0</id>
+            <left>2013</left>
+            <top>2885</top>
+            <width>80</width>
+            <height>22</height>
+        </platform>
+        <platform>
+            <id>plat2P0</id>
+            <left>2013</left>
+            <top>2790</top>
+            <width>80</width>
+            <height>22</height>
+        </platform>
+
+        <platform>
+            <id>plat1P1</id>
+            <left>2902</left>
+            <top>2604</top>
+            <width>83</width>
+            <height>22</height>
+        </platform>
+        <platform>
+            <id>plat2P1</id>
+            <left>2902</left>
+            <top>2509</top>
+            <width>83</width>
+            <height>22</height>
+        </platform>
+
+        <platform>
+            <id>plat1P2</id>
+            <left>2013</left>
+            <top>2297</top>
+            <width>80</width>
+            <height>22</height>
+        </platform>
+        <platform>
+            <id>plat2P2</id>
+            <left>2013</left>
+            <top>2202</top>
+            <width>80</width>
+            <height>22</height>
+        </platform>
+
+        <platform>
+            <id>plat1P3</id>
+            <left>2902</left>
+            <top>2016</top>
+            <width>83</width>
+            <height>22</height>
+        </platform>
+        <platform>
+            <id>plat2P3</id>
+            <left>2902</left>
+            <top>1921</top>
+            <width>83</width>
+            <height>22</height>
+        </platform>
+
+        <platform>
+            <id>plat1P4</id>
+            <left>2013</left>
+            <top>1735</top>
+            <width>80</width>
+            <height>22</height>
+        </platform>
+        <platform>
+            <id>plat2P4</id>
+            <left>2013</left>
+            <top>1640</top>
+            <width>80</width>
+            <height>22</height>
+        </platform>
+
+        <platform>
+            <id>plat1P5</id>
+            <left>2902</left>
+            <top>1454</top>
+            <width>83</width>
+            <height>22</height>
+        </platform>
+        <platform>
+            <id>plat2P5</id>
+            <left>2902</left>
+            <top>1359</top>
+            <width>83</width>
+            <height>22</height>
+        </platform>
+
+        <platform>
+            <id>plat1P6</id>
+            <left>2013</left>
+            <top>1147</top>
+            <width>80</width>
+            <height>22</height>
+        </platform>
+        <platform>
+            <id>plat2P6</id>
+            <left>2013</left>
+            <top>1052</top>
+            <width>80</width>
+            <height>22</height>
+        </platform>
+        <platform>
+            <id>plat1P7</id>
+            <left>2902</left>
+            <top>866</top>
+            <width>83</width>
+            <height>22</height>
+        </platform>
+        <platform>
+            <id>plat2P7</id>
+            <left>2902</left>
+            <top>771</top>
+            <width>83</width>
+            <height>22</height>
+        </platform>
+        <platform>
+            <id>muroTorreYCarcelDcho</id>
+            <left>2985</left>
+            <top>0</top>
+            <width>80</width>
+            <height>3000</height>
+        </platform>
+        <platform>
+            <id>muroCarcelIzdo</id>
+            <left>2000</left>
+            <top>691</top>
+            <width>15</width>
+            <height>2309</height>
+        </platform>
+        <platform>
+            <id>muroTorreIzdo</id>
+            <left>2751</left>
+            <top>0</top>
+            <width>15</width>
+            <height>603</height>
+        </platform>
+        <platform>
+            <id>techoCastillo1</id>
+            <left>0</left>
+            <top>1261</top>
+            <width>943</width>
+            <height>85</height>
+        </platform>
+        <platform>
+            <id>techoCastillo2</id>
+            <left>1119</left>
+            <top>1261</top>
+            <width>881</width>
+            <height>85</height>
+        </platform>
+        <platform>
+            <id>muroCastilloIzq</id>
+            <left>0</left>
+            <top>0</top>
+            <width>150</width>
+            <height>3000</height>
+        </platform>
+        <platform>
+            <id>muroCastilloDcho</id>
+            <left>1850</left>
+            <top>1261</top>
+            <width>150</width>
+            <height>1739</height>
+        </platform>
+        <platform>
+            <id>sueloBoss</id>
+            <left>0</left>
+            <top>2115</top>
+            <width>2000</width>
+            <height>885</height>
+        </platform>
+        <platform>
+            <id>platBossIzda</id>
+            <left>603</left>
+            <top>1906</top>
+            <width>228</width>
+            <height>30</height>
+        </platform>
+        <platform>
+            <id>platBossDcha</id>
+            <left>1281</left>
+            <top>1906</top>
+            <width>228</width>
+            <height>30</height>
+        </platform>
+    </platforms>
+
+    <!--Rectangle to put the flag, to change level-->
+    <!--TODO: put flag in good place-->
+    <flag>
+       <left>2350</left>
+        <top>863</top>
+        <width>100</width>
+        <height>90</height>
+    </flag>
+
+    <!--Player's starting position in the map-->
+    <playerPosition>
+        <x>2800</x>
+        <y>2800</y>
+    </playerPosition>
+
+    <!--List of enemies of this level-->
+    <enemies>
+        <!--<enemy>Zombie</enemy>-->
+        <enemy>BarrelSkeleton</enemy>
+        <enemy>CheetahSkeleton</enemy>
+        <enemy>Zebesian</enemy>
+        <enemy>MeltyZombie</enemy>
+    </enemies>
+
+    <!--Enemies Spawn Point-->
+    <spawnPoints>
+        <spawnPoint>
+            <id>1</id>
+            <x>750</x>
+            <y>940</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>2</id>
+            <x>1800</x>
+            <y>940</y>
+            <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>3</id>
+            <x>2500</x>
+            <y>940</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>4</id>
+            <x>2500</x>
+            <y>940</y>
+            <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>5</id>
+            <x>425</x>
+            <y>600</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>6</id>
+            <x>1500</x>
+            <y>550</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>7</id>
+            <x>1000</x>
+            <y>690</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>8</id>
+            <x>2000</x>
+            <y>570</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+    </spawnPoints>
+    <!-- OJOOOOOOOOOOO, missing
+    TODO: spawnpoints-->
+
+    <stageInfo>
+        <title>Stage 2</title>
+        <description>The Forest</description>
+    </stageInfo>
+
+        <stageIntroStory>
+        <story>
+            <directory>Level2-Forest</directory>
+            <file>intro1.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+        <story>
+            <directory>Level2-Forest</directory>
+            <file>intro2.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+    </stageIntroStory>
+
+    <stageOutroStory>
+        <story>
+            <directory> </directory>
+            <file>marco.png</file>
+            <left>100</left>
+            <top>500</top>
+            <width>700</width>
+            <height>409</height>
+        </story>
+    </stageOutroStory>
+
+    <musicFile>hxh-TryYourLuck.mp3</musicFile>
+
+</level>
