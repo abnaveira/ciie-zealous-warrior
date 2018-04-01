@@ -321,57 +321,105 @@
     <spawnPoints>
         <spawnPoint>
             <id>1</id>
-            <x>750</x>
-            <y>940</y>
+            <x>2939</x>
+            <y>2601</y>
             <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>2</id>
-            <x>1800</x>
-            <y>940</y>
-            <enemiesNumber>2</enemiesNumber>
+            <x>2646</x>
+            <y>2682</y>
+            <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>3</id>
-            <x>2500</x>
-            <y>940</y>
+            <x>2280</x>
+            <y>2395</y>
             <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>4</id>
-            <x>2500</x>
-            <y>940</y>
+            <x>2678</x>
+            <y>2395</y>
             <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>5</id>
-            <x>425</x>
-            <y>600</y>
-            <enemiesNumber>1</enemiesNumber>
+            <x>2207</x>
+            <y>2108</y>
+            <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>6</id>
-            <x>1500</x>
-            <y>550</y>
+            <x>2800</x>
+            <y>2108</y>
             <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>7</id>
-            <x>1000</x>
-            <y>690</y>
-            <enemiesNumber>1</enemiesNumber>
+            <x>2468</x>
+            <y>2820</y>
+            <enemiesNumber>3</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>8</id>
-            <x>2000</x>
-            <y>570</y>
+            <x>2297</x>
+            <y>1539</y>
             <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>9</id>
+            <x>2683</x>
+            <y>1539</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>10</id>
+            <x>2855</x>
+            <y>1258</y>
+            <enemiesNumber>1</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>11</id>
+            <x>2381</x>
+            <y>1258</y>
+            <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>12</id>
+            <x>2501</x>
+            <y>964</y>
+            <enemiesNumber>3</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>13</id>
+            <x>2320</x>
+            <y>671</y>
+            <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>14</id>
+            <x>2381</x>
+            <y>1258</y>
+            <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>15</id>
+            <x>405</x>
+            <y>1246</y>
+            <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>16</id>
+            <x>1510</x>
+            <y>1246</y>
+            <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
     </spawnPoints>
 
     <stageInfo>
         <title>Nivel 3</title>
-        <description>Castillo del Rey Brog</description>
+        <description>Castillo del Rey Brogg</description>
     </stageInfo>
 
         <stageIntroStory>
