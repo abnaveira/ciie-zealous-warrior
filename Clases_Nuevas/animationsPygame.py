@@ -7,12 +7,13 @@ import pyganim
 class Animation(pyganim.PygAnimation):
     def __init__(self, *args):
         pyganim.PygAnimation.__init__(self, args)
-        # Posicion global que tendra esta animacion
-        self.positionX = 0
-        self.positionY = 0
         #posicion local
         self.posX =0
         self.posY= 0
+        # Posicion global que tendra esta animacion
+        self.positionX = 0
+        self.positionY = 0
+
 
     def move(self, distanceX, distanceY):
         self.positionX += distanceX

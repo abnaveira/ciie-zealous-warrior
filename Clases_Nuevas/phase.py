@@ -36,7 +36,7 @@ class PhaseScene(PygameScene):
         self.sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList, \
         platformList, flagArea, realFlagPos,realPlayerPosition, playerX, playerY, spawnPointList, \
             enemyList, bossList, stageInfo,stageIntroStoryList, \
-            stageOutroStoryList, musicFile = loadLevelData(levelFile)
+            stageOutroStoryList, stageDeathStoryList, musicFile = loadLevelData(levelFile)
 
         PygameScene.__init__(self, director, self.sceneryObj.windowWidth, self.sceneryObj.windowHeight)
 
@@ -52,7 +52,7 @@ class PhaseScene(PygameScene):
         self.backgroundColor = BackgroundColor(self.sceneryObj)
 
         # Creates the player and adds it to the group of players
-        self.player = Player(self.soundEffects)
+        self.player = Player()
         self.playersGroup = pygame.sprite.Group(self.player)
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
@@ -134,6 +134,8 @@ class PhaseScene(PygameScene):
                     animation.scale((scaleAndPlacement.scaleX, scaleAndPlacement.scaleY))
                 animation.positionX = scaleAndPlacement.x
                 animation.positionY = scaleAndPlacement.y
+                animation.posX = scaleAndPlacement.x
+                animation.posY = scaleAndPlacement.y
                 animation.play()
                 self.backAnimations.append(animation)
 
@@ -147,30 +149,32 @@ class PhaseScene(PygameScene):
                                            self.sceneryObj.windowWidth, self.background,self.foreground)
 
         self.spriteStructure = SpriteStructure(self, self.player, self.enemiesGroup, self.platformsGroup, \
-                                               self.projectilesGroup, None, None, self.potionsGroup)
+                                               self.projectilesGroup, None, None, self.potionsGroup, self.soundEffects)
 
         # Creates the HUD elements
-        self.HUD = HUD(self.spriteStructure, stageInfo, stageIntroStoryList, stageOutroStoryList)
+        self.HUD = HUD(self.spriteStructure, stageInfo, stageIntroStoryList, stageOutroStoryList, stageDeathStoryList)
         # This variable controls the update of elements to show the text dialogs
         self.text_finished = False
         # This variable controls the draw of the final text
         self.final = False
         # This variable controls the update of elements to show the final text dialogs
         self.text_final_finished = False
+        # This variable controls the update of elements to show the death text dialogs
+        self.text_death_finished = False
         # Used for the music muting
         self.lastTimeMuted = pyTime.time()
 
     def update(self, time):
-        if not self.final:
+        if not self.final or (not self.player.dead):
             if self.text_finished:
                 if not self.musicLoaded:
                     # Load background music
                     pygame.mixer.music.load(self.musicFile)
-                    # If the music is not muted
+                    # If the music is not muted+
                     if not self.director.musicMuted:
                         # Play it indefinetely until method stop is called
                         pygame.mixer.music.play(-1)
-                        pygame.mixer.music.set_volume(soundEffects.GLOBAL_VOLUME)
+                        pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
                     # Flag is now true
                     self.musicLoaded = True
 
@@ -212,10 +216,13 @@ class PhaseScene(PygameScene):
                             flag = flagList.pop()
                             # We set the Banner in its position
                             bannerSprite = Banner()
-                            # TODO: la bandera en la x no se pone bien
                             bannerSprite.setPosition(self.realFlagPos)
                             bannerSprite.setScreenPosition(self.player.scroll)
                             self.bannerSpriteGroup.add(bannerSprite)
+
+                            # Play the Banner Stump sound
+                            self.soundEffects.bannerStumpSound.play()
+
                             # We destroy enemies
                             self.enemiesGroup.empty()
                             # Time a minute from now, when the spawning has ended
@@ -258,11 +265,14 @@ class PhaseScene(PygameScene):
     def draw(self, screen):
         # Background color
         self.backgroundColor.draw(screen)
+
+        # Background
+        self.background.draw(screen)
+
         # Back animations
         for animation in self.backAnimations:
             animation.draw(screen)
-        # Background
-        self.background.draw(screen)
+
         # Flag Sprite
         self.bannerSpriteGroup.draw(screen)
         # Sprites
@@ -275,7 +285,11 @@ class PhaseScene(PygameScene):
         for animation in self.frontAnimations:
             animation.draw(screen)
         # HUD
-        self.HUD.draw(self.final, screen)
+        # If the player is dead draw the boxes for death text
+        if (self.player.dead):
+            self.HUD.drawDeathBoxes(screen)
+        else:
+            self.HUD.draw(self.final, self.flagRaised, screen)
 
     def events(self, events_list):
         # Look in the events
@@ -298,6 +312,13 @@ class PhaseScene(PygameScene):
                 # Abort music playback
                 pygame.mixer.music.stop()
                 self.director.leaveScene()
+
+        if (self.player.dead == True):
+            if not self.text_death_finished:
+                # Updates the dialog box of the HUD if it is necessary
+                self.text_death_finished = self.HUD.changeDeathBox(keysPressed, K_RETURN, K_q)
+                return
+
         # If m key is pressed, mute/unmute
         if keysPressed[K_m]:
             # If it is not muted, mute it
@@ -306,7 +327,7 @@ class PhaseScene(PygameScene):
                     # Stop music
                     pygame.mixer.music.stop()
                     # Stop sound effects
-                    pygame.mixer.pause()
+                    self.soundEffects.setEffectsVolume(0)
                     # Reverse the flag
                     self.director.musicMuted = True
                     self.lastTimeMuted = pyTime.time()
@@ -315,19 +336,23 @@ class PhaseScene(PygameScene):
                     # Play music indefinetely until method stop is called
                     pygame.mixer.music.play(-1)
                     # Resume sound effects
-                    pygame.mixer.unpause()
+                    self.soundEffects.setEffectsVolume(self.soundEffects.globalVolume)
                     # Reverse the flag
                     self.director.musicMuted = False
                     self.lastTimeMuted = pyTime.time()
         if keysPressed[K_PLUS]:
-            volume = pygame.mixer.music.get_volume()
+            volume = self.soundEffects.globalVolume
             if volume < 1:
-                pygame.mixer.music.set_volume(volume + 0.01)
+                self.soundEffects.globalVolume = volume + 0.01
+                self.soundEffects.setEffectsVolume(self.soundEffects.globalVolume)
+                pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
 
         if keysPressed[K_MINUS]:
-            volume = pygame.mixer.music.get_volume()
+            volume = self.soundEffects.globalVolume
             if volume > 0:
-                pygame.mixer.music.set_volume(volume - 0.01)
+                self.soundEffects.globalVolume = volume - 0.01
+                self.soundEffects.setEffectsVolume(self.soundEffects.globalVolume)
+                pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
 
         # Indicates the actions to do to the player
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)

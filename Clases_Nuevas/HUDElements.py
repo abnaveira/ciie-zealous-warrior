@@ -185,7 +185,7 @@ class DescriptionText(GUIText):
 
 # Main class for the HUD
 class HUD():
-    def __init__(self, spriteStructure, stageInfo, stageIntroStoryList, stageOutroStoryList):
+    def __init__(self, spriteStructure, stageInfo, stageIntroStoryList, stageOutroStoryList, stageDeathStoryList):
         # Creates the HUD elements
         self.healthBar = HealthBar(spriteStructure.player)
         self.healthBarDecoration = HealthBarDecoration()
@@ -206,6 +206,12 @@ class HUD():
             self.finalBoxes.append(TextDialogBox(box.file,(box.left, box.top), box.width, box.height))
         self.actualFinalBox = 0
         self.stop_final_boxes = False
+        # Death text boxes
+        self.deathBoxes = []
+        for box in stageDeathStoryList:
+            self.deathBoxes.append(TextDialogBox(box.file, (box.left, box.top), box.width, box.height))
+        self.actualDeathBox = 0
+        self.stop_death_boxes = False
 
     def update(self):
         if self.stop_initial_boxes:
@@ -246,7 +252,21 @@ class HUD():
                     self.actualTime = timeLib.time()
         return self.stop_final_boxes
 
-    def draw(self, final, screen):
+    def changeDeathBox(self, keypressed, key, scapeKey):
+        if keypressed[scapeKey]:
+            self.stop_death_boxes = True
+        # Checks if there are more boxes
+        if not self.stop_death_boxes:
+            time = timeLib.time() - self.actualTime
+            # Only changes if the time is more than one second
+            if time > 0.5:
+                # Checks if the key is pressed
+                if keypressed[key]:
+                    self.actualDeathBox += 1
+                    self.actualTime = timeLib.time()
+        return self.stop_death_boxes
+
+    def draw(self, final, flagRaised, screen):
         # Checks if the initial boxes ended
         if self.stop_initial_boxes:
             # Checks if the phase is in the final
@@ -265,7 +285,9 @@ class HUD():
                 self.healthBar.draw(screen)
                 self.stageText.draw(screen)
                 self.descriptionText.draw(screen)
-                self.arrow.draw(screen)
+                # Only draws the flag if the player has reached the flag
+                if flagRaised:
+                    self.arrow.draw(screen)
         else:
             # Checks if there are more boxes
             if self.actualInitialBox < self.initialBoxes.__len__():
@@ -273,3 +295,12 @@ class HUD():
                 self.quitText.draw(screen)
             else:
                 self.stop_initial_boxes = True
+
+    def drawDeathBoxes(self, screen):
+        if not self.stop_death_boxes:
+            # Checks if there are more boxes
+            if self.actualDeathBox < self.deathBoxes.__len__():
+                self.deathBoxes[self.actualDeathBox].draw(screen)
+                self.quitText.draw(screen)
+            else:
+                self.stop_death_boxes = True

@@ -10,6 +10,7 @@ from mysprite import MySprite
 from projectiles import *
 from resourcesManager import *
 from potionSprites import *
+import pygame
 
 #---------------------------
 #---------Constants---------
@@ -401,14 +402,12 @@ class Character(MySprite):
 #********************
 
 class Player(Character):
-    def __init__(self, soundEffects):
+    def __init__(self):
         Character.__init__(self, 'Arthur.png', 'coordArthur.txt',
                     [1, 7, 4], PLAYER_SPEED, PLAYER_JUMP_SPEED, PLAYER_ANIM_DELAY)
         self.stunDelay = PLAYER_STUN_DELAY
         self.invulDelay = PLAYER_INVUL_DELAY
         self.HP = PLAYER_BASE_HEALTH
-        # Class with the sound effects
-        self.soundEffects = soundEffects
 
     # Defines movement intention
     # Whatever the player presses on their keyboard will set an intention that will
@@ -438,7 +437,7 @@ class Player(Character):
         if self.attacking:
             self.attacking = False
             # Play the sword slash sound
-            self.soundEffects.swordSlashSound.play()
+            spriteStructure.soundEffects.swordSlashSound.play()
 
             self.attackTime = PLAYER_ATTACK_DELAY
             # Otherwise character attacks from its back
@@ -452,9 +451,14 @@ class Player(Character):
 
     def onDeath(self, spriteStructure, time):
         self.kill()
-        print("I was killed here" + str(self.position))
-        # Open the window that shows that you the player is dead
-        spriteStructure.phase.openDeathScreen()
+
+        # Play the Wilhelm Scream sound
+        spriteStructure.soundEffects.wilhelmScreamSound.play()
+
+        # If the text death boxes finished
+        if spriteStructure.phase.text_death_finished == True:
+            # Open the window that shows that you the player is dead
+            spriteStructure.phase.openDeathScreen()
 
 #********************
 #* Enemy Characters *
@@ -576,6 +580,9 @@ class BarrelSkeleton(NPC):
 
     def update(self, spriteStructure, time):
         if self.attacking:
+            # Play the whoosh sound
+            spriteStructure.soundEffects.whooshSound.play()
+
             unBarreledOne = UnBarreledSkeleton()
             unBarreledOne.setPosition(self.position)
             spriteStructure.enemyGroup.add(unBarreledOne)
@@ -688,6 +695,9 @@ class AxeKnight(NPC):
     def update(self, spriteStructure, time):
         if self.attacking:
             self.attacking = False
+            # Play the metal clash sound
+            spriteStructure.soundEffects.metalClashSound.play()
+
             self.attackTime = self.attackDelay
             spriteStructure.projectileGroup.add(axeProj(self.position, self.looking))
         elif self.attackTime > 0:
@@ -850,6 +860,9 @@ class Zebesian(NPC):
     def update(self, spriteStructure, time):
         if self.attacking:
             self.attacking = False
+            # Play the laser sound
+            spriteStructure.soundEffects.laserSound.play()
+
             self.attackTime = self.attackDelay
             spriteStructure.projectileGroup.add(ZebesianBeam((self.position[0], self.position[1] - 25), self.looking))
         elif self.attackTime > 0:

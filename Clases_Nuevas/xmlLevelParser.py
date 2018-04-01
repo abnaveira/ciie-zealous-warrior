@@ -256,7 +256,7 @@ def loadLevelData(level):
             height = int(story.find("height").text)
             stageIntroStoryList.append(IntroAndOutroStory(directory, file, left, top, width, height))
 
-    # Stage intro stories
+    # Stage outro stories
     stageOutroStory = root.find("stageOutroStory")
     stageOutroStoryList = []
     if stageOutroStory is not None:
@@ -269,14 +269,27 @@ def loadLevelData(level):
             height = int(story.find("height").text)
             stageOutroStoryList.append(IntroAndOutroStory(directory, file, left, top, width, height))
 
+    # Stage death stories
+    stageDeathStory = root.find("stageDeathStory")
+    stageDeathStoryList = []
+    if stageDeathStory is not None:
+        for story in stageDeathStory.iter("story"):
+            directory = story.find("directory").text
+            file = story.find("file").text
+            left = int(story.find("left").text)
+            top = int(story.find("top").text)
+            width = int(story.find("width").text)
+            height = int(story.find("height").text)
+            stageDeathStoryList.append(IntroAndOutroStory(directory, file, left, top, width, height))
+
     # Music file
     musicFile = root.find("musicFile").text
     musicFile = os.path.join("musicAndSounds", musicFile)
 
     return sceneryObj, frontImagesList, frontAnimationsList, backAnimationsList,\
            platformList, flagArea, realFlagPos, realPlayerPosition, playerX, playerY, spawnPointList, \
-           enemyList, bossList, stageInfo, stageIntroStoryList, \
-           stageOutroStoryList, musicFile
+           enemyList, bossList, stageInfo, stageIntroStoryList,\
+           stageOutroStoryList, stageDeathStoryList, musicFile
 
 class StageInfo:
     def __init__(self, title, description):

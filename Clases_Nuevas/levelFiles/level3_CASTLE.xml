@@ -314,6 +314,7 @@
         <enemy>AxeKnight</enemy>
         <enemy>Zebesian</enemy>
         <enemy>MeltyZombie</enemy>
+        <enemy>Imp</enemy>
     </enemies>
 
     <!--Enemies Spawn Point-->
@@ -371,8 +372,8 @@
     TODO: spawnpoints-->
 
     <stageInfo>
-        <title>Stage 2</title>
-        <description>The Forest</description>
+        <title>Nivel 3</title>
+        <description>El castillo</description>
     </stageInfo>
 
         <stageIntroStory>
@@ -413,6 +414,25 @@
         </story>
     </stageOutroStory>
 
+    <stageDeathStory>
+        <story>
+            <directory>Level3-Castle</directory>
+            <file>outro_lose.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+        <story>
+            <directory>Level3-Castle</directory>
+            <file>outro_lose2.png</file>
+            <left>130</left>
+            <top>500</top>
+            <width>800</width>
+            <height>439</height>
+        </story>
+    </stageDeathStory>
+
     <!--Bosses and position if there are bosses in the scene-->
     <bosses>
         <boss>
@@ -423,5 +443,208 @@
     </bosses>
 
     <musicFile>HeroAca-YouSayRun.mp3</musicFile>
+
+        <!--Animations that go in the back of the player-->
+    <backAnimations>
+        <backAnimation>
+            <frames>
+                <frame>
+                    <file>images/Level3-Castle/antorcha/antorcha.1.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level3-Castle/antorcha/antorcha.2.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level3-Castle/antorcha/antorcha.3.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level3-Castle/antorcha/antorcha.4.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level3-Castle/antorcha/antorcha.5.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level3-Castle/antorcha/antorcha.6.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level3-Castle/antorcha/antorcha.7.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level3-Castle/antorcha/antorcha.8.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level3-Castle/antorcha/antorcha.9.png</file>
+                    <milis>0.1</milis>
+                </frame>
+
+            </frames>
+            <!--To use the same animation with different scaling in different positions-->
+            <scaleAndPlacements>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2120</x>
+                    <y>2860</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2860</x>
+                    <y>2860</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2120</x>
+                    <y>2580</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2860</x>
+                    <y>2580</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2120</x>
+                    <y>2300</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2860</x>
+                    <y>2300</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2120</x>
+                    <y>2020</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2860</x>
+                    <y>2020</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2120</x>
+                    <y>1740</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2860</x>
+                    <y>1740</y>
+                </scaleAndPlacement>
+                <!--scaleAndPlacement>
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <x>2120</x>
+                    <y>1460</y>
+                </scaleAndPlacement-->
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2860</x>
+                    <y>1460</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2120</x>
+                    <y>1180</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2860</x>
+                    <y>1180</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2120</x>
+                    <y>900</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>32</scaleX>
+                    <scaleY>64</scaleY>
+                    <!--Position of the animation-->
+                    <x>2860</x>
+                    <y>900</y>
+                </scaleAndPlacement>
+            </scaleAndPlacements>
+        </backAnimation>
+
+        <backAnimation>
+            <frames>
+                <frame>
+                    <file>images/Level3-Castle/reloj/reloj.1.png</file>
+                    <milis>0.2</milis>
+                </frame>
+                <frame>
+                    <file>images/Level3-Castle/reloj/reloj.2.png</file>
+                    <milis>0.2</milis>
+                </frame>
+                <frame>
+                    <file>images/Level3-Castle/reloj/reloj.3.png</file>
+                    <milis>0.2</milis>
+                </frame>
+            </frames>
+            <!--To use the same animation with different scaling in different positions-->
+            <scaleAndPlacements>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>65</scaleX>
+                    <scaleY>120</scaleY>
+                    <!--Position of the animation-->
+                    <x>2500</x>
+                    <y>2009</y>
+                </scaleAndPlacement>
+            </scaleAndPlacements>
+        </backAnimation>
+    </backAnimations>
+
 
 </level>

@@ -4,7 +4,7 @@
 class SpriteStructure():
 
     def __init__(self, phase, player, enemyGroup, platformGroup, projectileGroup, standingGroup, hudGroup,
-                 potionsGroup):
+                 potionsGroup, soundEffects):
         self.phase = phase
         self.player = player
         self.enemyGroup = enemyGroup
@@ -13,3 +13,4 @@ class SpriteStructure():
         self.standingGroup = standingGroup
         self.hudGroup = hudGroup
         self.potionsGroup = potionsGroup
+        self.soundEffects = soundEffects

@@ -28,6 +28,13 @@
                 <scaleX>3000</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
+            <layer>
+                <file>Level1-Cave/flagHolder.png</file>
+                <parallaxValueX>0</parallaxValueX>
+                <parallaxValueY>0</parallaxValueY>
+                <scaleX>3000</scaleX>
+                <scaleY>1000</scaleY>
+            </layer>
         </background>
 
         <foreground>
@@ -38,13 +45,13 @@
                 <scaleX>3000</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
-            <layer>
+            <!--layer>
                 <file>Level1-Cave/cave.foreground.2.png</file>
                 <parallaxValueX>0</parallaxValueX>
                 <parallaxValueY>0</parallaxValueY>
                 <scaleX>3000</scaleX>
                 <scaleY>1000</scaleY>
-            </layer>
+            </layer-->
             <layer>
                 <file>Level1-Cave/cave.foreground.3.png</file>
                 <parallaxValueX>0</parallaxValueX>
@@ -456,6 +463,7 @@
 
     <!--List of enemies of this level-->
     <enemies>
+        <enemy>Zombie</enemy>
         <enemy>BarrelSkeleton</enemy>
         <enemy>Skeleton</enemy>
         <enemy>Imp</enemy>

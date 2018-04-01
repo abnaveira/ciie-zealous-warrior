@@ -154,6 +154,8 @@ class Barrel(Projectile):
         self.ended = False
         self.collided = False
         self.falling = True
+        self.hitGround = False
+
         speedy = -0.25
         if (looking == RIGHT):
             self.speed = (BARREL_MOVE_SPEED, speedy)
@@ -173,6 +175,13 @@ class Barrel(Projectile):
         platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
         if platforms:
             speedy = 0
+
+            # Play thump sound first time it hits the floor
+            if not self.hitGround:
+                self.hitGround = True
+                # Play the thump sound
+                spriteStructure.soundEffects.thumpSound.play()
+
             if self.checkWall(self.looking, platforms):
                 self.collided = True
         else:
