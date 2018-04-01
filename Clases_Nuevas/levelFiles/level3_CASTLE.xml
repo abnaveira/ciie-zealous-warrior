@@ -422,7 +422,7 @@
         <description>Castillo del Rey Brogg</description>
     </stageInfo>
 
-        <stageIntroStory>
+    <stageIntroStory>
         <story>
             <directory>Level3-Castle</directory>
             <file>intro1.png</file>

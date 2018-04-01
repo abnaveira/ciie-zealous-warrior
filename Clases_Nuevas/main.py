@@ -16,20 +16,6 @@ if __name__ == '__main__':
     # Create the director
     director = Director(soundEffects)
 
-    # Get level files from an xml
-    levelFilesList = getAllLevelFiles("zealous_warrior_all_levels.xml")
-    # Reverse the order of the levels (to put in the stack)
-    levelFilesList.reverse()
-
-    for level in levelFilesList:
-        # Create the scene for the level
-        scene = PhaseScene(director, level, soundEffects)
-        # Put it on top of the stack
-        director.stackScene(scene)
-
-    # Loads the game menu in the director
-    menu = Menu(director, 960, 540)
-    director.stackScene(menu)
-
+    director.stackGame()
     # Execute the game
     director.execute()
