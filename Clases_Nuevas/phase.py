@@ -19,7 +19,7 @@ import soundEffects
 # -------------------------------------------------
 # Class for pygame scenes with one player
 
-TIME_SPAWN_NOFLAG = 5000
+TIME_SPAWN_NOFLAG = 4000
 TIME_SPAWN_FLAG   = 3000
 ENEMY_MAXIMUM     = 60
 

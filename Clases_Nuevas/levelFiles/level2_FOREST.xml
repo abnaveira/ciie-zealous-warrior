@@ -253,10 +253,9 @@
     </platforms>
 
     <!--Rectangle to put the flag, to change level-->
-    <!--TODO: put flag in good place-->
     <flag>
-       <left>2350</left>
-        <top>863</top>
+       <left>4195</left>
+        <top>357</top>
         <width>58</width>
         <height>90</height>
     </flag>

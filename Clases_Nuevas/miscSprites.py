@@ -13,6 +13,7 @@ class Platform(MySprite):
         self.setPosition((self.rect.left, self.rect.bottom))
         # The platforms are invisible
         self.image = pygame.Surface((0, 0))
+        # To color the rectangle in red, for debug purposes
         #self.image = pygame.Surface((rectangle.width, rectangle.height))
         #self.image.fill((255,0,0))
 
@@ -27,9 +28,10 @@ class FlagArea(MySprite):
         # The position will be set as the size of the Flag
         self.setPosition((self.rect.left, self.rect.bottom))
         # The flag area is invisible
-        #self.image = pygame.Surface((0, 0))
-        self.image = pygame.Surface((rectangle.width, rectangle.height))
-        self.image.fill((0,255,0))
+        self.image = pygame.Surface((0, 0))
+        # To color the rectangle in green, for debug purposes
+        #self.image = pygame.Surface((rectangle.width, rectangle.height))
+        #self.image.fill((0,255,0))
 
 # -------------------------------------------------
 # Class for the background color

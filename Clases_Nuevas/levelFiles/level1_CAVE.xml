@@ -449,8 +449,8 @@
 
     <!--Rectangle to put the flag, to change level-->
     <flag>
-       <left>2350</left>
-        <top>850</top>
+       <left>70</left>
+        <top>142</top>
         <width>58</width>
         <height>90</height>
     </flag>
