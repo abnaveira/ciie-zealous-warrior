@@ -165,7 +165,7 @@ class PhaseScene(PygameScene):
         self.lastTimeMuted = pyTime.time()
 
     def update(self, time):
-        if not self.final or (not self.player.dead):
+        if not self.final:
             if self.text_finished:
                 if not self.musicLoaded:
                     # Load background music
@@ -304,6 +304,7 @@ class PhaseScene(PygameScene):
             # Updates the dialog box of the HUD if it is necessary
             self.text_finished = self.HUD.changeBox(keysPressed, K_RETURN, K_q)
             return
+
         if self.final:
             if not self.text_final_finished:
                 # Updates the dialog box of the HUD if it is necessary
