@@ -215,10 +215,13 @@ class PhaseScene(PygameScene):
                             flag = flagList.pop()
                             # We set the Banner in its position
                             bannerSprite = Banner()
-                            # TODO: la bandera en la x no se pone bien
                             bannerSprite.setPosition(self.realFlagPos)
                             bannerSprite.setScreenPosition(self.player.scroll)
                             self.bannerSpriteGroup.add(bannerSprite)
+
+                            # Play the Banner Stump sound
+                            self.soundEffects.bannerStumpSound.play()
+
                             # We destroy enemies
                             self.enemiesGroup.empty()
                             # Time a minute from now, when the spawning has ended
