@@ -368,12 +368,10 @@
             <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
     </spawnPoints>
-    <!-- OJOOOOOOOOOOO, missing
-    TODO: spawnpoints-->
 
     <stageInfo>
         <title>Nivel 3</title>
-        <description>El castillo</description>
+        <description>Castillo del Rey Brog</description>
     </stageInfo>
 
         <stageIntroStory>

@@ -326,12 +326,10 @@
             <enemiesNumber>1</enemiesNumber>
         </spawnPoint>
     </spawnPoints>
-    <!-- OJOOOOOOOOOOO, missing
-    TODO: spawnpoints-->
 
     <stageInfo>
-        <title>Stage 2</title>
-        <description>The Forest</description>
+        <title>Nivel 2</title>
+        <description>Páramo Sombrío</description>
     </stageInfo>
 
         <stageIntroStory>
