@@ -123,6 +123,8 @@ BOSS_HIT_KB         = (.3, -.2)
 # World constants
 GRAVITY = 0.0009    # px / ms^2
 
+KILLING_FLOOR = 10000
+
 #---------------------------
 #---------Classes-----------
 #---------------------------
@@ -283,7 +285,7 @@ class Character(MySprite):
         platforms = pygame.sprite.spritecollide(self, spriteStructure.platformGroup, False)
 
         # First we check if for any reason the character has been killed or fallen oob.
-        if self.dead or (self.position[1] > 3000):
+        if self.dead or (self.position[1] > KILLING_FLOOR):
             self.onDeath(spriteStructure, time)
             return
 

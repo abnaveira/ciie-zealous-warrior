@@ -56,6 +56,7 @@ class PhaseScene(PygameScene):
         self.playersGroup = pygame.sprite.Group(self.player)
         # Set the player in its initial position
         self.player.setPosition((playerX, playerY))
+        self.initialPos = (playerX, playerY)
 
         # Initialises the enemy sprites group
         self.enemiesGroup = pygame.sprite.Group()
@@ -89,7 +90,6 @@ class PhaseScene(PygameScene):
             self.platformsGroup.add(platform)
 
         # ---------------------------------------------------
-        # TODO: implement this well
         # If there is no flag (this level has a boss)
         if flagArea is not None:
             self.thereIsFlag = True
@@ -177,6 +177,10 @@ class PhaseScene(PygameScene):
                         pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
                     # Flag is now true
                     self.musicLoaded = True
+
+                    # Put player in starting position (due to charging all levels at once
+                    # This is necesary
+                    self.player.setPosition(self.initialPos)
 
                 # Executes enemy AI
                 for enemy in self.enemiesGroup:
