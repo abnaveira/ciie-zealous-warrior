@@ -121,7 +121,7 @@ class scrollControl:
             # Update the animations positions
             for animation in frontAnimations:
                 animation.setScreenPosition(self.scroll)
-            for animation in frontAnimations:
+            for animation in backAnimations:
                 animation.setScreenPosition(self.scroll)
 
             # Update the scenery to show the new position

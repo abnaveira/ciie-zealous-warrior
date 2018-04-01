@@ -24,7 +24,7 @@
                 <scaleY>1000</scaleY>
             </layer>
             <layer>
-                <file>Level2-Forest/forest.background.3.png</file>
+                <file>Level2-Forest/flagHolder.png</file>
                 <!--ParallaxValue sets the image to move slower. if the value is 0 it moves normally-->
                 <parallaxValueX>0</parallaxValueX>
                 <parallaxValueY>0</parallaxValueY>
@@ -39,14 +39,14 @@
                 <file>Level2-Forest/forest.foreground.1.png</file>
                 <parallaxValueX>0</parallaxValueX>
                 <parallaxValueY>0</parallaxValueY>
-                <scaleX>3000</scaleX>
+                <scaleX>4500</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
             <layer>
                 <file>Level2-Forest/forest.foreground.2.png</file>
                 <parallaxValueX>0</parallaxValueX>
                 <parallaxValueY>0</parallaxValueY>
-                <scaleX>3000</scaleX>
+                <scaleX>4500</scaleX>
                 <scaleY>1000</scaleY>
             </layer>
 
@@ -366,5 +366,53 @@
     </stageOutroStory>
 
     <musicFile>hxh-TryYourLuck.mp3</musicFile>
-
+<backAnimations>
+        <backAnimation>
+            <frames>
+                <frame>
+                    <file>images/Level2-Forest/bird/bird.1.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level2-Forest/bird/bird.2.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level2-Forest/bird/bird.3.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level2-Forest/bird/bird.4.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level2-Forest/bird/bird.5.png</file>
+                    <milis>0.1</milis>
+                </frame>
+                <frame>
+                    <file>images/Level2-Forest/bird/bird.6.png</file>
+                    <milis>0.1</milis>
+                </frame>
+            </frames>
+            <!--To use the same animation with different scaling in different positions-->
+            <scaleAndPlacements>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>44</scaleX>
+                    <scaleY>90</scaleY>
+                    <!--Position of the animation-->
+                    <x>2814</x>
+                    <y>715</y>
+                </scaleAndPlacement>
+                <scaleAndPlacement>
+                    <!--Scale of the animation (use 0 if no scaling needed)-->
+                    <scaleX>44</scaleX>
+                    <scaleY>90</scaleY>
+                    <!--Position of the animation-->
+                    <x>1028</x>
+                    <y>327</y>
+                </scaleAndPlacement>
+            </scaleAndPlacements>
+        </backAnimation>
+</backAnimations>
 </level>

@@ -134,6 +134,8 @@ class PhaseScene(PygameScene):
                     animation.scale((scaleAndPlacement.scaleX, scaleAndPlacement.scaleY))
                 animation.positionX = scaleAndPlacement.x
                 animation.positionY = scaleAndPlacement.y
+                animation.posX = scaleAndPlacement.x
+                animation.posY = scaleAndPlacement.y
                 animation.play()
                 self.backAnimations.append(animation)
 
@@ -258,11 +260,14 @@ class PhaseScene(PygameScene):
     def draw(self, screen):
         # Background color
         self.backgroundColor.draw(screen)
+
+        # Background
+        self.background.draw(screen)
+
         # Back animations
         for animation in self.backAnimations:
             animation.draw(screen)
-        # Background
-        self.background.draw(screen)
+
         # Flag Sprite
         self.bannerSpriteGroup.draw(screen)
         # Sprites
