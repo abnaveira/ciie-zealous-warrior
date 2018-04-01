@@ -30,6 +30,9 @@ DIALOG_BOX_HEIGHT = 409
 #-----------------------
 QUIT_TEXT_POSITION_X = 700
 QUIT_TEXT_POSITION_Y = 500
+#-----------------------
+COUNTER_X = 430
+COUNTER_Y = 67
 
 # HUD elements for the level gameplay
 class HUDElement:
@@ -96,7 +99,7 @@ class LastEnemyArrow(HUDElement):
         self.player = player
 
     def update(self):
-        if self.enemies.__len__() < 3 and self.enemies.__len__() > 0:
+        if self.enemies.__len__() > 0 :
             for sprite in self.enemies.sprites():
                 enemy_pos = sprite.position
                 player_pos = self.player.position
@@ -131,7 +134,7 @@ class LastEnemyArrow(HUDElement):
                 break
 
     def draw(self, screen):
-        if self.enemies.__len__() == 1:
+        if self.enemies.__len__() > 0:
             screen.blit(self.image, self.rect)
 
 class TextDialogBox(HUDElement):
@@ -165,11 +168,31 @@ class GUIText(HUDElement):
         if self.time > 0:
             screen.blit(self.image, self.rect)
 
+class EnemyCounter(HUDElement):
+    def __init__(self, enemies):
+        # Asks the resource manager for the font
+        self.font = ResourcesManager.loadFont('arial', 30)
+        self.enemies = enemies
+        self.text = str(self.enemies.__len__())
+        # Creates the text image
+        self.image = self.font.render(self.text, True, (204, 153, 0))
+        HUDElement.__init__(self, self.image.get_rect())
+        # Sets text in position
+        self.setScreenPosition((COUNTER_X, COUNTER_Y))
+
+    def update(self):
+        self.text = str(self.enemies.__len__())
+        self.image = self.font.render(self.text, True, (204, 153, 0))
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+
 class QuitText(GUIText):
     def __init__(self):
         # Asks the resource manager for the font
         font = ResourcesManager.loadFont('arial', 17)
-        GUIText.__init__(self, font, (255, 255, 255), "Presiona \"q\" para saltar", (QUIT_TEXT_POSITION_X, QUIT_TEXT_POSITION_Y), 5)
+        GUIText.__init__(self, font, (255, 255, 255), "Presiona \"q\" para saltar",
+                         (QUIT_TEXT_POSITION_X, QUIT_TEXT_POSITION_Y), 5)
 
 class StageText(GUIText):
     def __init__(self, text):
@@ -193,6 +216,7 @@ class HUD():
         self.descriptionText = DescriptionText(stageInfo.description)
         self.arrow = LastEnemyArrow(spriteStructure.enemyGroup, spriteStructure.player)
         self.quitText = QuitText()
+        self.counter = EnemyCounter(spriteStructure.enemyGroup)
         # Initial text boxes
         self.initialBoxes = []
         for box in stageIntroStoryList:
@@ -223,6 +247,8 @@ class HUD():
             self.descriptionText.update()
             # Updates the enemy arrow
             self.arrow.update()
+            # Updates the enemy counter
+            self.counter.update()
 
     def changeBox(self, keypressed, key, scapeKey):
         if keypressed[scapeKey]:
@@ -288,6 +314,7 @@ class HUD():
                 # Only draws the flag if the player has reached the flag
                 if flagRaised:
                     self.arrow.draw(screen)
+                    self.counter.draw(screen)
         else:
             # Checks if there are more boxes
             if self.actualInitialBox < self.initialBoxes.__len__():
