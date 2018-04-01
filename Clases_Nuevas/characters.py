@@ -4,13 +4,10 @@ import random
 import pygame, sys, os
 import math
 from pygame.locals import *
-from escena import *
-from gestorRecursos import *
 from mysprite import MySprite
 from projectiles import *
 from resourcesManager import *
 from potionSprites import *
-import pygame
 
 #---------------------------
 #---------Constants---------

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from Clases_Nuevas.SpriteStructure import SpriteStructure
-from Clases_Nuevas.spawn2 import Spawn2
+from SpriteStructure import SpriteStructure
+from spawn2 import Spawn2
 from scene import PygameScene
 from xmlLevelParser import *
 from characters import *

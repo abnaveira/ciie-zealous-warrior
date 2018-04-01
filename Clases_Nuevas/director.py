@@ -3,7 +3,6 @@
 # Modules
 import pygame, pyglet
 import sys
-from escena import *
 from pygame.locals import *
 from scene import *
 from phase import PhaseScene
@@ -71,16 +70,6 @@ class Director():
 
                 # Execute the loop
                 self.loopPygame(scene)
-
-            # If not, if it is pyglet's
-            elif isinstance(scene, EscenaPyglet):
-
-                # Execute pyglet app
-                pyglet.app.run()
-
-                # When pyglet animation is done, close the window
-                scene.close()
-
             else:
                 raise Exception('Unrecogniced scene type')
 
@@ -95,10 +84,6 @@ class Director():
             if isinstance(scene, PygameScene):
                 # We indicate with the flag we want to leave it
                 self.leave_scene_pygame = True
-            # If it is pyglet's
-            elif isinstance(scene, EscenaPyglet):
-                # Exit pyglet loop
-                pyglet.app.exit()
             else:
                 raise Exception('Unrecogniced scene type')
 

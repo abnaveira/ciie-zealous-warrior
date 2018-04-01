@@ -5,6 +5,7 @@ import os
 import xml.etree.ElementTree as ET
 from miscSprites import *
 import pygame
+
 BANNER_WIDTH = 58
 
 def openXmlGetTree(xmlFileName):

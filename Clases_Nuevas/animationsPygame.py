@@ -1,6 +1,4 @@
 # -*- encoding: utf-8 -*-
-import pygame
-
 import pyganim
 
 # We extend Pyganimation class to give it a postion

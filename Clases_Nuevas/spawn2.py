@@ -1,7 +1,5 @@
 import random
-
 import copy
-
 from characters import *
 
 MINIMUM_DISTANCE = 250000

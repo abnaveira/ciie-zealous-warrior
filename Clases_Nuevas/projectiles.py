@@ -1,5 +1,4 @@
 
-from gestorRecursos import *
 from mysprite import MySprite
 from resourcesManager import *
 

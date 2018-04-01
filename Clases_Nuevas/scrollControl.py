@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-from projectiles import *
 
 # -------------------------------------------------
 # Class used for the window scroll control
