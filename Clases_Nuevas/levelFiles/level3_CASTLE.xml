@@ -304,7 +304,7 @@
     <!--Player's starting position in the map-->
     <playerPosition>
         <x>2800</x>
-        <y>2800</y>
+        <y>2971</y>
     </playerPosition>
 
     <!--List of enemies of this level-->
