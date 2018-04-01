@@ -452,11 +452,10 @@ class Player(Character):
     def onDeath(self, spriteStructure, time):
         self.kill()
 
-        # Play the Wilhelm Scream sound
-        spriteStructure.soundEffects.wilhelmScreamSound.play()
-
         # If the text death boxes finished
         if spriteStructure.phase.text_death_finished == True:
+            # Play the Wilhelm Scream sound
+            spriteStructure.soundEffects.wilhelmScreamSound.play()
             # Open the window that shows that you the player is dead
             spriteStructure.phase.openDeathScreen()
 
