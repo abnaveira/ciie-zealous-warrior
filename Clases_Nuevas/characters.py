@@ -452,6 +452,7 @@ class Player(Character):
 
     def onDeath(self, spriteStructure, time):
         self.kill()
+        print("I was killed here" + str(self.position))
         # Open the window that shows that you the player is dead
         spriteStructure.phase.openDeathScreen()
 
@@ -692,6 +693,10 @@ class AxeKnight(NPC):
         elif self.attackTime > 0:
             self.attackTime -= time
         NPC.update(self, spriteStructure, time)
+
+    def stun(self, speed, damage):
+        speedx, speedy = speed
+        NPC.stun(self, (speedx*0.3, speedy*0.2), damage)
 
 # MeltyZombie stays on its platform, moves slowly towards the player and leaves a gooey trail that damages the player.
 class MeltyZombie(NPC):

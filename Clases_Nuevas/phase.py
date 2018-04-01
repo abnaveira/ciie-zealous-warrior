@@ -197,6 +197,7 @@ class PhaseScene(PygameScene):
                             if len(self.enemiesGroup.sprites()) == 0:
                                 # This changes scene
                                 self.final = True
+                                return
                         elif self.spawnTimer >= TIME_SPAWN_FLAG:
                             self.spawnTimer = 0
                             self.spawnEnemyValidated()
@@ -230,6 +231,7 @@ class PhaseScene(PygameScene):
                 if self.thereAreBosses:
                     if len(self.bossesGroup.sprites()) == 0:
                         self.final = True
+                        return
 
                 # Updates the banner sprite
                 self.bannerSpriteGroup.update(self.player, time)
