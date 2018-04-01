@@ -475,19 +475,37 @@
             <id>1</id>
             <x>700</x>
             <y>850</y>
-            <enemiesNumber>3</enemiesNumber>
+            <enemiesNumber>4</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>2</id>
             <x>1400</x>
             <y>750</y>
-            <enemiesNumber>4</enemiesNumber>
+            <enemiesNumber>6</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>3</id>
             <x>2200</x>
             <y>800</y>
             <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>4</id>
+            <x>1627</x>
+            <y>463</y>
+            <enemiesNumber>3</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>5</id>
+            <x>878</x>
+            <y>301</y>
+            <enemiesNumber>2</enemiesNumber>
+        </spawnPoint>
+        <spawnPoint>
+            <id>6</id>
+            <x>2623</x>
+            <y>598</y>
+            <enemiesNumber>3</enemiesNumber>
         </spawnPoint>
     </spawnPoints>
 

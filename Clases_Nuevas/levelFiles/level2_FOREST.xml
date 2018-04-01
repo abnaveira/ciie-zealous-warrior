@@ -287,7 +287,7 @@
             <id>2</id>
             <x>1800</x>
             <y>940</y>
-            <enemiesNumber>2</enemiesNumber>
+            <enemiesNumber>3</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>3</id>
@@ -305,7 +305,7 @@
             <id>5</id>
             <x>425</x>
             <y>600</y>
-            <enemiesNumber>1</enemiesNumber>
+            <enemiesNumber>3</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>6</id>
@@ -317,7 +317,7 @@
             <id>7</id>
             <x>3030</x>
             <y>690</y>
-            <enemiesNumber>1</enemiesNumber>
+            <enemiesNumber>2</enemiesNumber>
         </spawnPoint>
         <spawnPoint>
             <id>8</id>
