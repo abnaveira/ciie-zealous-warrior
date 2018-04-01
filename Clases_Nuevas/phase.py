@@ -238,7 +238,6 @@ class PhaseScene(PygameScene):
                 if self.thereAreBosses:
                     if len(self.bossesGroup.sprites()) == 0:
                         self.final = True
-                        self.director.stackGame()
                         return
 
                 # Updates the banner sprite
@@ -314,6 +313,9 @@ class PhaseScene(PygameScene):
                 # Abort music playback
                 pygame.mixer.music.stop()
                 self.director.leaveScene()
+                if self.thereAreBosses:
+                    if len(self.bossesGroup.sprites()) == 0:
+                        self.director.stackGame()
 
         if (self.player.dead == True):
             if not self.text_death_finished:
