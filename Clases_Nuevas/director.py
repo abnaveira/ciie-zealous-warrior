@@ -7,8 +7,11 @@ from escena import *
 from pygame.locals import *
 from scene import *
 from phase import PhaseScene
+from xmlLevelParser import getAllLevelFiles
+from menu import Menu
 
 FPS = 60
+LEVELS = "zealous_warrior_all_levels.xml"
 
 class Director():
 
@@ -48,8 +51,6 @@ class Director():
             # Draw in the screen
             scene.draw(scene.screen)
             pygame.display.flip()
-
-
 
 
     def execute(self):
@@ -121,10 +122,25 @@ class Director():
         self.stack.append(scene)
 
     def stackScene(self, scene):
-        self.stopScene()
         # Put argument scene on top of the stack (over the current one)
         self.stack.append(scene)
 
     def addPhase(self, levelFile):
         self.stopScene()
         self.stack.append(PhaseScene(self, levelFile, self.soundEffects))
+
+    def stackGame(self):
+        # Get level files from an xml
+        levelFilesList = getAllLevelFiles(LEVELS)
+        # Reverse the order of the levels (to put in the stack)
+        levelFilesList.reverse()
+
+        for level in levelFilesList:
+            # Create the scene for the level
+            scene = PhaseScene(self, level, self.soundEffects)
+            # Put it on top of the stack
+            self.stackScene(scene)
+
+        # Loads the game menu in the director
+        menu = Menu(self, 960, 540)
+        self.stackScene(menu)

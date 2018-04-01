@@ -238,6 +238,7 @@ class PhaseScene(PygameScene):
                 if self.thereAreBosses:
                     if len(self.bossesGroup.sprites()) == 0:
                         self.final = True
+                        self.director.stackGame()
                         return
 
                 # Updates the banner sprite
