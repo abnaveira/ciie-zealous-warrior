@@ -345,18 +345,20 @@ class PhaseScene(PygameScene):
                     self.director.musicMuted = False
                     self.lastTimeMuted = pyTime.time()
         if keysPressed[K_PLUS]:
-            volume = self.soundEffects.globalVolume
-            if volume < 1:
-                self.soundEffects.globalVolume = volume + 0.01
-                self.soundEffects.setEffectsVolume(self.soundEffects.globalVolume)
-                pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
+            if not self.director.musicMuted:
+                volume = self.soundEffects.globalVolume
+                if volume < 1:
+                    self.soundEffects.globalVolume = volume + 0.01
+                    self.soundEffects.setEffectsVolume(self.soundEffects.globalVolume)
+                    pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
 
         if keysPressed[K_MINUS]:
-            volume = self.soundEffects.globalVolume
-            if volume > 0:
-                self.soundEffects.globalVolume = volume - 0.01
-                self.soundEffects.setEffectsVolume(self.soundEffects.globalVolume)
-                pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
+            if not self.director.musicMuted:
+                volume = self.soundEffects.globalVolume
+                if volume > 0:
+                    self.soundEffects.globalVolume = volume - 0.01
+                    self.soundEffects.setEffectsVolume(self.soundEffects.globalVolume)
+                    pygame.mixer.music.set_volume(self.soundEffects.globalVolume)
 
         # Indicates the actions to do to the player
         self.player.move(keysPressed, K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE)
